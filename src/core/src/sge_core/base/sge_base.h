@@ -94,7 +94,8 @@ template<class T, size_t N, bool bEnableOverflow = true> using Vector_ = eastl::
 template<class T> using Vector = eastl::vector<T>;
 
 template<class T> using StrViewT = eastl::basic_string_view<T>;
-using StrView = StrViewT<char>;
+using StrViewA = StrViewT<char>;
+using StrViewW = StrViewT<wchar_t>;
 
 template<class T, size_t N, bool bEnableOverflow = true> // using FixedStringT = eastl::fixed_string<T, N, bEnableOverflow>;
 class StringT : public eastl::fixed_string<T, N, bEnableOverflow> {
@@ -107,11 +108,31 @@ public:
 	template<class R> void operator=(R&& r) { Base::operator=(SGE_FORWARD(r)); }
 };
 
-using String = eastl::string;
-template<size_t N, bool bEnableOverflow = true> using String_ = StringT<char, N, bEnableOverflow>;
-using TempString = String_<220>;
-
+using StringA = eastl::basic_string<char>;
 using StringW = eastl::basic_string<wchar_t>;
+
+template<size_t N, bool bEnableOverflow = true> using StringA_ = StringT<char,    N, bEnableOverflow>;
+template<size_t N, bool bEnableOverflow = true> using StringW_ = StringT<wchar_t, N, bEnableOverflow>;
+
+using TempStringA = StringA_<220>;
+using TempStringW = StringW_<220>;
+
+using StrView		= StrViewA;
+using String		= StringA;
+
+template<size_t N> using String_ = StringA_<N>;
+using TempString	= TempStringA;
+
+template<size_t N> struct CharBySize;
+template<> struct CharBySize<1> { using Type = char; };
+template<> struct CharBySize<2> { using Type = char16_t; };
+template<> struct CharBySize<4> { using Type = char32_t; };
+
+struct WCharUtil {
+	using Char = typename CharBySize<sizeof(wchar_t)>::Type;
+	Char    toChar (wchar_t c) { return static_cast<Char>(c); }
+	wchar_t toWChar(Char    c) { return static_cast<wchar_t>(c); }
+};
 
 
 //! Source Location

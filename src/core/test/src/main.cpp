@@ -12,7 +12,7 @@
 namespace sge {
 
 void run_temp_test() {
-	RUN_TEST(test_Fmt);
+	RUN_TEST(test_UtfUtil);
 }
 
 void run_all_test() {
@@ -21,6 +21,7 @@ void run_all_test() {
 
 // string
 	RUN_TEST(test_Fmt);
+	RUN_TEST(test_UtfUtil);
 
 // net
 	RUN_TEST(test_Socket);

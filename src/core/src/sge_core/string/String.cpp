@@ -44,5 +44,4 @@ void StringUtil::appendBinToHex(String& result, const u8* data, size_t dataSize)
 	}
 }
 
-
 } // namespace
