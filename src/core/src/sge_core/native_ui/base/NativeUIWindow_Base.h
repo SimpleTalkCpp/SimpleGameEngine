@@ -41,12 +41,15 @@ public:
 		bool		alwaysOnTop		: 1;
 	};
 
-	void create(CreateDesc& desc) { onCreate(desc); }
+	void create			(CreateDesc& desc)	{ onCreate(desc); }
+	void setWindowTitle	(StrView title)		{ onSetWindowTitle(title); }
+
+	virtual void onCloseButton() {}
+	virtual void onActive(bool isActive) {}
 
 protected:
 	virtual void onCreate(CreateDesc& desc) {}
-	virtual void onCloseButton() {}
-	virtual void onActive(bool isActive) {}
+	virtual void onSetWindowTitle(StrView title) {}
 };
 
 }

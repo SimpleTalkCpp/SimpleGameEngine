@@ -1,5 +1,5 @@
 #include "NativeUIWindow_Win32.h"
-#include <sge_core/base/Error.h>
+#include <sge_core/string/UtfUtil.h>
 
 #if SGE_OS_WINDOWS
 
@@ -80,6 +80,13 @@ void NativeUIWindow_Win32::onCreate(CreateDesc& desc) {
 	}
 
 	ShowWindow(_hwnd, SW_SHOW);
+}
+
+void NativeUIWindow_Win32::onSetWindowTitle(StrView title) {
+	if (!_hwnd) return;
+	TempStringW tmp;
+	UtfUtil::convert(tmp, title);
+	::SetWindowText(_hwnd, tmp.c_str());
 }
 
 LRESULT WINAPI NativeUIWindow_Win32::s_wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {

@@ -18,7 +18,7 @@ public:
 		NativeUIWindow::CreateDesc winDesc;
 		winDesc.isMainWindow = true;
 		_mainWin.create(winDesc);
-//		_mainWin.setWindowTitle("SGE Editor");
+		_mainWin.setWindowTitle("SGE Editor");
 	}
 
 private:

@@ -12,6 +12,7 @@ class NativeUIWindow_Win32 : public NativeUIWindow_Base {
 public:
 
 	virtual void onCreate(CreateDesc& desc) override;
+	virtual void onSetWindowTitle(StrView title) override;
 
 	HWND _hwnd;
 

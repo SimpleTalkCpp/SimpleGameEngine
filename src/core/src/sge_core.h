@@ -7,4 +7,6 @@
 #include "sge_core/net/Socket.h"
 #include "sge_core/net/Poll.h"
 
+#include "sge_core/string/UtfUtil.h"
+
 #include "sge_core/native_ui/NativeUI.h"

@@ -7,9 +7,8 @@ public:
 	class CreateDesc {
 	};
 
-	int  run(CreateDesc& desc);
-	void quit(int returnCode);
-
+			int  run(CreateDesc& desc);
+			void quit(int returnCode);
 	virtual void willQuit() {}
 
 protected:
