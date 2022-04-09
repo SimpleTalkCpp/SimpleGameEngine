@@ -69,7 +69,7 @@ void NativeUIWindow_Win32::onCreate(CreateDesc& desc) {
 		rect.pos = (screenSize - rect.size) / 2;
 	}
 
-	_hwnd = ::CreateWindowExW(dwExStyle, clsName, clsName, dwStyle,
+	_hwnd = ::CreateWindowEx(dwExStyle, clsName, clsName, dwStyle,
 								(int)desc.rect.x,
 								(int)desc.rect.y,
 								(int)desc.rect.w,

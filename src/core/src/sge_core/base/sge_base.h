@@ -60,7 +60,7 @@ inline void* operator new[](size_t size, size_t alignment, size_t alignmentOffse
 
 namespace sge {
 
-template<class T> inline constexpr typename std::underlying_type<T>::type         enumInt(T  value) { return       static_cast<typename std::underlying_type<T>::type>(value); }
+template<class T> inline constexpr typename std::underlying_type<T>::type     enumInt(T  value) { return       static_cast<typename std::underlying_type<T>::type>(value); }
 template<class T> inline constexpr typename std::underlying_type<T>::type& enumIntRef(T& value) { return *reinterpret_cast<typename std::underlying_type<T>::type*>(&value); }
 template<class T> inline constexpr typename std::underlying_type<T>::type const& enumIntRef(const T& value) { return *reinterpret_cast<const typename std::underlying_type<T>::type*>(&value); }
 
@@ -69,12 +69,12 @@ template<class T> inline bool constexpr enumHas(const T& a, const T& b) { return
 template<class T> SGE_INLINE T* constCast(const T* v) { return const_cast<T*>(v); }
 template<class T> SGE_INLINE T& constCast(const T& v) { return const_cast<T&>(v); }
 
-using u8 = uint8_t;
+using u8  = uint8_t;
 using u16 = uint16_t;
 using u32 = uint32_t;
 using u64 = uint64_t;
 
-using i8 = int8_t;
+using i8  = int8_t;
 using i16 = int16_t;
 using i32 = int32_t;
 using i64 = int64_t;

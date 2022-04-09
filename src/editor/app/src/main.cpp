@@ -19,10 +19,15 @@ public:
 		winDesc.isMainWindow = true;
 		_mainWin.create(winDesc);
 		_mainWin.setWindowTitle("SGE Editor");
+
+		SGE_LOG("Hello {}", 10);
+
+//		_renderer.create(_mainWin);
 	}
 
 private:
 	MainWin		_mainWin;
+//	Renderer	_renderer;
 };
 
 }
