@@ -3,10 +3,22 @@
 namespace sge {
 
 class MainWin : public NativeUIWindow {
+	using Base = NativeUIWindow;
 public:
+	void onCreate(CreateDesc& desc) {
+		Base::onCreate(desc);
+
+		RenderContext::CreateDesc renderContextDesc;
+		renderContextDesc.window = this;
+
+		_renderContext.reset(RenderContext::create(renderContextDesc));
+	}
+
 	virtual void onCloseButton() override {
 		NativeUIApp::current()->quit(0);
 	}
+
+	UPtr<RenderContext>	_renderContext;
 };
 
 class EditorApp : public NativeUIApp {
@@ -15,14 +27,16 @@ public:
 	virtual void onCreate(CreateDesc& desc) override {
 		Base::onCreate(desc);
 
+		Renderer::CreateDesc renderDesc;
+		//renderDesc.apiType = OpenGL;
+		Renderer::create(renderDesc);
+
+	//---
 		NativeUIWindow::CreateDesc winDesc;
 		winDesc.isMainWindow = true;
 		_mainWin.create(winDesc);
 		_mainWin.setWindowTitle("SGE Editor");
 
-		SGE_LOG("Hello {}", 10);
-
-//		_renderer.create(_mainWin);
 	}
 
 private:

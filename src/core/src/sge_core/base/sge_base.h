@@ -161,6 +161,37 @@ private:
 	void operator=(const NonCopyable&) = delete;
 };
 
+template<class T>
+class ComPtr : public NonCopyable {
+public:
+	ComPtr() = default;
+	ComPtr(const ComPtr& r) { ref(r._p); }
+	~ComPtr() noexcept { reset(nullptr); }
+
+	T* operator->() noexcept		{ return _p; }
+	operator T*() noexcept			{ return _p; }
+
+			T* ptr() noexcept		{ return _p; }
+	const	T* ptr() const noexcept	{ return _p; }
+
+	void reset(T* p) {
+		if (p == _p) return;
+		if (_p) {
+			_p->Release();
+			_p = nullptr;
+		}
+		if (_p) {
+			_p->AddRef();
+		}
+	}
+
+	T** ptrForInit() noexcept { reset(nullptr); return &_p; }
+
+	T* detach() { T* o = _p; _ p = nullptr; return o; }
+private:
+	T* _p = nullptr;
+};
+
 template<class T> inline void sge_delete(T* p) { delete p; }
 
 } // namespace
