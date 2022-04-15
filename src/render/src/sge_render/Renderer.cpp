@@ -22,12 +22,14 @@ Renderer* Renderer::create(CreateDesc& desc) {
 		case ApiType::DX11: p = new Renderer_DX11(desc); break;
 		default: throw SGE_ERROR("unsupport graphic api");
 	}
+
 	return p;
 }
 
 Renderer::Renderer() {
 	SGE_ASSERT(_current == nullptr);
 	_current = this;
+	_vsync = true;
 }
 
 Renderer::~Renderer() {

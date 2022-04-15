@@ -32,9 +32,12 @@ public:
 
 	virtual RenderContext*	onCreateContext(RenderContext_CreateDesc& desc) = 0;
 
+	bool vsync() const		{ return _vsync; }
+
 protected:
-	RenderAdapterInfo	_adapterInfo;
 	static Renderer*	_current;
+	RenderAdapterInfo	_adapterInfo;
+	bool _vsync : 1;
 };
 
 }

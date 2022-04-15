@@ -13,6 +13,7 @@ public:
 
 	virtual void onCreate(CreateDesc& desc) override;
 	virtual void onSetWindowTitle(StrView title) override;
+	virtual void onDrawNeeded() override;
 
 	HWND _hwnd;
 

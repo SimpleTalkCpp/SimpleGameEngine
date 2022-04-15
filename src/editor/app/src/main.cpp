@@ -18,6 +18,14 @@ public:
 		NativeUIApp::current()->quit(0);
 	}
 
+	virtual void onDraw() {
+		Base::onDraw();
+		if (_renderContext) {
+			_renderContext->render();
+		}
+		drawNeeded();
+	}
+
 	UPtr<RenderContext>	_renderContext;
 };
 
@@ -25,6 +33,16 @@ class EditorApp : public NativeUIApp {
 	using Base = NativeUIApp;
 public:
 	virtual void onCreate(CreateDesc& desc) override {
+		{
+			String file = getExecutableFilename();
+			String path = FilePath::getDir(file);
+			path.append("/../../../../../../examples/Test101");
+			setCurrentDir(path);
+
+			auto dir = getCurrentDir();
+			SGE_LOG("dir = {}", dir);
+		}
+
 		Base::onCreate(desc);
 
 		Renderer::CreateDesc renderDesc;

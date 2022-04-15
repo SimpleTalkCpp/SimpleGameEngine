@@ -44,12 +44,16 @@ public:
 	void create			(CreateDesc& desc)	{ onCreate(desc); }
 	void setWindowTitle	(StrView title)		{ onSetWindowTitle(title); }
 
+	void drawNeeded() { onDrawNeeded(); }
+
 	virtual void onCloseButton() {}
 	virtual void onActive(bool isActive) {}
+	virtual void onDraw() {}
 
 protected:
 	virtual void onCreate(CreateDesc& desc) {}
 	virtual void onSetWindowTitle(StrView title) {}
+	virtual void onDrawNeeded() {}
 };
 
 }

@@ -12,8 +12,16 @@ public:
 
 	static RenderContext*	create(CreateDesc& desc);
 
+	void render();
+
 	RenderContext(CreateDesc& desc);
 	virtual ~RenderContext() = default;
+
+protected:
+	virtual void onBeginRender() {};
+	virtual void onEndRender() {};
+	virtual void onClearColorAndDepthBuffer() {}
+	virtual void onSwapBuffers() {}
 };
 
 

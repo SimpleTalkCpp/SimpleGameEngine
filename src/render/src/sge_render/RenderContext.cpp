@@ -7,6 +7,13 @@ RenderContext* RenderContext::create(CreateDesc& desc) {
 	return Renderer::current()->onCreateContext(desc);
 }
 
+void RenderContext::render() {
+	onBeginRender();
+	onClearColorAndDepthBuffer();
+	onSwapBuffers();
+	onEndRender();
+}
+
 RenderContext::RenderContext(CreateDesc& desc) {
 
 }

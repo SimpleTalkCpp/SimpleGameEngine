@@ -84,9 +84,12 @@ void NativeUIWindow_Win32::onCreate(CreateDesc& desc) {
 
 void NativeUIWindow_Win32::onSetWindowTitle(StrView title) {
 	if (!_hwnd) return;
-	TempStringW tmp;
-	UtfUtil::convert(tmp, title);
+	TempStringW tmp = UtfUtil::toStringW(title);
 	::SetWindowText(_hwnd, tmp.c_str());
+}
+
+void NativeUIWindow_Win32::onDrawNeeded() {
+	::InvalidateRect(_hwnd, nullptr, false);
 }
 
 LRESULT WINAPI NativeUIWindow_Win32::s_wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -104,6 +107,16 @@ LRESULT WINAPI NativeUIWindow_Win32::s_wndProc(HWND hwnd, UINT msg, WPARAM wPara
 				thisObj->_hwnd = nullptr;
 				sge_delete(thisObj);
 			}
+		}break;
+
+		case WM_PAINT: {
+			PAINTSTRUCT ps;
+			BeginPaint(hwnd, &ps);
+			if (auto* thisObj = s_getThis(hwnd)) {
+				thisObj->onDraw();
+				return 0;
+			}
+			EndPaint(hwnd, &ps);
 		}break;
 
 		case WM_CLOSE: {

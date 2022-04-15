@@ -6,7 +6,10 @@
 #include <d3d11_4.h>
 #include <dxgi1_4.h>
 
+#include <d3dcompiler.h>
+
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 
 namespace sge {
 
@@ -27,6 +30,13 @@ using DX11_ID3DTexture3D		= ID3D11Texture3D;
 
 using DX11_ID3DRenderTargetView	= ID3D11RenderTargetView;
 using DX11_ID3DDepthStencilView	= ID3D11DepthStencilView;
+
+using DX11_ID3DBuffer			= ID3D11Buffer;
+using DX11_ID3DBlob				= ID3DBlob;
+
+using DX11_ID3DVertexShader		= ID3D11VertexShader;
+using DX11_ID3DPixelShader		= ID3D11PixelShader;
+using DX11_ID3DInputLayout		= ID3D11InputLayout;
 
 struct DX11Util {
 	DX11Util() = delete;

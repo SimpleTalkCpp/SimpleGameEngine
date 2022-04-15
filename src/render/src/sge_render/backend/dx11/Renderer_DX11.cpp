@@ -76,7 +76,7 @@ Renderer_DX11::Renderer_DX11(CreateDesc& desc) {
 		hr = _dxgiAdapter->GetDesc(&ad);
 		Util::throwIfError(hr);
 
-		UtfUtil::convert(_adapterInfo.adapterName, ad.Description);
+		_adapterInfo.adapterName = UtfUtil::toString(ad.Description);
 		_adapterInfo.memorySize = ad.DedicatedVideoMemory;
 
 		SGE_LOG("Render Adapter\n  name={}\n  mem={}G"
