@@ -19,6 +19,7 @@ public:
 
 protected:
 	virtual void onBeginRender() {};
+	virtual void onTestDraw() {};
 	virtual void onEndRender() {};
 	virtual void onClearColorAndDepthBuffer() {}
 	virtual void onSwapBuffers() {}

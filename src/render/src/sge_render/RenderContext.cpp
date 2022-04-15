@@ -10,6 +10,9 @@ RenderContext* RenderContext::create(CreateDesc& desc) {
 void RenderContext::render() {
 	onBeginRender();
 	onClearColorAndDepthBuffer();
+
+	onTestDraw();
+
 	onSwapBuffers();
 	onEndRender();
 }

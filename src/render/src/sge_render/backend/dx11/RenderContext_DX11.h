@@ -29,6 +29,8 @@ protected:
 	virtual void onBeginRender() override;
 	virtual void onEndRender() override;
 
+	virtual void onTestDraw() override;
+
 	virtual void onClearColorAndDepthBuffer() override;
 	virtual void onSwapBuffers() override;
 };

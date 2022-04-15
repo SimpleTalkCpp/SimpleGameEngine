@@ -37,12 +37,16 @@ RenderContext_DX11::RenderContext_DX11(CreateDesc& desc)
 void RenderContext_DX11::_createRenderTarget() {
 	auto* renderer = Renderer_DX11::current();
 	auto* dev = renderer->d3dDevice();
+	HRESULT hr;
 
-	ComPtr<ID3D11Texture2D> backBuffer;
-	auto hr = _swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.ptrForInit()));
+	hr = _swapChain->ResizeBuffers(0, 800, 600, DXGI_FORMAT_UNKNOWN, 0);
 	Util::throwIfError(hr);
 
-	hr = dev->CreateRenderTargetView( backBuffer, nullptr, _renderTargetView.ptrForInit() );
+	ComPtr<ID3D11Texture2D> backBuffer;
+	hr = _swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.ptrForInit()));
+	Util::throwIfError(hr);
+
+	hr = dev->CreateRenderTargetView(backBuffer, nullptr, _renderTargetView.ptrForInit() );
 	Util::throwIfError(hr);
 
 	D3D11_TEXTURE2D_DESC backBufferDesc;
@@ -75,9 +79,6 @@ void RenderContext_DX11::_createRenderTarget() {
 
 void RenderContext_DX11::onBeginRender() {
 	auto* ctx = _renderer->d3dDeviceContext();
-	auto* dev = _renderer->d3dDevice();
-	HRESULT hr;
-
 	if (!_renderTargetView) {
 		_createRenderTarget();
 	}
@@ -85,6 +86,17 @@ void RenderContext_DX11::onBeginRender() {
 	DX11_ID3DRenderTargetView* rt[] = { _renderTargetView };
 //	ctx->OMSetRenderTargets(1, rt, _depthStencilView);
 	ctx->OMSetRenderTargets(1, rt, nullptr);
+}
+
+void RenderContext_DX11::onEndRender() {
+
+}
+
+void RenderContext_DX11::onTestDraw() {
+	auto* dev = _renderer->d3dDevice();
+	auto* ctx = _renderer->d3dDeviceContext();
+
+	HRESULT hr;
 
 // testing
 	struct Vertex {
@@ -174,10 +186,6 @@ void RenderContext_DX11::onBeginRender() {
 	ctx->PSSetShader(_testPixelShader,  0, 0);
 
 	ctx->Draw(vertexCount, 0);
-}
-
-void RenderContext_DX11::onEndRender() {
-
 }
 
 void RenderContext_DX11::onClearColorAndDepthBuffer() {
