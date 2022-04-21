@@ -56,9 +56,7 @@ struct DX11Util {
 
 private:
 	static bool _checkError(HRESULT hr) {
-		if (FAILED(hr))
-			return false;
-		return true;
+		return SUCCEEDED(hr);
 	}
 };
 

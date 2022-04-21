@@ -165,7 +165,10 @@ template<class T>
 class ComPtr : public NonCopyable {
 public:
 	ComPtr() = default;
-	ComPtr(const ComPtr& r) { ref(r._p); }
+
+	ComPtr(const ComPtr& r) { reset(r._p); }
+	void operator=(const ComPtr& r) { if (r._p == _p) return; reset(r._p); }
+
 	~ComPtr() noexcept { reset(nullptr); }
 
 	T* operator->() noexcept		{ return _p; }
@@ -180,6 +183,8 @@ public:
 			_p->Release();
 			_p = nullptr;
 		}
+
+		_p = p;
 		if (_p) {
 			_p->AddRef();
 		}
