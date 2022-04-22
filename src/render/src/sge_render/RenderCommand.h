@@ -59,7 +59,8 @@ public:
 private:
 	template<class CMD>
 	CMD* newCommand() {
-		auto* cmd = reinterpret_cast<CMD*>(_allocator.allocate(sizeof(CMD)));
+		auto* buf = _allocator.allocate(sizeof(CMD));
+		auto* cmd = new(buf) CMD();
 		commands.emplace_back(cmd);
 		return cmd;
 	}
