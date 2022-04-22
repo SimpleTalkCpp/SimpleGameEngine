@@ -22,6 +22,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstdint>
+#include <atomic>
 
 #include <EASTL/vector.h>
 #include <EASTL/fixed_vector.h>
@@ -84,14 +85,20 @@ using f32 = float;
 using f64 = double;
 using f128 = long double;
 
+template< class Obj, class Member > constexpr
+intptr_t memberOffset(Member Obj::*ptrToMember, size_t index = 0) {
+	Obj* c = nullptr;
+	Member* m = &(c->*ptrToMember) + index;
+	return reinterpret_cast<intptr_t>(m);
+}
+
 template<class T> using UPtr = eastl::unique_ptr<T>;
-template<class T> using SPtr = eastl::shared_ptr<T>;
-template<class T> using WPtr = eastl::weak_ptr<T>;
 
 template<class T> using Span = eastl::span<T>;
 template<class T, size_t N, bool bEnableOverflow = true> using Vector_ = eastl::fixed_vector<T, N, bEnableOverflow>;
 
 template<class T> using Vector = eastl::vector<T>;
+template<class KEY, class VALUE> using Map = eastl::map<KEY, VALUE>;
 
 template<class T> using StrViewT = eastl::basic_string_view<T>;
 using StrViewA = StrViewT<char>;
@@ -197,6 +204,96 @@ private:
 	T* _p = nullptr;
 };
 
+class RefCountBase : public NonCopyable {
+public:
+	
+
+	std::atomic_int	_refCount = 0;
+};
+
 template<class T> inline void sge_delete(T* p) { delete p; }
+
+template<class T>
+class SPtr : public NonCopyable {
+public:
+	SPtr() = default;
+
+	SPtr(const SPtr& r) { reset(r._p); }
+	void operator=(const SPtr& r) { if (r._p == _p) return; reset(r._p); }
+
+	~SPtr() noexcept { reset(nullptr); }
+
+	T* operator->() noexcept		{ return _p; }
+	operator T*() noexcept			{ return _p; }
+
+			T* ptr() noexcept		{ return _p; }
+	const	T* ptr() const noexcept	{ return _p; }
+
+	void reset(T* p) {
+		static_assert(std::is_base_of<RefCountBase, T>::value, "");
+
+		if (p == _p) return;
+		if (_p) {
+			auto c = --_p->_refCount;
+			if (c <= 0) {
+				sge_delete(_p);
+			}
+			_p = nullptr;
+		}
+
+		_p = p;
+		if (_p) {
+			_p->_refCount++;
+		}
+	}
+
+	T** ptrForInit() noexcept { reset(nullptr); return &_p; }
+
+	T* detach() { T* o = _p; _ p = nullptr; return o; }
+private:
+	T* _p = nullptr;
+};
+
+template<class T>
+struct Tuple2 {
+	using ElementType = T;
+	static const size_t kElementCount = 2;
+
+	union {
+		struct { T x, y; };
+		T data[kElementCount];
+	};
+};
+
+template<class T>
+struct Tuple3 {
+	using ElementType = T;
+	static const size_t kElementCount = 3;
+
+	union {
+		struct { T x, y, z; };
+		T data[kElementCount];
+	};
+};
+
+template<class T>
+struct Tuple4 {
+	using ElementType = T;
+	static const size_t kElementCount = 4;
+
+	union {
+		struct { T x, y, z, w; };
+		T data[kElementCount];
+	};
+};
+
+using Tuple2f = Tuple2<float>;
+using Tuple3f = Tuple3<float>;
+using Tuple4f = Tuple4<float>;
+
+using Tuple2d = Tuple2<double>;
+using Tuple3d = Tuple3<double>;
+using Tuple4d = Tuple4<double>;
+
 
 } // namespace
