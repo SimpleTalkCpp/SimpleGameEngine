@@ -50,9 +50,7 @@ struct DX11Util {
 	}
 	static void reportError();
 
-	static Renderer_DX11*			renderer();
-	static DX11_ID3DDevice*			d3dDevice();
-	static DX11_ID3DDeviceContext*	d3dDeviceContext();
+	static UINT castUINT(size_t v) { SGE_ASSERT(v < UINT_MAX); return static_cast<UINT>(v); }
 
 private:
 	static bool _checkError(HRESULT hr) {

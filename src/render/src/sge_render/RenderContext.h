@@ -2,17 +2,17 @@
 
 namespace sge {
 
+class RenderCommandBuffer;
+
 struct RenderContext_CreateDesc {
 	NativeUIWindow*	window = nullptr;
 };
 
-class RenderContext : public NonCopyable {
+class RenderContext : public Object {
 public:
 	using CreateDesc = RenderContext_CreateDesc;
 
-	static RenderContext*	create(CreateDesc& desc);
-
-	void render();
+	void render(RenderCommandBuffer& cmdBuf);
 
 	RenderContext(CreateDesc& desc);
 	virtual ~RenderContext() = default;

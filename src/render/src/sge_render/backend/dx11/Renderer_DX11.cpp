@@ -1,5 +1,6 @@
 #include "Renderer_DX11.h"
 #include "RenderContext_DX11.h"
+#include "RenderGpuBuffer_DX11.h"
 
 namespace sge {
 
@@ -96,6 +97,10 @@ Renderer_DX11::Renderer_DX11(CreateDesc& desc) {
 
 RenderContext* Renderer_DX11::onCreateContext(RenderContext_CreateDesc& desc) {
 	return new RenderContext_DX11(desc);
+}
+
+RenderGpuBuffer* Renderer_DX11::onCreateGpuBuffer(RenderGpuBuffer_CreateDesc& desc) {
+	return new RenderGpuBuffer_DX11(desc);
 }
 
 }

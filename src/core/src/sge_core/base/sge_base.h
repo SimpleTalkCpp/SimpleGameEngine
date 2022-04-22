@@ -173,8 +173,11 @@ class ComPtr : public NonCopyable {
 public:
 	ComPtr() = default;
 
-	ComPtr(const ComPtr& r) { reset(r._p); }
+	ComPtr(const ComPtr& r)	{ reset(r._p); }
+	ComPtr(ComPtr && r)		{ reset(r._p); r._p = nullptr; }
+
 	void operator=(const ComPtr& r) { if (r._p == _p) return; reset(r._p); }
+	void operator=(ComPtr && r)		{ if (r._p == _p) return; reset(r._p); r._p = nullptr; }
 
 	~ComPtr() noexcept { reset(nullptr); }
 
@@ -211,6 +214,10 @@ public:
 	std::atomic_int	_refCount = 0;
 };
 
+class Object : public RefCountBase {
+public:
+};
+
 template<class T> inline void sge_delete(T* p) { delete p; }
 
 template<class T>
@@ -218,8 +225,11 @@ class SPtr : public NonCopyable {
 public:
 	SPtr() = default;
 
-	SPtr(const SPtr& r) { reset(r._p); }
-	void operator=(const SPtr& r) { if (r._p == _p) return; reset(r._p); }
+	SPtr(T* p)		{ reset(p); }
+	SPtr(SPtr && r)	{ reset(r._p); r._p = nullptr; }
+
+	void operator=(T* p)		{ if (p == _p) return; reset(p); }
+	void operator=(SPtr && r)	{ if (r._p == _p) return; reset(r._p); r._p = nullptr; }
 
 	~SPtr() noexcept { reset(nullptr); }
 
@@ -247,8 +257,6 @@ public:
 		}
 	}
 
-	T** ptrForInit() noexcept { reset(nullptr); return &_p; }
-
 	T* detach() { T* o = _p; _ p = nullptr; return o; }
 private:
 	T* _p = nullptr;
@@ -263,6 +271,9 @@ struct Tuple2 {
 		struct { T x, y; };
 		T data[kElementCount];
 	};
+
+	Tuple2(const T& x_, const T& y_)
+		: x(x_), y(y_) {}
 };
 
 template<class T>
@@ -274,6 +285,9 @@ struct Tuple3 {
 		struct { T x, y, z; };
 		T data[kElementCount];
 	};
+
+	Tuple3(const T& x_, const T& y_, const T& z_)
+		: x(x_) , y(y_), z(z_) {}
 };
 
 template<class T>
@@ -285,6 +299,9 @@ struct Tuple4 {
 		struct { T x, y, z, w; };
 		T data[kElementCount];
 	};
+
+	Tuple4(const T& x_, const T& y_, const T& z_, const T& w_)
+		: x(x_), y(y_), z(z_), w(w_) {}
 };
 
 using Tuple2f = Tuple2<float>;

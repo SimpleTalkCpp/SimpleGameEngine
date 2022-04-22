@@ -1,20 +1,30 @@
 #include "RenderContext.h"
 #include "Renderer.h"
+#include "RenderCommand.h"
 
 namespace sge {
 
-RenderContext* RenderContext::create(CreateDesc& desc) {
-	return Renderer::current()->onCreateContext(desc);
-}
+//void RenderContext::render() {
+//	onBeginRender();
+//	onClearColorAndDepthBuffer();
+//
+//	onTestDraw();
+//
+//	onSwapBuffers();
+//	onEndRender();
+//}
 
-void RenderContext::render() {
-	onBeginRender();
-	onClearColorAndDepthBuffer();
+void RenderContext::render(RenderCommandBuffer& cmdBuf) {
+	using Cmd = RenderCommandType;
 
-	onTestDraw();
-
-	onSwapBuffers();
-	onEndRender();
+	for (auto* cmd : cmdBuf.commands) {
+		switch (cmd->type()) {
+			case Cmd::DrawCall: {
+				auto* c = static_cast<RenderCommand_DrawCall*>(cmd);
+				
+			} break;
+		}
+	}
 }
 
 RenderContext::RenderContext(CreateDesc& desc) {

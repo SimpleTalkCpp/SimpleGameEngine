@@ -11,7 +11,7 @@ public:
 
 	static VertexLayoutManager* current();
 
-	const VertexLayout* get(VertexType type);
+	const VertexLayout* getLayout(VertexType type);
 
 	VertexLayout* _createLayout(VertexType type);
 

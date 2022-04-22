@@ -7,8 +7,9 @@ namespace sge {
 enum class VertexType;
 
 constexpr VertexType VertexType_make(u8 color, u8 uv) {
-	u64 o = (u64)color
-		|	((u64)uv << 8);
+	u64 o = 1
+		|((u64)color << 1)
+		|((u64)uv    << 5);
 
 	return static_cast<VertexType>(o);
 }
@@ -94,10 +95,10 @@ struct VertexBase {
 };
 
 template<u8 COLOR_COUNT, u8 UV_COLOR>
-struct VertexT_PosUvColor;
+struct VertexT_PosColorUv;
 
 template<>
-struct VertexT_PosUvColor<0, 0> : public VertexBase<0, 0> {
+struct VertexT_PosColorUv<0, 0> : public VertexBase<0, 0> {
 	Tuple3f pos;
 
 	void onRegister(VertexLayout* layout) {
@@ -106,7 +107,7 @@ struct VertexT_PosUvColor<0, 0> : public VertexBase<0, 0> {
 };
 
 template<>
-struct VertexT_PosUvColor<0, 1> : public VertexBase<0, 1> {
+struct VertexT_PosColorUv<1, 0> : public VertexBase<1, 0> {
 	Tuple3f pos;
 	Color4b color;
 
@@ -118,7 +119,7 @@ struct VertexT_PosUvColor<0, 1> : public VertexBase<0, 1> {
 };
 
 template<u8 UV_COUNT>
-struct VertexT_PosUvColor<UV_COUNT, 1> : public VertexBase<UV_COUNT, 1> {
+struct VertexT_PosColorUv<1, UV_COUNT> : public VertexBase<1, UV_COUNT> {
 	Tuple3f pos;
 	Color4b color;
 	Tuple2f uv[UV_COUNT];
@@ -133,9 +134,9 @@ struct VertexT_PosUvColor<UV_COUNT, 1> : public VertexBase<UV_COUNT, 1> {
 	}
 };
 
-using Vertex_Pos			= VertexT_PosUvColor<0, 0>;
-using Vertex_PosColor		= VertexT_PosUvColor<0, 1>;
-using Vertex_PosUvColor		= VertexT_PosUvColor<1, 1>;
-using Vertex_PosUv2Color	= VertexT_PosUvColor<2, 1>;
+using Vertex_Pos			= VertexT_PosColorUv<0, 0>;
+using Vertex_PosColor		= VertexT_PosColorUv<1, 0>;
+using Vertex_PosColorUv		= VertexT_PosColorUv<1, 1>;
+using Vertex_PosColorUv2	= VertexT_PosColorUv<1, 2>;
 
 }

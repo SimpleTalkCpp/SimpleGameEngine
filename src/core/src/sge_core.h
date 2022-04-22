@@ -5,6 +5,8 @@
 
 #include "sge_core/base/UnitTest.h"
 
+#include "sge_core/allocator/LinearAllocator.h"
+
 #include "sge_core/base/BinDeserializer.h"
 #include "sge_core/base/BinSerializer.h"
 

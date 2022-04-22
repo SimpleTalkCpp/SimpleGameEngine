@@ -7,8 +7,8 @@ VertexLayoutManager* VertexLayoutManager::s_current = nullptr;
 VertexLayoutManager::VertexLayoutManager() {
 	registerLayout<Vertex_Pos>();
 	registerLayout<Vertex_PosColor>();
-	registerLayout<Vertex_PosUvColor>();
-	registerLayout<Vertex_PosUv2Color>();
+	registerLayout<Vertex_PosColorUv>();
+	registerLayout<Vertex_PosColorUv2>();
 }
 
 VertexLayoutManager* VertexLayoutManager::current() {
@@ -16,7 +16,7 @@ VertexLayoutManager* VertexLayoutManager::current() {
 	return &s;
 }
 
-const VertexLayout* VertexLayoutManager::get(VertexType type) {
+const VertexLayout* VertexLayoutManager::getLayout(VertexType type) {
 	auto it = _table.find(type);
 	if (it == _table.end()) {
 		return nullptr;
@@ -25,7 +25,7 @@ const VertexLayout* VertexLayoutManager::get(VertexType type) {
 }
 
 VertexLayout* VertexLayoutManager::_createLayout(VertexType type) {
-	auto* p = get(type);
+	auto* p = getLayout(type);
 	if (p) {
 		SGE_ASSERT(false);
 	}

@@ -1,5 +1,7 @@
 #include <sge_editor.h>
 
+#include <sge_render/mesh/RenderMesh.h>
+#include <sge_render/RenderCommand.h>
 #include <sge_render/vertex/Vertex.h>
 #include <sge_render/vertex/VertexLayoutManager.h>
 
@@ -9,19 +11,33 @@ class MainWin : public NativeUIWindow {
 	using Base = NativeUIWindow;
 public:
 	void onCreate(CreateDesc& desc) {
-		Base::onCreate(desc);
-
-		RenderContext::CreateDesc renderContextDesc;
-		renderContextDesc.window = this;
-
 		SGE_DUMP_VAR(sizeof(Vertex_Pos));
 		SGE_DUMP_VAR(sizeof(Vertex_PosColor));
-		SGE_DUMP_VAR(sizeof(Vertex_PosUvColor));
-		SGE_DUMP_VAR(sizeof(Vertex_PosUv2Color));
+		SGE_DUMP_VAR(sizeof(Vertex_PosColorUv));
+		SGE_DUMP_VAR(sizeof(Vertex_PosColorUv2));
 
-		_renderContext.reset(RenderContext::create(renderContextDesc));
+		Base::onCreate(desc);
+		auto* renderer = Renderer::current();
 
-		VertexLayoutManager::current()->get(Vertex_Pos::kType);
+		{
+			RenderContext::CreateDesc renderContextDesc;
+			renderContextDesc.window = this;
+			_renderContext = renderer->createContext(renderContextDesc);
+		}
+
+		EditMesh editMesh;
+
+		editMesh.pos.emplace_back( 0.0f,  0.5f, 0.0f);
+		editMesh.pos.emplace_back( 0.5f, -0.5f, 0.0f);
+		editMesh.pos.emplace_back(-0.5f, -0.5f, 0.0f);
+
+		editMesh.color.emplace_back(255, 0, 0, 255);
+		editMesh.color.emplace_back(0, 255, 0, 255);
+		editMesh.color.emplace_back(0, 0, 255, 255);
+
+		_renderMesh.create(editMesh);
+
+		VertexLayoutManager::current()->getLayout(Vertex_Pos::kType);
 	}
 
 	virtual void onCloseButton() override {
@@ -32,15 +48,16 @@ public:
 		Base::onDraw();
 		if (!_renderContext) return;
 
-
-
-
-		_renderContext->render();
+		RenderCommandBuffer cmd;
+		cmd.drawMesh(_renderMesh);
+		cmd.swapBuffer();
+		
+		_renderContext->render(cmd);
 		drawNeeded();
 	}
 
-	UPtr<RenderContext>	_renderContext;
-
+	SPtr<RenderContext>	_renderContext;
+	RenderMesh	_renderMesh;
 };
 
 class EditorApp : public NativeUIApp {
