@@ -45,7 +45,7 @@ SockAddr::Family SockAddr::family() const {
 }
 
 void SockAddr::setFamily(Family f) {
-	_addr.sa_family = enumInt(f);
+	_addr.sa_family = static_cast<u16>(f);
 }
 
 void SockAddr::resolve(StrView hostname, u16 port, Family family) {

@@ -1,4 +1,5 @@
 #include "String.h"
+#include "UtfUtil.h"
 
 namespace sge {
 

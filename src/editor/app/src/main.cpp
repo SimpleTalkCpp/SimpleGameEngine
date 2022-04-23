@@ -1,7 +1,7 @@
 #include <sge_editor.h>
 
 #include <sge_render/mesh/RenderMesh.h>
-#include <sge_render/RenderCommand.h>
+#include <sge_render/command/RenderCommand.h>
 #include <sge_render/vertex/Vertex.h>
 #include <sge_render/vertex/VertexLayoutManager.h>
 
@@ -48,16 +48,23 @@ public:
 		Base::onDraw();
 		if (!_renderContext) return;
 
-		RenderCommandBuffer cmd;
+		_renderContext->setFrameBufferSize(clientRect().size);
 
-		cmd.drawMesh(_renderMesh);
-		cmd.swapBuffer();
+		_renderContext->beginRender();
+
+		_cmdBuf.reset();
+		_cmdBuf.clearFrameBuffers();
+		_cmdBuf.drawMesh(_renderMesh);
+		_cmdBuf.swapBuffers();
 		
-		_renderContext->render(cmd);
+		_renderContext->commit(_cmdBuf);
+
+		_renderContext->endRender();
 		drawNeeded();
 	}
 
 	SPtr<RenderContext>	_renderContext;
+	RenderCommandBuffer _cmdBuf;
 	RenderMesh	_renderMesh;
 };
 

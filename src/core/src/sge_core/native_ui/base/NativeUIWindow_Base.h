@@ -46,6 +46,8 @@ public:
 
 	void drawNeeded() { onDrawNeeded(); }
 
+	const Rect2f& clientRect() const { return _clientRect; }
+
 	virtual void onCloseButton() {}
 	virtual void onActive(bool isActive) {}
 	virtual void onDraw() {}
@@ -53,7 +55,10 @@ public:
 protected:
 	virtual void onCreate(CreateDesc& desc) {}
 	virtual void onSetWindowTitle(StrView title) {}
+	virtual void onClientRectChanged(const Rect2f& rc) { _clientRect = rc; }
 	virtual void onDrawNeeded() {}
+
+	Rect2f	_clientRect {0,0,0,0};
 };
 
 }

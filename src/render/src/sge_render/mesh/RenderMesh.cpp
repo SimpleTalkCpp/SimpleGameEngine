@@ -33,7 +33,7 @@ void RenderMesh::create(const EditMesh& src) {
 		}
 	}
 
-	for (size_t i = 0; i < EditMesh::kUvCountMax; i++) {
+	for (u8 i = 0; i < EditMesh::kUvCountMax; i++) {
 		auto& uv = src.uv[i];
 		if (uv.size() > 0) {
 			if (uv.size() <= _vertexCount) {
@@ -50,21 +50,21 @@ void RenderMesh::create(const EditMesh& src) {
 						RenderDataType_get<Tuple2f>(), uvCount,
 						RenderDataType_get<Tuple3f>(), normalCount, 0, 0);
 
-	_layout = VertexLayoutManager::current()->getLayout(vertexType);
+	_vertexLayout = VertexLayoutManager::current()->getLayout(vertexType);
 
-	if (!_layout) {
-		throw SGE_ERROR("cannot find layout for mesh");
+	if (!_vertexLayout) {
+		throw SGE_ERROR("cannot find vertex Layout for mesh");
 	}
 
 //------
 	Vector_<u8, 1024>	vertexData;
-	vertexData.resize(_layout->stride * _vertexCount);
+	vertexData.resize(_vertexLayout->stride * _vertexCount);
 
 	{
 		auto* data = vertexData.data();
-		auto stride = _layout->stride;
+		auto stride = _vertexLayout->stride;
 
-		for (auto& element : _layout->elements) {
+		for (auto& element : _vertexLayout->elements) {
 			switch (element.semantic) {
 				case VertexLayout_Semantic::Pos: {
 					RenderMesh_copyVertexData(data, _vertexCount, element, stride, src.pos.data());
@@ -93,7 +93,7 @@ void RenderMesh::create(const EditMesh& src) {
 	{
 		RenderGpuBuffer::CreateDesc desc;
 		desc.type = RenderGpuBufferType::Vertex;
-		desc.bufferSize = _vertexCount * _layout->stride;
+		desc.bufferSize = _vertexCount * _vertexLayout->stride;
 		_vertexBuf = renderer->createGpuBuffer(desc);
 
 		_vertexBuf->uploadToGpu(vertexData);

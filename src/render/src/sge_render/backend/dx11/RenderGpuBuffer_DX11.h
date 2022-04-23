@@ -13,6 +13,7 @@ public:
 
 	virtual void onUploadToGpu(Span<const u8> data, size_t offset) override;
 
+	DX11_ID3DBuffer* d3dBuf() { return _d3dBuf; }
 private:
 	ComPtr<DX11_ID3DBuffer> _d3dBuf;
 };

@@ -11,6 +11,10 @@ class RenderContext_DX11 : public RenderContext {
 public:
 	RenderContext_DX11(CreateDesc& desc);
 
+	void onCmd_ClearFrameBuffers(RenderCommand_ClearFrameBuffers&	cmd);
+	void onCmd_SwapBuffers		(RenderCommand_SwapBuffers&			cmd);
+	void onCmd_DrawCall			(RenderCommand_DrawCall&			cmd);
+
 protected:
 	Renderer_DX11*	_renderer = nullptr;
 
@@ -26,13 +30,13 @@ protected:
 
 	void _createRenderTarget();
 
+	virtual void onSetFrameBufferSize(Vec2f newSize);	
 	virtual void onBeginRender() override;
 	virtual void onEndRender() override;
 
-	virtual void onTestDraw() override;
+	void _setTestShaders();
 
-	virtual void onClearColorAndDepthBuffer() override;
-	virtual void onSwapBuffers() override;
+	virtual void onCommit(RenderCommandBuffer& cmdBuf);
 };
 
 }

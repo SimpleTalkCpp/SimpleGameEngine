@@ -1,34 +1,17 @@
 #include "RenderContext.h"
 #include "Renderer.h"
-#include "RenderCommand.h"
 
 namespace sge {
 
-//void RenderContext::render() {
-//	onBeginRender();
-//	onClearColorAndDepthBuffer();
-//
-//	onTestDraw();
-//
-//	onSwapBuffers();
-//	onEndRender();
-//}
+void RenderContext::setFrameBufferSize(Vec2f newSize) {
+	if (_frameBufferSize == newSize)
+		return;
 
-void RenderContext::render(RenderCommandBuffer& cmdBuf) {
-	using Cmd = RenderCommandType;
-
-	for (auto* cmd : cmdBuf.commands) {
-		switch (cmd->type()) {
-			case Cmd::DrawCall: {
-				auto* c = static_cast<RenderCommand_DrawCall*>(cmd);
-				
-			} break;
-		}
-	}
+	_frameBufferSize = newSize;
+	onSetFrameBufferSize(newSize);
 }
 
 RenderContext::RenderContext(CreateDesc& desc) {
-
 }
 
 }

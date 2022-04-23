@@ -25,6 +25,9 @@ public:
 	Vec2 operator-(const T& s) const { return Vec2(x - s, y - s); }
 	Vec2 operator*(const T& s) const { return Vec2(x * s, y * s); }
 	Vec2 operator/(const T& s) const { return Vec2(x / s, y / s); }
+
+	bool operator==(const Vec2& r) const { return x == r.x && y == r.y; }
+	bool operator!=(const Vec2& r) const { return x != r.x || y != r.y; }
 };
 
 using Vec2f = Vec2<float>;

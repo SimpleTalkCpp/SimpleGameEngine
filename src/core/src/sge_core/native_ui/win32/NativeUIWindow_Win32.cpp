@@ -1,4 +1,5 @@
 #include "NativeUIWindow_Win32.h"
+#include "Win32Util.h"
 #include <sge_core/string/UtfUtil.h>
 
 #if SGE_OS_WINDOWS
@@ -125,6 +126,17 @@ LRESULT WINAPI NativeUIWindow_Win32::s_wndProc(HWND hwnd, UINT msg, WPARAM wPara
 				return 0;
 			}
 		}break;
+
+		case WM_SIZE: {
+			if (auto* thisObj = s_getThis(hwnd)) {
+				RECT clientRect;
+				::GetClientRect(hwnd, &clientRect);
+				Rect2f newClientRect = Win32Util::toRect2f(clientRect);
+
+				thisObj->onClientRectChanged(newClientRect);
+				return 0;
+			}
+ 		}break;
 
 		case WM_ACTIVATE: {
 			if (auto* thisObj = s_getThis(hwnd)) {

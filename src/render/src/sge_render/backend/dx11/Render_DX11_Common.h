@@ -11,6 +11,8 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
+#include <sge_render/Render_Common.h>
+
 namespace sge {
 
 class Renderer_DX11;
@@ -52,6 +54,8 @@ struct DX11Util {
 
 	static UINT castUINT(size_t v) { SGE_ASSERT(v < UINT_MAX); return static_cast<UINT>(v); }
 
+	static D3D11_PRIMITIVE_TOPOLOGY		getDxPrimitiveTopology	(RenderPrimitiveType t);
+
 private:
 	static bool _checkError(HRESULT hr) {
 		return SUCCEEDED(hr);
@@ -66,6 +70,16 @@ void DX11Util::reportError() {
 		d->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	}
 #endif
+}
+
+inline
+D3D11_PRIMITIVE_TOPOLOGY DX11Util::getDxPrimitiveTopology(RenderPrimitiveType t) {
+	switch (t) {
+		case RenderPrimitiveType::Points:				return D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+		case RenderPrimitiveType::Lines:				return D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+		case RenderPrimitiveType::Triangles:			return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		default: throw SGE_ERROR("unknown RenderPrimitiveType");
+	}
 }
 
 } // namespace

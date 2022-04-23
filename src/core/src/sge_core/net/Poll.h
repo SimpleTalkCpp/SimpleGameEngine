@@ -20,7 +20,7 @@ SGE_ENUM_BITWISE_OPERATOR(PollFlags)
 #if SGE_OS_WINDOWS
 	using PollFd = ::WSAPOLLFD;
 	inline int Poll(Span<PollFd> fds, int timeoutMilliseconds) {
-		int ret = ::WSAPoll(fds.data(), fds.size(), timeoutMilliseconds);
+		int ret = ::WSAPoll(fds.data(), static_cast<ULONG>(fds.size()), timeoutMilliseconds);
 		return ret;
 	}
 #else

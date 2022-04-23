@@ -3,18 +3,16 @@
 #include "../detect_platform/sge_detect_platform.h"
 
 #if SGE_OS_WINDOWS
-#define NOMINMAX 1
-
-#include <WinSock2.h> // WinSock2.h must include before windows.h to avoid winsock1 define
-#include <ws2tcpip.h> // struct sockaddr_in6
-#pragma comment(lib, "Ws2_32.lib")
-
-#include <Windows.h>
+	#define NOMINMAX 1
+	#include <WinSock2.h> // WinSock2.h must include before windows.h to avoid winsock1 define
+	#include <ws2tcpip.h> // struct sockaddr_in6
+	#pragma comment(lib, "Ws2_32.lib")
+	#include <Windows.h>
 #else
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <netinet/in.h> // struct sockaddr_in
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <netdb.h>
+	#include <netinet/in.h> // struct sockaddr_in
 #endif
 
 #include <cassert>
@@ -31,8 +29,11 @@
 #include <EASTL/string_view.h>
 #include <EASTL/span.h>
 
+#include <EASTL/optional.h>
+
 #include <EASTL/map.h>
 #include <EASTL/hash_map.h>
+#include <EASTL/unordered_map.h>
 #include <EASTL/string_map.h>
 
 #include <EASTL/unique_ptr.h>
@@ -99,6 +100,9 @@ template<class T, size_t N, bool bEnableOverflow = true> using Vector_ = eastl::
 
 template<class T> using Vector = eastl::vector<T>;
 template<class KEY, class VALUE> using Map = eastl::map<KEY, VALUE>;
+template<class KEY, class VALUE> using UnorderedMap = eastl::unordered_map<KEY, VALUE>;
+
+template<class T> using Opt = eastl::optional<T>;
 
 template<class T> using StrViewT = eastl::basic_string_view<T>;
 using StrViewA = StrViewT<char>;
@@ -175,6 +179,7 @@ public:
 
 class Object : public RefCountBase {
 public:
+	virtual ~Object() = default;
 };
 
 template<class T> inline void sge_delete(T* p) { delete p; }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Render_Common.h"
 #include "../RenderDataType.h"
 
 namespace sge {
@@ -126,7 +127,7 @@ struct VertexLayout : public NonCopyable {
 		if (std::is_array<ATTR>()) {
 			size_t n = std::extent<ATTR>();
 			for (size_t i = 0; i < n; i++) {
-				_addElement(semantic + i, attr, i);
+				_addElement(semantic + static_cast<int>(i), attr, i);
 			}
 		} else {
 			_addElement(semantic, attr, 0);
@@ -140,7 +141,7 @@ private:
 		o.semantic = semantic;
 		using A = std::remove_extent<ATTR>::type;
 		o.dataType = RenderDataType_get<A>();
-		o.offset   = memberOffset(attr) + sizeof(A) * index;
+		o.offset   = static_cast<u16>(memberOffset(attr) + sizeof(A) * index);
 	}
 };
 

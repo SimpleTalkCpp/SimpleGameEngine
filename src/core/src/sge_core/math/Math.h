@@ -3,6 +3,9 @@
 namespace sge {
 
 namespace Math {
+	template<class T> constexpr T max(const T& a, const T& b) { return a > b ? a : b; }
+	template<class T> constexpr T min(const T& a, const T& b) { return a < b ? a : b; }
+
 	template<class T> constexpr T ByteToK(const T& v) { return v / 1024; }
 	template<class T> constexpr T ByteToM(const T& v) { return v / (1024 * 1024); }
 	template<class T> constexpr T ByteToG(const T& v) { return v / (1024 * 1024 * 1024); }
