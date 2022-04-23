@@ -10,10 +10,10 @@ class RenderMesh {
 public:
 	void create(const EditMesh& src);
 
-	RenderGpuBuffer* vertexBuf() { return _vertexBuf; }
-	size_t vertexCount() const { return _vertexCount; }
-	const VertexLayout* layout() const { return _layout; }
-	RenderPrimitiveType primitive() const { return _primitive; }
+	RenderGpuBuffer* vertexBuf()			{ return _vertexBuf; }
+	size_t vertexCount() const				{ return _vertexCount; }
+	const VertexLayout* layout() const		{ return _layout; }
+	RenderPrimitiveType primitive() const	{ return _primitive; }
 
 private:
 	const VertexLayout*	_layout = nullptr;
@@ -21,6 +21,7 @@ private:
 	RenderPrimitiveType _primitive = RenderPrimitiveType::None;
 
 	size_t _vertexCount = 0;
+
 	SPtr<RenderGpuBuffer>	_vertexBuf;
 };
 

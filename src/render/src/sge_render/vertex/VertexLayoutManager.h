@@ -17,15 +17,14 @@ public:
 
 	template<class VERTEX>
 	void registerLayout() {
-
 		VertexLayout* layout = _createLayout(VERTEX::kType);
-		VERTEX* v = nullptr;
 		layout->stride = sizeof(VERTEX);
 		layout->type = VERTEX::kType;
-		v->onRegister(layout);
+		VERTEX::onRegister(layout);
 	}
 
 private:
+
 	static VertexLayoutManager* s_current;	
 	Map<VertexType, VertexLayout>	_table;
 };

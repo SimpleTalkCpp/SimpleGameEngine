@@ -6,65 +6,26 @@ namespace sge {
 
 class LinearAllocator {
 public:
+	void setChunkSize(size_t n) { _chunkSize = n; }
 
-	void setChunkSize(size_t n) {
-		_chunkSize = n;
-	}
+	void* allocate(size_t reqSize, size_t align = 16);
 
-	void* allocate(size_t reqSize) {
-		auto* c = getChunk(reqSize);
-		return c->allocate(reqSize);
-	}
-
-	void clear() {
-		for (auto& c : _chunks) {
-			c->clear();
-		}
-	}
+	void clear();
 
 private:
 	struct Chunk : public NonCopyable {
-		Chunk(size_t n) {
-			_buffer.resize(n);
-			_available = n;
-		}
+		Chunk(size_t n);
 
-		void* allocate(size_t reqSize) {
-			if (_available < reqSize) {
-				throw SGE_ERROR("not enough memory");
-			}
-			auto offset = _buffer.size() - _available;
-			_available -= reqSize;
-			return _buffer.data() + offset;
-		}
-
-		void clear() {
-			_available = _buffer.size();
-		}
-
-		size_t available() const { return _available; }
+		void* allocate(size_t reqSize, size_t align);
+		void clear();
 
 	private:
 		Vector<u8> _buffer;
-		size_t _available = 0;
+		size_t _used = 0;
 	};
 
-	Chunk* getChunk(size_t reqSize) {
-		if (_chunks.size()) {
-			auto& t = _chunks.back();
-			if (t->available() >= reqSize)
-				return t.get();
-		}
-
-		auto chunkSize = reqSize > _chunkSize ? reqSize : _chunkSize;
-		auto* newChunk = new Chunk(chunkSize);
-		_chunks.emplace_back(newChunk);
-		
-		return newChunk;
-	}
-
 	Vector<UPtr<Chunk>>	_chunks;
-	size_t _chunkSize = 4096;
+	size_t _chunkSize = 16 * 1024;
 };
 
 

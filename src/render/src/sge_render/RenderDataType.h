@@ -2,7 +2,7 @@
 
 namespace sge {
 
-enum class RenderDataType {
+enum class RenderDataType : u8 {
 	None,
 
 	Int8,		Int8x2,		Int8x3,		Int8x4,
@@ -24,6 +24,8 @@ enum class RenderDataType {
 };
 
 template<class T> constexpr RenderDataType RenderDataType_get();
+
+template<> constexpr RenderDataType RenderDataType_get<void>() { return RenderDataType::None;  }
 
 template<> constexpr RenderDataType RenderDataType_get<i8 >() { return RenderDataType::Int8;  }
 template<> constexpr RenderDataType RenderDataType_get<i16>() { return RenderDataType::Int16; }

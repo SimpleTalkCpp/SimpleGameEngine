@@ -18,6 +18,7 @@ void RenderMesh_copyVertexData(DST* dst, size_t vertexCount, const VertexLayout:
 void RenderMesh::create(const EditMesh& src) {
 	u8 uvCount = 0;
 	u8 colorCount = 0;
+	u8 normalCount = 0;
 
 	_primitive = RenderPrimitiveType::Triangles;
 	_vertexCount = src.pos.size();
@@ -43,7 +44,12 @@ void RenderMesh::create(const EditMesh& src) {
 		}
 	}
 
-	auto vertexType = VertexType_make(colorCount, uvCount);
+	auto vertexType = VertexType_make(
+						RenderDataType_get<Tuple3f>(), 
+						RenderDataType_get<Color4b>(), colorCount, 
+						RenderDataType_get<Tuple2f>(), uvCount,
+						RenderDataType_get<Tuple3f>(), normalCount, 0, 0);
+
 	_layout = VertexLayoutManager::current()->getLayout(vertexType);
 
 	if (!_layout) {
@@ -65,6 +71,18 @@ void RenderMesh::create(const EditMesh& src) {
 				} break;
 				case VertexLayout_Semantic::Color0: {
 					RenderMesh_copyVertexData(data, _vertexCount, element, stride, src.color.data());
+				} break;
+				case VertexLayout_Semantic::TexCoord0: {
+					RenderMesh_copyVertexData(data, _vertexCount, element, stride, src.uv[0].data());
+				} break;
+				case VertexLayout_Semantic::TexCoord1: {
+					RenderMesh_copyVertexData(data, _vertexCount, element, stride, src.uv[1].data());
+				} break;
+				case VertexLayout_Semantic::TexCoord2: {
+					RenderMesh_copyVertexData(data, _vertexCount, element, stride, src.uv[2].data());
+				} break;
+				case VertexLayout_Semantic::TexCoord3: {
+					RenderMesh_copyVertexData(data, _vertexCount, element, stride, src.uv[3].data());
 				} break;
 			}
 		}

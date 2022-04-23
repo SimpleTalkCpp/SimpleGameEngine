@@ -11,6 +11,7 @@ public:
 	
 	RenderPrimitiveType primitive = RenderPrimitiveType::None;
 	const VertexLayout*	layout = nullptr;
+
 	SPtr<RenderGpuBuffer>	vertexBuffer;
 	size_t vertexCount = 0;
 };

@@ -7,8 +7,26 @@ VertexLayoutManager* VertexLayoutManager::s_current = nullptr;
 VertexLayoutManager::VertexLayoutManager() {
 	registerLayout<Vertex_Pos>();
 	registerLayout<Vertex_PosColor>();
-	registerLayout<Vertex_PosColorUv>();
-	registerLayout<Vertex_PosColorUv2>();
+
+	#define MY_REGISTER_VERTEX_UV(T) \
+		registerLayout<T<1>>(); \
+		registerLayout<T<2>>(); \
+		registerLayout<T<3>>(); \
+		registerLayout<T<4>>(); \
+	//---
+		MY_REGISTER_VERTEX_UV(Vertex_PosUv);
+		MY_REGISTER_VERTEX_UV(Vertex_PosColorUv);
+
+		MY_REGISTER_VERTEX_UV(Vertex_PosNormalUv);
+		MY_REGISTER_VERTEX_UV(Vertex_PosColorNormalUv);
+
+		MY_REGISTER_VERTEX_UV(Vertex_PosTangentUv);
+		MY_REGISTER_VERTEX_UV(Vertex_PosColorTangentUv);
+
+		MY_REGISTER_VERTEX_UV(Vertex_PosBinormalUv);
+		MY_REGISTER_VERTEX_UV(Vertex_PosColorBinormalUv);
+
+	#undef MY_REGISTER_VERTEX_UV
 }
 
 VertexLayoutManager* VertexLayoutManager::current() {

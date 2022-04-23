@@ -11,7 +11,16 @@
 #include "sge_core/base/BinSerializer.h"
 
 #include "sge_core/math/Math.h"
+#include "sge_core/math/Tuple2.h"
+#include "sge_core/math/Tuple3.h"
+#include "sge_core/math/Tuple4.h"
+
+#include "sge_core/math/Vec2.h"
+
 #include "sge_core/graph/Color.h"
+
+#include "sge_core/pointer/SPtr.h"
+#include "sge_core/pointer/ComPtr.h"
 
 #include "sge_core/net/Socket.h"
 #include "sge_core/net/Poll.h"

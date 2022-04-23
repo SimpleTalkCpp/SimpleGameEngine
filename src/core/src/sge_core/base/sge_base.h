@@ -86,9 +86,9 @@ using f64 = double;
 using f128 = long double;
 
 template< class Obj, class Member > constexpr
-intptr_t memberOffset(Member Obj::*ptrToMember, size_t index = 0) {
+intptr_t memberOffset(Member Obj::*ptrToMember) {
 	Obj* c = nullptr;
-	Member* m = &(c->*ptrToMember) + index;
+	Member* m = &(c->*ptrToMember);
 	return reinterpret_cast<intptr_t>(m);
 }
 
@@ -168,49 +168,8 @@ private:
 	void operator=(const NonCopyable&) = delete;
 };
 
-template<class T>
-class ComPtr : public NonCopyable {
-public:
-	ComPtr() = default;
-
-	ComPtr(const ComPtr& r)	{ reset(r._p); }
-	ComPtr(ComPtr && r)		{ reset(r._p); r._p = nullptr; }
-
-	void operator=(const ComPtr& r) { if (r._p == _p) return; reset(r._p); }
-	void operator=(ComPtr && r)		{ if (r._p == _p) return; reset(r._p); r._p = nullptr; }
-
-	~ComPtr() noexcept { reset(nullptr); }
-
-	T* operator->() noexcept		{ return _p; }
-	operator T*() noexcept			{ return _p; }
-
-			T* ptr() noexcept		{ return _p; }
-	const	T* ptr() const noexcept	{ return _p; }
-
-	void reset(T* p) {
-		if (p == _p) return;
-		if (_p) {
-			_p->Release();
-			_p = nullptr;
-		}
-
-		_p = p;
-		if (_p) {
-			_p->AddRef();
-		}
-	}
-
-	T** ptrForInit() noexcept { reset(nullptr); return &_p; }
-
-	T* detach() { T* o = _p; _ p = nullptr; return o; }
-private:
-	T* _p = nullptr;
-};
-
 class RefCountBase : public NonCopyable {
 public:
-	
-
 	std::atomic_int	_refCount = 0;
 };
 
@@ -219,98 +178,5 @@ public:
 };
 
 template<class T> inline void sge_delete(T* p) { delete p; }
-
-template<class T>
-class SPtr : public NonCopyable {
-public:
-	SPtr() = default;
-
-	SPtr(T* p)		{ reset(p); }
-	SPtr(SPtr && r)	{ reset(r._p); r._p = nullptr; }
-
-	void operator=(T* p)		{ if (p == _p) return; reset(p); }
-	void operator=(SPtr && r)	{ if (r._p == _p) return; reset(r._p); r._p = nullptr; }
-
-	~SPtr() noexcept { reset(nullptr); }
-
-	T* operator->() noexcept		{ return _p; }
-	operator T*() noexcept			{ return _p; }
-
-			T* ptr() noexcept		{ return _p; }
-	const	T* ptr() const noexcept	{ return _p; }
-
-	void reset(T* p) {
-		static_assert(std::is_base_of<RefCountBase, T>::value, "");
-
-		if (p == _p) return;
-		if (_p) {
-			auto c = --_p->_refCount;
-			if (c <= 0) {
-				sge_delete(_p);
-			}
-			_p = nullptr;
-		}
-
-		_p = p;
-		if (_p) {
-			_p->_refCount++;
-		}
-	}
-
-	T* detach() { T* o = _p; _ p = nullptr; return o; }
-private:
-	T* _p = nullptr;
-};
-
-template<class T>
-struct Tuple2 {
-	using ElementType = T;
-	static const size_t kElementCount = 2;
-
-	union {
-		struct { T x, y; };
-		T data[kElementCount];
-	};
-
-	Tuple2(const T& x_, const T& y_)
-		: x(x_), y(y_) {}
-};
-
-template<class T>
-struct Tuple3 {
-	using ElementType = T;
-	static const size_t kElementCount = 3;
-
-	union {
-		struct { T x, y, z; };
-		T data[kElementCount];
-	};
-
-	Tuple3(const T& x_, const T& y_, const T& z_)
-		: x(x_) , y(y_), z(z_) {}
-};
-
-template<class T>
-struct Tuple4 {
-	using ElementType = T;
-	static const size_t kElementCount = 4;
-
-	union {
-		struct { T x, y, z, w; };
-		T data[kElementCount];
-	};
-
-	Tuple4(const T& x_, const T& y_, const T& z_, const T& w_)
-		: x(x_), y(y_), z(z_), w(w_) {}
-};
-
-using Tuple2f = Tuple2<float>;
-using Tuple3f = Tuple3<float>;
-using Tuple4f = Tuple4<float>;
-
-using Tuple2d = Tuple2<double>;
-using Tuple3d = Tuple3<double>;
-using Tuple4d = Tuple4<double>;
-
 
 } // namespace

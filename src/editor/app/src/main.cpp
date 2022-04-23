@@ -13,8 +13,8 @@ public:
 	void onCreate(CreateDesc& desc) {
 		SGE_DUMP_VAR(sizeof(Vertex_Pos));
 		SGE_DUMP_VAR(sizeof(Vertex_PosColor));
-		SGE_DUMP_VAR(sizeof(Vertex_PosColorUv));
-		SGE_DUMP_VAR(sizeof(Vertex_PosColorUv2));
+//		SGE_DUMP_VAR(sizeof(Vertex_PosColorUv));
+//		SGE_DUMP_VAR(sizeof(Vertex_PosColorUv2));
 
 		Base::onCreate(desc);
 		auto* renderer = Renderer::current();
@@ -49,6 +49,7 @@ public:
 		if (!_renderContext) return;
 
 		RenderCommandBuffer cmd;
+
 		cmd.drawMesh(_renderMesh);
 		cmd.swapBuffer();
 		
