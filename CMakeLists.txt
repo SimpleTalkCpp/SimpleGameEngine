@@ -26,7 +26,8 @@ endfunction()
 
 function(sge_set_target_warning_level target_name)
 	if(MSVC)
-	  target_compile_options(${target_name} PRIVATE /W4 /WX)
+	  target_compile_options(${target_name} PRIVATE /WX)     #warning treated as error
+	  target_compile_options(${target_name} PRIVATE /W4)     #warning level 4
 	  target_compile_options(${target_name} PRIVATE /wd4100) #warning C4100: unreferenced formal parameter in function
 	  target_compile_options(${target_name} PRIVATE /wd4201) #warning C4201: nonstandard extension used: nameless struct/union
 	  target_compile_options(${target_name} PRIVATE /wd4127) #warning C4127: conditional expression is constant
