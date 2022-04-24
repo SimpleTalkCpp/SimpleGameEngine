@@ -202,9 +202,9 @@ DX11_ID3DInputLayout* RenderContext_DX11::_getTestInputLayout(const VertexLayout
 
 	for (auto& e : src->elements) {
 		auto& dst = inputDesc.emplace_back();
-		auto semanticType			= VertexLayout_SemanticUtil::getType(e.semantic);
+		auto semanticType			= Vertex_SemanticUtil::getType(e.semantic);
 		dst.SemanticName			= Util::getDxSemanticName(semanticType);
-		dst.SemanticIndex			= VertexLayout_SemanticUtil::getIndex(e.semantic);
+		dst.SemanticIndex			= Vertex_SemanticUtil::getIndex(e.semantic);
 		dst.Format					= Util::getDxFormat(e.dataType);
 		dst.InputSlot				= 0;
 		dst.AlignedByteOffset		= e.offset;

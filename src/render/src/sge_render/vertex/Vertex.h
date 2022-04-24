@@ -16,59 +16,60 @@ namespace sge {
 // binormalCount	: 2 bit
 enum class VertexType : u64 { None };
 
-constexpr VertexType VertexType_addPos(VertexType t, RenderDataType posType) {
-	return static_cast<VertexType>(static_cast<u64>(t) 
-			| static_cast<u64>(posType));
-}
-
-constexpr VertexType VertexType_addColor(VertexType t, RenderDataType colorType, u8 colorCount) {
-	return static_cast<VertexType>(static_cast<u64>(t) 
-			| (static_cast<u64>(colorType)  << 8 ) 
-			| (static_cast<u64>(colorCount) << 16));
-}
-
-constexpr VertexType VertexType_addUv(VertexType t, RenderDataType uvType, u8 uvCount) {
-	return static_cast<VertexType>(static_cast<u64>(t) 
-			| (static_cast<u64>(uvType)  << 18) 
-			| (static_cast<u64>(uvCount) << 26));
-}
-
-constexpr VertexType VertexType_addNormal(VertexType t, RenderDataType normalType, u8 normalCount) {
-	return static_cast<VertexType>(static_cast<u64>(t) 
-			| (static_cast<u64>(normalType)  << 32) 
-			| (static_cast<u64>(normalCount) << 40));
-}
-
-constexpr VertexType VertexType_addTangent(VertexType t, u8 tangentCount) {
-	return static_cast<VertexType>(static_cast<u64>(t) 
-			| (static_cast<u64>(tangentCount) << 42));
-}
-constexpr VertexType VertexType_addBinormal(VertexType t, u8 binormalCount) {
-	return static_cast<VertexType>(static_cast<u64>(t) 
-			| (static_cast<u64>(binormalCount) << 44));
-}
-
-constexpr VertexType VertexType_make(
-	RenderDataType posType, 
-	RenderDataType colorType,  u8 colorCount,
-	RenderDataType uvType,     u8 uvCount,
-	RenderDataType normalType, u8 normalCount, u8 tangentCount, u8 binormalCount)
-{
-	VertexType t = VertexType::None;
-	t = VertexType_addPos	(t, posType);
-	if (colorCount)	 t = VertexType_addColor(t, colorType,	colorCount);
-	if (uvCount)	 t = VertexType_addUv	(t, uvType,		uvCount);
-	if (normalCount) {
-		t = VertexType_addNormal	(t, normalType,	normalCount);
-		t = VertexType_addTangent	(t, tangentCount);
-		t = VertexType_addBinormal	(t, binormalCount);
+struct VertexTypeUtil {
+	static constexpr VertexType addPos(VertexType t, RenderDataType posType) {
+		return static_cast<VertexType>(static_cast<u64>(t) 
+				| static_cast<u64>(posType));
 	}
-	return t;
-}
 
-enum class VertexLayout_Semantic : u16;
+	static constexpr VertexType addColor(VertexType t, RenderDataType colorType, u8 colorCount) {
+		return static_cast<VertexType>(static_cast<u64>(t) 
+				| (static_cast<u64>(colorType)  << 8 ) 
+				| (static_cast<u64>(colorCount) << 16));
+	}
 
-enum class VertexLayout_SemanticType : u8 {
+	static constexpr VertexType addUv(VertexType t, RenderDataType uvType, u8 uvCount) {
+		return static_cast<VertexType>(static_cast<u64>(t) 
+				| (static_cast<u64>(uvType)  << 18) 
+				| (static_cast<u64>(uvCount) << 26));
+	}
+
+	static constexpr VertexType addNormal(VertexType t, RenderDataType normalType, u8 normalCount) {
+		return static_cast<VertexType>(static_cast<u64>(t) 
+				| (static_cast<u64>(normalType)  << 32) 
+				| (static_cast<u64>(normalCount) << 40));
+	}
+
+	static constexpr VertexType addTangent(VertexType t, u8 tangentCount) {
+		return static_cast<VertexType>(static_cast<u64>(t) 
+				| (static_cast<u64>(tangentCount) << 42));
+	}
+	static constexpr VertexType addBinormal(VertexType t, u8 binormalCount) {
+		return static_cast<VertexType>(static_cast<u64>(t) 
+				| (static_cast<u64>(binormalCount) << 44));
+	}
+
+	static constexpr VertexType make(
+		RenderDataType posType, 
+		RenderDataType colorType,  u8 colorCount,
+		RenderDataType uvType,     u8 uvCount,
+		RenderDataType normalType, u8 normalCount, u8 tangentCount, u8 binormalCount)
+	{
+		VertexType t = addPos(VertexType::None, posType);
+		if (colorCount)	 t = addColor	(t, colorType,	colorCount);
+		if (uvCount)	 t = addUv		(t, uvType,		uvCount);
+		if (normalCount) {
+			t = addNormal	(t, normalType,	normalCount);
+			t = addTangent	(t, tangentCount);
+			t = addBinormal	(t, binormalCount);
+		}
+		return t;
+	}
+};
+
+enum class Vertex_Semantic : u16;
+
+enum class Vertex_SemanticType : u8 {
 	None,
 	Pos,
 	Color,
@@ -78,11 +79,11 @@ enum class VertexLayout_SemanticType : u8 {
 	Binormal,
 };
 
-SGE_ENUM_ALL_OPERATOR(VertexLayout_Semantic)
+SGE_ENUM_ALL_OPERATOR(Vertex_Semantic)
 
-struct VertexLayout_SemanticUtil {
-	using Semantic = VertexLayout_Semantic;
-	using Type = VertexLayout_SemanticType;
+struct Vertex_SemanticUtil {
+	using Semantic = Vertex_Semantic;
+	using Type = Vertex_SemanticType;
 	using Index = u8;
 
 	static constexpr Semantic make(Type type, Index index) {
@@ -92,32 +93,32 @@ struct VertexLayout_SemanticUtil {
 	static constexpr Index	getIndex(Semantic v) { return static_cast<u8  >(enumInt(v)); }
 };
 
-enum class VertexLayout_Semantic : u16{
+enum class Vertex_Semantic : u16{
 	None = 0,
-	Pos			= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Pos, 0),
+	Pos			= Vertex_SemanticUtil::make(Vertex_SemanticType::Pos, 0),
 
-	Color0		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Color, 0),
-	Color1		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Color, 1),
-	Color2		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Color, 2),
-	Color3		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Color, 3),
+	Color0		= Vertex_SemanticUtil::make(Vertex_SemanticType::Color, 0),
+	Color1		= Vertex_SemanticUtil::make(Vertex_SemanticType::Color, 1),
+	Color2		= Vertex_SemanticUtil::make(Vertex_SemanticType::Color, 2),
+	Color3		= Vertex_SemanticUtil::make(Vertex_SemanticType::Color, 3),
 
-	TexCoord0	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 0),
-	TexCoord1	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 1),
-	TexCoord2	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 2),
-	TexCoord3	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 3),
-	TexCoord4	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 4),
-	TexCoord5	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 5),
-	TexCoord6	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 6),
-	TexCoord7	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 7),
+	TexCoord0	= Vertex_SemanticUtil::make(Vertex_SemanticType::TexCoord, 0),
+	TexCoord1	= Vertex_SemanticUtil::make(Vertex_SemanticType::TexCoord, 1),
+	TexCoord2	= Vertex_SemanticUtil::make(Vertex_SemanticType::TexCoord, 2),
+	TexCoord3	= Vertex_SemanticUtil::make(Vertex_SemanticType::TexCoord, 3),
+	TexCoord4	= Vertex_SemanticUtil::make(Vertex_SemanticType::TexCoord, 4),
+	TexCoord5	= Vertex_SemanticUtil::make(Vertex_SemanticType::TexCoord, 5),
+	TexCoord6	= Vertex_SemanticUtil::make(Vertex_SemanticType::TexCoord, 6),
+	TexCoord7	= Vertex_SemanticUtil::make(Vertex_SemanticType::TexCoord, 7),
 
-	Normal		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Normal,   0),
-	Tangent		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Tangent,  0),
-	Binormal	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Binormal, 0),
+	Normal		= Vertex_SemanticUtil::make(Vertex_SemanticType::Normal,   0),
+	Tangent		= Vertex_SemanticUtil::make(Vertex_SemanticType::Tangent,  0),
+	Binormal	= Vertex_SemanticUtil::make(Vertex_SemanticType::Binormal, 0),
 
 };
 
 struct VertexLayout : public NonCopyable {
-	using Semantic = VertexLayout_Semantic;
+	using Semantic = Vertex_Semantic;
 	using DataType = RenderDataType;
 
 	struct Element {
@@ -148,13 +149,13 @@ private:
 		auto& o = elements.push_back();
 		o.semantic = semantic;
 		using A = std::remove_extent<ATTR>::type;
-		o.dataType = RenderDataType_get<A>();
+		o.dataType = RenderDataTypeUtil::get<A>();
 		o.offset   = static_cast<u16>(memberOffset(attr) + sizeof(A) * index);
 	}
 };
 
 struct VertexBase {
-	using Semantic = VertexLayout_Semantic;
+	using Semantic = Vertex_Semantic;
 
 	using PosType    = void;
 	using ColorType  = void;
@@ -181,8 +182,8 @@ struct VertexT_Pos : public VertexBase
 	using PosType = POS_TYPE;
 	POS_TYPE pos;
 
-	static const RenderDataType	kPosType    = RenderDataType_get<POS_TYPE>();
-	static const VertexType kType = VertexType_addPos(VertexType::None, kPosType);
+	static const RenderDataType	kPosType    = RenderDataTypeUtil::get<POS_TYPE>();
+	static const VertexType kType = VertexTypeUtil::addPos(VertexType::None, kPosType);
 
 	static void onRegister(VertexLayout* layout) {
 		layout->addElement(Semantic::Pos, &VertexT_Pos::pos);
@@ -195,9 +196,9 @@ struct VertexT_Color : public BASE
 	using ColorType = COLOR_TYPE;
 	COLOR_TYPE	color[COLOR_COUNT];
 
-	static const RenderDataType	kColorType    = RenderDataType_get<COLOR_TYPE>();
+	static const RenderDataType	kColorType    = RenderDataTypeUtil::get<COLOR_TYPE>();
 	static const u8 kColorCount = COLOR_COUNT;
-	static const VertexType kType = VertexType_addColor(BASE::kType, kColorType, kColorCount);
+	static const VertexType kType = VertexTypeUtil::addColor(BASE::kType, kColorType, kColorCount);
 
 	static void onRegister(VertexLayout* layout) {
 		BASE::onRegister(layout);
@@ -211,9 +212,9 @@ struct VertexT_Uv : public BASE
 	using UvType = UV_TYPE;
 	UV_TYPE		uv[UV_COUNT];
 
-	static const RenderDataType	kUvType    = RenderDataType_get<UV_TYPE>();
+	static const RenderDataType	kUvType    = RenderDataTypeUtil::get<UV_TYPE>();
 	static const u8 kUvCount = UV_COUNT;
-	static const VertexType kType = VertexType_addUv(BASE::kType, kUvType, kUvCount);
+	static const VertexType kType = VertexTypeUtil::addUv(BASE::kType, kUvType, kUvCount);
 
 	static void onRegister(VertexLayout* layout) {
 		BASE::onRegister(layout);
@@ -227,9 +228,9 @@ struct VertexT_Normal : public BASE
 	using NormalType = NORMAL_TYPE;
 	NORMAL_TYPE	normal[NORMAL_COUNT];
 
-	static const RenderDataType	kNormalType    = RenderDataType_get<NORMAL_TYPE>();
+	static const RenderDataType	kNormalType    = RenderDataTypeUtil::get<NORMAL_TYPE>();
 	static const u8 kNormalCount = NORMAL_COUNT;
-	static const VertexType kType = VertexType_addNormal(BASE::kType, kNormalType, kNormalCount);
+	static const VertexType kType = VertexTypeUtil::addNormal(BASE::kType, kNormalType, kNormalCount);
 
 	static void onRegister(VertexLayout* layout) {
 		BASE::onRegister(layout);
@@ -243,9 +244,9 @@ struct VertexT_Tangent : public BASE
 	using TangentType = TANGENT_TYPE;
 	TANGENT_TYPE	tangent[TANGENT_COUNT];
 
-	static const RenderDataType	kTangentType    = RenderDataType_get<TANGENT_TYPE>();
+	static const RenderDataType	kTangentType    = RenderDataTypeUtil::get<TANGENT_TYPE>();
 	static const u8 kTangentCount = TANGENT_COUNT;
-	static const VertexType kType = VertexType_addTangent(BASE::kType, kTangentCount);
+	static const VertexType kType = VertexTypeUtil::addTangent(BASE::kType, kTangentCount);
 
 	static void onRegister(VertexLayout* layout) {
 		static_assert(std::is_same<TangentType, NormalType>::value, "");
@@ -261,9 +262,9 @@ struct VertexT_Binormal : public BASE
 	using BinormalType = BINORMAL_TYPE;
 	BINORMAL_TYPE	binormal[BINORMAL_COUNT];
 
-	static const RenderDataType	kBinormalType    = RenderDataType_get<BINORMAL_TYPE>();
+	static const RenderDataType	kBinormalType    = RenderDataTypeUtil::get<BINORMAL_TYPE>();
 	static const u8 kBinormalCount = BINORMAL_COUNT;
-	static const VertexType kType = VertexType_addBinormal(BASE::kType, kBinormalCount);
+	static const VertexType kType = VertexTypeUtil::addBinormal(BASE::kType, kBinormalCount);
 
 	static void onRegister(VertexLayout* layout) {
 		static_assert(std::is_same<BinormalType, NormalType>::value, "");

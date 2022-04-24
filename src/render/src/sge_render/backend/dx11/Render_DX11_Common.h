@@ -57,7 +57,7 @@ struct DX11Util {
 
 	static D3D11_PRIMITIVE_TOPOLOGY	getDxPrimitiveTopology	(RenderPrimitiveType t);
 	static DXGI_FORMAT				getDxFormat				(RenderDataType v);
-	static const char*				getDxSemanticName		(VertexLayout_SemanticType t);
+	static const char*				getDxSemanticName		(Vertex_SemanticType t);
 
 private:
 	static bool _checkError(HRESULT hr) {
@@ -87,8 +87,8 @@ D3D11_PRIMITIVE_TOPOLOGY DX11Util::getDxPrimitiveTopology(RenderPrimitiveType t)
 }
 
 inline
-const char* DX11Util::getDxSemanticName(VertexLayout_SemanticType t) {
-	using SRC = VertexLayout_SemanticType;
+const char* DX11Util::getDxSemanticName(Vertex_SemanticType t) {
+	using SRC = Vertex_SemanticType;
 	switch (t) {
 		case SRC::Pos:			return "POSITION";
 		case SRC::Color:		return "COLOR";

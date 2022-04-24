@@ -17,11 +17,11 @@ public:
 	const VertexLayout* vertexLayout() const	{ return _vertexLayout; }
 
 private:
+	
 	RenderPrimitiveType _primitive = RenderPrimitiveType::None;
 
 	size_t _vertexCount = 0;
 	const VertexLayout*	_vertexLayout = nullptr;
-
 	SPtr<RenderGpuBuffer>	_vertexBuf;
 };
 
