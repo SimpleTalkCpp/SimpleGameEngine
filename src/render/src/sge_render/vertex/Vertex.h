@@ -80,31 +80,39 @@ enum class VertexLayout_SemanticType : u8 {
 
 SGE_ENUM_ALL_OPERATOR(VertexLayout_Semantic)
 
-constexpr VertexLayout_Semantic VertexLayout_Semantics_make(VertexLayout_SemanticType type, u8 index) {
-	return static_cast<VertexLayout_Semantic>((enumInt(type) << 8) | index);
+struct VertexLayout_SemanticUtil {
+	using Semantic = VertexLayout_Semantic;
+	using Type = VertexLayout_SemanticType;
+	using Index = u8;
+
+	static constexpr Semantic make(Type type, Index index) {
+		return static_cast<Semantic>((enumInt(type) << 8) | index);
+	};
+	static constexpr Type	getType (Semantic v) { return static_cast<Type>(enumInt(v) >> 8); }
+	static constexpr Index	getIndex(Semantic v) { return static_cast<u8  >(enumInt(v)); }
 };
 
 enum class VertexLayout_Semantic : u16{
 	None = 0,
-	Pos			= VertexLayout_Semantics_make(VertexLayout_SemanticType::Pos, 0),
+	Pos			= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Pos, 0),
 
-	Color0		= VertexLayout_Semantics_make(VertexLayout_SemanticType::Color, 0),
-	Color1		= VertexLayout_Semantics_make(VertexLayout_SemanticType::Color, 1),
-	Color2		= VertexLayout_Semantics_make(VertexLayout_SemanticType::Color, 2),
-	Color3		= VertexLayout_Semantics_make(VertexLayout_SemanticType::Color, 3),
+	Color0		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Color, 0),
+	Color1		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Color, 1),
+	Color2		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Color, 2),
+	Color3		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Color, 3),
 
-	TexCoord0	= VertexLayout_Semantics_make(VertexLayout_SemanticType::TexCoord, 0),
-	TexCoord1	= VertexLayout_Semantics_make(VertexLayout_SemanticType::TexCoord, 1),
-	TexCoord2	= VertexLayout_Semantics_make(VertexLayout_SemanticType::TexCoord, 2),
-	TexCoord3	= VertexLayout_Semantics_make(VertexLayout_SemanticType::TexCoord, 3),
-	TexCoord4	= VertexLayout_Semantics_make(VertexLayout_SemanticType::TexCoord, 4),
-	TexCoord5	= VertexLayout_Semantics_make(VertexLayout_SemanticType::TexCoord, 5),
-	TexCoord6	= VertexLayout_Semantics_make(VertexLayout_SemanticType::TexCoord, 6),
-	TexCoord7	= VertexLayout_Semantics_make(VertexLayout_SemanticType::TexCoord, 7),
+	TexCoord0	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 0),
+	TexCoord1	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 1),
+	TexCoord2	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 2),
+	TexCoord3	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 3),
+	TexCoord4	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 4),
+	TexCoord5	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 5),
+	TexCoord6	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 6),
+	TexCoord7	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::TexCoord, 7),
 
-	Normal		= VertexLayout_Semantics_make(VertexLayout_SemanticType::Normal,   0),
-	Tangent		= VertexLayout_Semantics_make(VertexLayout_SemanticType::Tangent,  0),
-	Binormal	= VertexLayout_Semantics_make(VertexLayout_SemanticType::Binormal, 0),
+	Normal		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Normal,   0),
+	Tangent		= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Tangent,  0),
+	Binormal	= VertexLayout_SemanticUtil::make(VertexLayout_SemanticType::Binormal, 0),
 
 };
 

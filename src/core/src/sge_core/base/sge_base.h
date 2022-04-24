@@ -33,7 +33,7 @@
 
 #include <EASTL/map.h>
 #include <EASTL/hash_map.h>
-#include <EASTL/unordered_map.h>
+#include <EASTL/vector_map.h>
 #include <EASTL/string_map.h>
 
 #include <EASTL/unique_ptr.h>
@@ -100,7 +100,7 @@ template<class T, size_t N, bool bEnableOverflow = true> using Vector_ = eastl::
 
 template<class T> using Vector = eastl::vector<T>;
 template<class KEY, class VALUE> using Map = eastl::map<KEY, VALUE>;
-template<class KEY, class VALUE> using UnorderedMap = eastl::unordered_map<KEY, VALUE>;
+template<class KEY, class VALUE> using VectorMap = eastl::vector_map<KEY, VALUE>;
 
 template<class T> using Opt = eastl::optional<T>;
 

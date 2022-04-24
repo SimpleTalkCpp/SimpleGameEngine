@@ -59,7 +59,11 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 	auto* ctx = _renderer->d3dDeviceContext();
 	auto primitive = Util::getDxPrimitiveTopology(cmd.primitive);
 	ctx->IASetPrimitiveTopology(primitive);
-	ctx->IASetInputLayout(_testInputLayout);
+
+	auto* inputLayout = _getTestInputLayout(cmd.vertexLayout);
+	if (!inputLayout) { SGE_ASSERT(false); return; }
+
+	ctx->IASetInputLayout(inputLayout);
 
 	UINT stride = static_cast<UINT>(cmd.vertexLayout->stride);
 	UINT offset = 0;
@@ -162,19 +166,9 @@ void RenderContext_DX11::_setTestShaders() {
 		hr = D3DCompileFromFile(shaderFile, 0, 0, "vs_main", "vs_4_0", 0, 0, bytecode.ptrForInit(), errorMsg.ptrForInit());
 		Util::throwIfError(hr);
 
-		hr = dev->CreateVertexShader(bytecode->GetBufferPointer(), bytecode->GetBufferSize(), nullptr, _testVertexShader.ptrForInit());
-		Util::throwIfError(hr);
+		_testVertexShaderBytecode = bytecode;
 
-		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
-		{
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM,  0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		};
-		hr = dev->CreateInputLayout(inputDesc
-									, sizeof(inputDesc) / sizeof(inputDesc[0])
-									, bytecode->GetBufferPointer()
-									, bytecode->GetBufferSize()
-									, _testInputLayout.ptrForInit());
+		hr = dev->CreateVertexShader(bytecode->GetBufferPointer(), bytecode->GetBufferSize(), nullptr, _testVertexShader.ptrForInit());
 		Util::throwIfError(hr);
 	}
 
@@ -194,6 +188,42 @@ void RenderContext_DX11::_setTestShaders() {
 
 void RenderContext_DX11::onCommit(RenderCommandBuffer& cmdBuf) {
 	_dispatch(this, cmdBuf);
+}
+
+DX11_ID3DInputLayout* RenderContext_DX11::_getTestInputLayout(const VertexLayout* src) {
+	if (!src) return nullptr;
+
+	auto it = _testInputLayouts.find(src);
+	if (it != _testInputLayouts.end()) {
+		return it->second;
+	}
+
+	Vector_<D3D11_INPUT_ELEMENT_DESC, 32> inputDesc;
+
+	for (auto& e : src->elements) {
+		auto& dst = inputDesc.emplace_back();
+		auto semanticType			= VertexLayout_SemanticUtil::getType(e.semantic);
+		dst.SemanticName			= Util::getDxSemanticName(semanticType);
+		dst.SemanticIndex			= VertexLayout_SemanticUtil::getIndex(e.semantic);
+		dst.Format					= Util::getDxFormat(e.dataType);
+		dst.InputSlot				= 0;
+		dst.AlignedByteOffset		= e.offset;
+		dst.InputSlotClass			= D3D11_INPUT_PER_VERTEX_DATA;
+		dst.InstanceDataStepRate	= 0;
+	}
+
+	ComPtr<DX11_ID3DInputLayout>	outLayout;
+
+	auto* dev = _renderer->d3dDevice();
+	auto hr = dev->CreateInputLayout(inputDesc.data()
+									, static_cast<UINT>(inputDesc.size())
+									, _testVertexShaderBytecode->GetBufferPointer()
+									, _testVertexShaderBytecode->GetBufferSize()
+									, outLayout.ptrForInit());
+	Util::throwIfError(hr);
+
+	_testInputLayouts[src] = outLayout;
+	return outLayout;
 }
 
 }
