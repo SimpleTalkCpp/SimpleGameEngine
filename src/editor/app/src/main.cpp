@@ -53,7 +53,7 @@ public:
 		_renderContext->beginRender();
 
 		_cmdBuf.reset();
-		_cmdBuf.clearFrameBuffers();
+		_cmdBuf.clearFrameBuffers()->setColor({0, 0, 0.2f, 1});
 		_cmdBuf.drawMesh(_renderMesh);
 		_cmdBuf.swapBuffers();
 		

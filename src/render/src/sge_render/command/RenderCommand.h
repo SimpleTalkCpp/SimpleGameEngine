@@ -30,11 +30,14 @@ private:
 
 class RenderCommand_ClearFrameBuffers : public RenderCommand {
 	using Base = RenderCommand;
+	using This = RenderCommand_ClearFrameBuffers;
 public:
 	RenderCommand_ClearFrameBuffers() : Base(Type::ClearFrameBuffers) {}
 
-	void dontClearColor() { color.reset(); }
-	void dontClearDepth() { depth.reset(); }
+	This& setColor(const Color4f& color_)	{ color = color_; return *this; }
+	This& setDepth(float depth_)			{ depth = depth_; return *this; }
+	This& dontClearColor() { color.reset(); return *this; }
+	This& dontClearDepth() { depth.reset(); return *this; }
 
 	Opt<Color4f> color = Color4f(1,1,1,1);
 	Opt<float>   depth = 0;
