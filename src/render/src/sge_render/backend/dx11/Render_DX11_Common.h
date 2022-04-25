@@ -45,19 +45,21 @@ struct DX11Util {
 	DX11Util() = delete;
 
 	static void throwIfError	(HRESULT hr) { 
-		if (!_checkError(hr)) { reportError(); throw SGE_ERROR("HRESULT = {}", hr); }
+		if (!_checkError(hr)) { reportError(hr); throw SGE_ERROR("HRESULT = {}", hr); }
 	}
 	static bool assertIfError	(HRESULT hr) {
-		if (!_checkError(hr)) { reportError(); SGE_ASSERT(false); return false; }
+		if (!_checkError(hr)) { reportError(hr); SGE_ASSERT(false); return false; }
 		return true;
 	}
-	static void reportError();
+	static void reportError(HRESULT hr);
 
 	static UINT castUINT(size_t v) { SGE_ASSERT(v < UINT_MAX); return static_cast<UINT>(v); }
 
 	static D3D11_PRIMITIVE_TOPOLOGY	getDxPrimitiveTopology	(RenderPrimitiveType t);
 	static DXGI_FORMAT				getDxFormat				(RenderDataType v);
 	static const char*				getDxSemanticName		(Vertex_SemanticType t);
+
+	static String getStrFromHRESULT(HRESULT hr);
 
 private:
 	static bool _checkError(HRESULT hr) {
@@ -66,7 +68,25 @@ private:
 };
 
 inline
-void DX11Util::reportError() {
+String DX11Util::getStrFromHRESULT(HRESULT hr) {
+	const int bufSize = 4096;
+	wchar_t buf[bufSize + 1];
+
+	DWORD langId = 0; // MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, hr, langId, buf, bufSize, nullptr );
+	buf[bufSize] = 0; // ensure terminate with 0
+
+	auto str = UtfUtil::toString(buf);
+	return str;
+}
+
+inline
+void DX11Util::reportError(HRESULT hr) {
+	if (!SUCCEEDED(hr)) {
+		auto str = getStrFromHRESULT(hr);
+		SGE_LOG("HRESULT(0x{:0X}) {}", static_cast<u32>(hr), str);
+	}
+
 #if 0 && _DEBUG
 	auto* d = renderer()->d3dDebug();
 	if (d) {
