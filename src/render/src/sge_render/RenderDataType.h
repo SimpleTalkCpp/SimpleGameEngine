@@ -26,7 +26,7 @@ enum class RenderDataType : u8 {
 struct RenderDataTypeUtil {
 	using Type = RenderDataType;
 
-	template<class T> constexpr Type get();
+	template<class T> static constexpr Type get();
 
 	template<> static constexpr Type get<void>() { return Type::None;  }
 
@@ -53,7 +53,6 @@ struct RenderDataTypeUtil {
 	template<> static constexpr Type get<Tuple4d>() { return Type::Float64x4; }
 
 	template<> static constexpr Type get<Color4b>() { return Type::UNorm8x4; }
-
 };
 
 }
