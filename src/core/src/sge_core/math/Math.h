@@ -6,9 +6,9 @@ namespace Math {
 	template<class T> constexpr T max(const T& a, const T& b) { return a > b ? a : b; }
 	template<class T> constexpr T min(const T& a, const T& b) { return a < b ? a : b; }
 
-	template<class T> constexpr T ByteToK(const T& v) { return v / 1024; }
-	template<class T> constexpr T ByteToM(const T& v) { return v / (1024 * 1024); }
-	template<class T> constexpr T ByteToG(const T& v) { return v / (1024 * 1024 * 1024); }
+	template<class T> constexpr T byteToK(const T& v) { return v / 1024; }
+	template<class T> constexpr T byteToM(const T& v) { return v / (1024 * 1024); }
+	template<class T> constexpr T byteToG(const T& v) { return v / (1024 * 1024 * 1024); }
 
 	struct _Helper {
 		template<class T>
@@ -16,6 +16,7 @@ namespace Math {
 			static_assert(std::is_unsigned<T>::value, "");
 			T r = n % a;
 			return r ? (n + a - r) : n;
+		//	return (n + a - 1) / a * a;
 		}
 	};
 

@@ -7,11 +7,11 @@ class SPtr : public NonCopyable {
 public:
 	SPtr() = default;
 
-	SPtr(T* p)		{ reset(p); }
-	SPtr(SPtr && r)	{ reset(r._p); r._p = nullptr; }
+	SPtr(T* p) noexcept			{ reset(p); }
+	SPtr(SPtr && r) noexcept	{ reset(r._p); r._p = nullptr; }
 
-	void operator=(T* p)		{ if (p == _p) return; reset(p); }
-	void operator=(SPtr && r)	{ if (r._p == _p) return; reset(r._p); r._p = nullptr; }
+	void operator=(T* p) noexcept		{ reset(p); }
+	void operator=(SPtr && r) noexcept	{ if (r._p == _p) return; reset(r._p); r._p = nullptr; }
 
 	~SPtr() noexcept { reset(nullptr); }
 
@@ -21,7 +21,7 @@ public:
 			T* ptr() noexcept		{ return _p; }
 	const	T* ptr() const noexcept	{ return _p; }
 
-	void reset(T* p) {
+	void reset(T* p) noexcept {
 		static_assert(std::is_base_of<RefCountBase, T>::value, "");
 
 		if (p == _p) return;
@@ -39,7 +39,7 @@ public:
 		}
 	}
 
-	T* detach() { T* o = _p; _ p = nullptr; return o; }
+	T* detach() { T* o = _p; _p = nullptr; return o; }
 private:
 	T* _p = nullptr;
 };

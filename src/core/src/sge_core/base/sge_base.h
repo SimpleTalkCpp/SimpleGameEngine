@@ -182,6 +182,6 @@ public:
 	virtual ~Object() = default;
 };
 
-template<class T> inline void sge_delete(T* p) { delete p; }
+template<class T> inline void sge_delete(T* p) noexcept { delete p; }
 
 } // namespace

@@ -5,6 +5,7 @@
 namespace sge {
 
 struct UtfUtil {
+	UtfUtil() = delete;
 
 	template<class DST, class SRC> static void convert(DST& dst, const SRC& src);
 
