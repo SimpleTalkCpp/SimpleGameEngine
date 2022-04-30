@@ -8,6 +8,7 @@
 	#include <ws2tcpip.h> // struct sockaddr_in6
 	#pragma comment(lib, "Ws2_32.lib")
 	#include <Windows.h>
+	#include <intsafe.h>
 #else
 	#include <sys/types.h>
 	#include <sys/socket.h>

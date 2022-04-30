@@ -12,12 +12,15 @@
 namespace sge {
 
 void run_temp_test() {
-	RUN_TEST(test_UtfUtil);
+	RUN_TEST(test_MemMapFile);
 }
 
 void run_all_test() {
 // base
 	RUN_TEST(test_BinSerializer);
+
+// file
+	RUN_TEST(test_MemMapFile);
 
 // string
 	RUN_TEST(test_Fmt);

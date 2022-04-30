@@ -45,7 +45,7 @@ const VertexLayout* VertexLayoutManager::getLayout(VertexType type) {
 VertexLayout* VertexLayoutManager::_createLayout(VertexType type) {
 	auto* p = getLayout(type);
 	if (p) {
-		SGE_ASSERT(false);
+		throw SGE_ERROR("duplicated layout");
 	}
 	return &_table[type];
 }

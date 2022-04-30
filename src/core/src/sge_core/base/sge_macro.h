@@ -32,35 +32,35 @@
 #define SGE_SRC_LOC	SrcLoc(__FILE__, __LINE__, SGE_FUNC_NAME_SZ)
 
 #define SGE_ENUM_BITWISE_OPERATOR(T) \
-	SGE_INLINE T operator~ (T  a)      { return static_cast<T>(~enumInt(a)); } \
-	SGE_INLINE T operator| (T  a, T b) { return static_cast<T>(enumInt(a) | enumInt(b)); } \
-	SGE_INLINE T operator& (T  a, T b) { return static_cast<T>(enumInt(a) & enumInt(b)); } \
-	SGE_INLINE T operator^ (T  a, T b) { return static_cast<T>(enumInt(a) ^ enumInt(b)); } \
-	SGE_INLINE void operator|=(T& a, T b) { a = static_cast<T>(enumInt(a) | enumInt(b)); } \
-	SGE_INLINE void operator&=(T& a, T b) { a = static_cast<T>(enumInt(a) & enumInt(b)); } \
-	SGE_INLINE void operator^=(T& a, T b) { a = static_cast<T>(enumInt(a) ^ enumInt(b)); } \
+	constexpr T operator~ (T  a)      { return static_cast<T>(~enumInt(a)); } \
+	constexpr T operator| (T  a, T b) { return static_cast<T>(enumInt(a) | enumInt(b)); } \
+	constexpr T operator& (T  a, T b) { return static_cast<T>(enumInt(a) & enumInt(b)); } \
+	constexpr T operator^ (T  a, T b) { return static_cast<T>(enumInt(a) ^ enumInt(b)); } \
+	constexpr void operator|=(T& a, T b) { a = static_cast<T>(enumInt(a) | enumInt(b)); } \
+	constexpr void operator&=(T& a, T b) { a = static_cast<T>(enumInt(a) & enumInt(b)); } \
+	constexpr void operator^=(T& a, T b) { a = static_cast<T>(enumInt(a) ^ enumInt(b)); } \
 //--------
 
 #define SGE_ENUM_ARITHMETIC_OPERATOR(T) \
-	SGE_INLINE T operator+ (T  a, T b) { return static_cast<T>(enumInt(a) + enumInt(b)); } \
-	SGE_INLINE T operator- (T  a, T b) { return static_cast<T>(enumInt(a) - enumInt(b)); } \
-	SGE_INLINE T operator* (T  a, T b) { return static_cast<T>(enumInt(a) * enumInt(b)); } \
-	SGE_INLINE T operator/ (T  a, T b) { return static_cast<T>(enumInt(a) / enumInt(b)); } \
-	SGE_INLINE void operator+=(T& a, T b) { a = static_cast<T>(enumInt(a) + enumInt(b)); } \
-	SGE_INLINE void operator-=(T& a, T b) { a = static_cast<T>(enumInt(a) - enumInt(b)); } \
-	SGE_INLINE void operator*=(T& a, T b) { a = static_cast<T>(enumInt(a) * enumInt(b)); } \
-	SGE_INLINE void operator/=(T& a, T b) { a = static_cast<T>(enumInt(a) / enumInt(b)); } \
+	constexpr T operator+ (T  a, T b) { return static_cast<T>(enumInt(a) + enumInt(b)); } \
+	constexpr T operator- (T  a, T b) { return static_cast<T>(enumInt(a) - enumInt(b)); } \
+	constexpr T operator* (T  a, T b) { return static_cast<T>(enumInt(a) * enumInt(b)); } \
+	constexpr T operator/ (T  a, T b) { return static_cast<T>(enumInt(a) / enumInt(b)); } \
+	constexpr void operator+=(T& a, T b) { a = static_cast<T>(enumInt(a) + enumInt(b)); } \
+	constexpr void operator-=(T& a, T b) { a = static_cast<T>(enumInt(a) - enumInt(b)); } \
+	constexpr void operator*=(T& a, T b) { a = static_cast<T>(enumInt(a) * enumInt(b)); } \
+	constexpr void operator/=(T& a, T b) { a = static_cast<T>(enumInt(a) / enumInt(b)); } \
 //--------
 
 #define SGE_ENUM_ARITHMETIC_OPERATOR_INT(T) \
-	SGE_INLINE T operator+ (T  a, int b) { return static_cast<T>(enumInt(a) + b); } \
-	SGE_INLINE T operator- (T  a, int b) { return static_cast<T>(enumInt(a) - b); } \
-	SGE_INLINE T operator* (T  a, int b) { return static_cast<T>(enumInt(a) * b); } \
-	SGE_INLINE T operator/ (T  a, int b) { return static_cast<T>(enumInt(a) / b); } \
-	SGE_INLINE void operator+=(T& a, int b) { a = static_cast<T>(enumInt(a) + b); } \
-	SGE_INLINE void operator-=(T& a, int b) { a = static_cast<T>(enumInt(a) - b); } \
-	SGE_INLINE void operator*=(T& a, int b) { a = static_cast<T>(enumInt(a) * b); } \
-	SGE_INLINE void operator/=(T& a, int b) { a = static_cast<T>(enumInt(a) / b); } \
+	constexpr T operator+ (T  a, int b) { return static_cast<T>(enumInt(a) + b); } \
+	constexpr T operator- (T  a, int b) { return static_cast<T>(enumInt(a) - b); } \
+	constexpr T operator* (T  a, int b) { return static_cast<T>(enumInt(a) * b); } \
+	constexpr T operator/ (T  a, int b) { return static_cast<T>(enumInt(a) / b); } \
+	constexpr void operator+=(T& a, int b) { a = static_cast<T>(enumInt(a) + b); } \
+	constexpr void operator-=(T& a, int b) { a = static_cast<T>(enumInt(a) - b); } \
+	constexpr void operator*=(T& a, int b) { a = static_cast<T>(enumInt(a) * b); } \
+	constexpr void operator/=(T& a, int b) { a = static_cast<T>(enumInt(a) / b); } \
 //--------
 
 #define SGE_ENUM_ALL_OPERATOR(T) \
