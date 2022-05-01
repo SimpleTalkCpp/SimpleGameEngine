@@ -36,7 +36,7 @@ public:
 
 	T** ptrForInit() noexcept { reset(nullptr); return &_p; }
 
-	T* detach() { T* o = _p; _ p = nullptr; return o; }
+	T* detach() { T* o = _p; _p = nullptr; return o; }
 private:
 	T* _p = nullptr;
 };
