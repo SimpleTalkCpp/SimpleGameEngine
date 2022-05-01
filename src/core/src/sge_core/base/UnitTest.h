@@ -11,8 +11,8 @@
 	}while(false)
 //----
 
-#define SGE_TEST_CHECK(a)			SGE_TEST_CHECK_IMPL(SGE_SRC_LOC, true,  bool(a), #a)
-#define SGE_TEST_CHECK_SLIENT(a)	SGE_TEST_CHECK_IMPL(SGE_SRC_LOC, false, bool(a), #a)
+#define SGE_TEST_CHECK(a)			SGE_TEST_CHECK_IMPL(SGE_LOC, true,  bool(a), #a)
+#define SGE_TEST_CHECK_SLIENT(a)	SGE_TEST_CHECK_IMPL(SGE_LOC, false, bool(a), #a)
 
 namespace sge {
 

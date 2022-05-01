@@ -3,8 +3,10 @@
 
 namespace sge {
 
-void RenderCommandBuffer::drawMesh(RenderMesh& mesh) {
+void RenderCommandBuffer::drawMesh(const SrcLoc& debugLoc, RenderMesh& mesh) {
 	auto* cmd = newCommand<RenderCommand_DrawCall>();
+	cmd->debugLoc = debugLoc;
+
 	cmd->primitive		= mesh.primitive();
 	cmd->vertexLayout	= mesh.vertexLayout();
 	cmd->vertexBuffer	= mesh.vertexBuf();

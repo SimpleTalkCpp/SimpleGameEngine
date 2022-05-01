@@ -24,6 +24,10 @@ public:
 
 	Type type() const { return _type; }
 
+#if _DEBUG
+	SrcLoc	debugLoc;
+#endif
+
 private:
 	Type _type = Type::None;
 };
@@ -62,10 +66,15 @@ public:
 
 class RenderCommandBuffer : public NonCopyable {
 public:
-	RenderCommand_ClearFrameBuffers* clearFrameBuffers() { return newCommand<RenderCommand_ClearFrameBuffers>(); }
-	RenderCommand_SwapBuffers*		 swapBuffers()		 { return newCommand<RenderCommand_SwapBuffers>(); }
+	RenderCommand_ClearFrameBuffers* clearFrameBuffers() {
+		return newCommand<RenderCommand_ClearFrameBuffers>();
+	}
 
-	void drawMesh(RenderMesh& mesh);
+	RenderCommand_SwapBuffers* swapBuffers() {
+		return newCommand<RenderCommand_SwapBuffers>();
+	}
+
+	void drawMesh(const SrcLoc& debugLoc, RenderMesh& mesh);
 
 	void reset();
 

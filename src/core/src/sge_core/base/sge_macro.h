@@ -29,7 +29,11 @@
 #define SGE_FORWARD(a)	::std::forward< decltype(a) >(a)
 #define SGE_ASSERT(...)	assert(__VA_ARGS__)
 
-#define SGE_SRC_LOC	SrcLoc(__FILE__, __LINE__, SGE_FUNC_NAME_SZ)
+#if _DEBUG
+	#define SGE_LOC	SrcLoc(__FILE__, __LINE__, SGE_FUNC_NAME_SZ)
+#else
+	#define SGE_LOC	SrcLoc()
+#endif
 
 #define SGE_ENUM_BITWISE_OPERATOR(T) \
 	constexpr T operator~ (T  a)      { return static_cast<T>(~enumInt(a)); } \
