@@ -19,8 +19,13 @@ enum class RenderDataType : u8 {
 	Float32,	Float32x2,	Float32x3,	Float32x4,
 	Float64,	Float64x2,	Float64x3,	Float64x4,
 
-	UNorm8,		UNorm8x2,	UNorm8x3,	UNorm8x4,
+	SNorm8,		SNorm8x2,	SNorm8x3,	SNorm8x4,
+	SNorm16,	SNorm16x2,	SNorm16x3,	SNorm16x4,
+	SNorm32,	SNorm32x2,	SNorm32x3,	SNorm32x4,
 
+	UNorm8,		UNorm8x2,	UNorm8x3,	UNorm8x4,
+	UNorm16,	UNorm16x2,	UNorm16x3,	UNorm16x4,
+	UNorm32,	UNorm32x2,	UNorm32x3,	UNorm32x4,
 };
 
 struct RenderDataTypeUtil {

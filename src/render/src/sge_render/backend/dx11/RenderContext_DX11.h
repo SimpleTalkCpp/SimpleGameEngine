@@ -23,10 +23,14 @@ protected:
 	ComPtr<DX11_ID3DTexture2D>			_depthStencil;
 	ComPtr<DX11_ID3DDepthStencilView>	_depthStencilView;
 
-	ComPtr<DX11_ID3DBuffer>			_testVertexBuffer;
-	ComPtr<DX11_ID3DVertexShader>	_testVertexShader;
-	ComPtr<ID3DBlob>				_testVertexShaderBytecode;
-	ComPtr<DX11_ID3DPixelShader>	_testPixelShader;
+	ComPtr<DX11_ID3DBuffer>				_testVertexBuffer;
+	ComPtr<DX11_ID3DVertexShader>		_testVertexShader;
+	ComPtr<ID3DBlob>					_testVertexShaderBytecode;
+	ComPtr<DX11_ID3DPixelShader>		_testPixelShader;
+	ComPtr<DX11_ID3DRasterizerState>	_testRasterizerState;
+
+	ComPtr<DX11_ID3DDepthStencilState>	_testDepthStencilState;
+	ComPtr<DX11_ID3DBlendState>			_testBlendState;
 
 	DX11_ID3DInputLayout* _getTestInputLayout(const VertexLayout* src);
 	VectorMap<const VertexLayout*, ComPtr<DX11_ID3DInputLayout>> _testInputLayouts;

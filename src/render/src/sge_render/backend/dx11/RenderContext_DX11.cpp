@@ -54,6 +54,12 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 	if (cmd.vertexCount <= 0) { SGE_ASSERT(false); return; }
 	if (cmd.primitive == RenderPrimitiveType::None) { SGE_ASSERT(false); return; }
 
+	RenderGpuBuffer_DX11* indexBuffer = nullptr;
+	if (cmd.indexCount > 0) {
+		indexBuffer = static_cast<RenderGpuBuffer_DX11*>(cmd.indexBuffer.ptr());
+		if (!indexBuffer) { SGE_ASSERT(false); return; }
+	}
+
 	_setTestShaders();
 
 	auto* ctx = _renderer->d3dDeviceContext();
@@ -68,10 +74,18 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 	UINT stride = static_cast<UINT>(cmd.vertexLayout->stride);
 	UINT offset = 0;
 	UINT vertexCount = static_cast<UINT>(cmd.vertexCount);
+	UINT indexCount  = static_cast<UINT>(cmd.indexCount);
 
 	DX11_ID3DBuffer* ppVertexBuffers[] = { vertexBuffer->d3dBuf() };
 	ctx->IASetVertexBuffers(0, 1, ppVertexBuffers, &stride, &offset);
-	ctx->Draw(vertexCount, 0);
+
+	if (indexCount > 0) {
+		auto indexType = Util::getDxFormat(cmd.indexType);
+		ctx->IASetIndexBuffer(indexBuffer->d3dBuf(), indexType, 0);
+		ctx->DrawIndexed(indexCount, 0, 0);
+	} else {
+		ctx->Draw(vertexCount, 0);
+	}
 }
 
 void RenderContext_DX11::onCmd_SwapBuffers(RenderCommand_SwapBuffers& cmd) {
@@ -178,9 +192,78 @@ void RenderContext_DX11::_setTestShaders() {
 		hr = D3DCompileFromFile(shaderFile, 0, 0, "ps_main", "ps_4_0", 0, 0, bytecode.ptrForInit(), errorMsg.ptrForInit());
 		Util::throwIfError(hr);
 
-		dev->CreatePixelShader(bytecode->GetBufferPointer(), bytecode->GetBufferSize(), nullptr, _testPixelShader.ptrForInit());
+		hr = dev->CreatePixelShader(bytecode->GetBufferPointer(), bytecode->GetBufferSize(), nullptr, _testPixelShader.ptrForInit());
 		Util::throwIfError(hr);
 	}
+
+	if (!_testRasterizerState) {
+		D3D11_RASTERIZER_DESC rasterDesc = {};
+		rasterDesc.AntialiasedLineEnable = true;
+		rasterDesc.CullMode = D3D11_CULL_NONE;
+		rasterDesc.DepthBias = 0;
+		rasterDesc.DepthBiasClamp = 0.0f;
+		rasterDesc.DepthClipEnable = true;
+
+		bool wireframe = true;
+		rasterDesc.FillMode = wireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
+
+		rasterDesc.FrontCounterClockwise = true;
+		rasterDesc.MultisampleEnable = false;
+		rasterDesc.ScissorEnable = false;
+		rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+		hr = dev->CreateRasterizerState(&rasterDesc, _testRasterizerState.ptrForInit());
+		Util::throwIfError(hr);
+	}
+
+	if (!_testDepthStencilState) {
+		D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
+		bool depthTest = false;
+		if (depthTest) {
+			depthStencilDesc.DepthEnable	= true;
+			depthStencilDesc.DepthFunc		= D3D11_COMPARISON_LESS;
+		} else {
+			depthStencilDesc.DepthEnable	= false;
+		}
+
+		depthStencilDesc.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ALL;
+		depthStencilDesc.StencilEnable		= false;
+		depthStencilDesc.StencilReadMask	= 0xFF;
+		depthStencilDesc.StencilWriteMask	= 0xFF;
+
+		hr = dev->CreateDepthStencilState(&depthStencilDesc, _testDepthStencilState.ptrForInit());
+		Util::throwIfError(hr);
+	}
+
+	if (!_testBlendState) {
+		D3D11_BLEND_DESC blendStateDesc = {};
+		blendStateDesc.AlphaToCoverageEnable  = false;
+		blendStateDesc.IndependentBlendEnable = false;
+		auto& rtDesc = blendStateDesc.RenderTarget[0];
+
+		rtDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		bool blendEnable = true;
+		if (blendEnable) {
+			rtDesc.BlendEnable	  = true;
+			rtDesc.BlendOp        = D3D11_BLEND_OP_ADD;
+			rtDesc.BlendOpAlpha   = D3D11_BLEND_OP_ADD;
+			rtDesc.SrcBlend       = D3D11_BLEND_SRC_ALPHA;
+			rtDesc.DestBlend      = D3D11_BLEND_INV_SRC_ALPHA;
+			rtDesc.SrcBlendAlpha  = D3D11_BLEND_SRC_ALPHA;
+			rtDesc.DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+		}else{
+			rtDesc.BlendEnable	  = false;
+		}
+
+		hr = dev->CreateBlendState(&blendStateDesc, _testBlendState.ptrForInit());
+		Util::throwIfError(hr);
+	}
+
+	ctx->RSSetState(_testRasterizerState);
+	ctx->OMSetDepthStencilState(_testDepthStencilState, 1);
+	
+	Color4f blendColor(1,1,1,1);
+	ctx->OMSetBlendState(_testBlendState, blendColor.data, 0xffffffff);
 
 	ctx->VSSetShader(_testVertexShader, 0, 0);
 	ctx->PSSetShader(_testPixelShader,  0, 0);

@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 1
+#endif
+
 #include "../detect_platform/sge_detect_platform.h"
 
 #if SGE_OS_WINDOWS
@@ -97,9 +101,16 @@ intptr_t memberOffset(Member Obj::*ptrToMember) {
 template<class T> using UPtr = eastl::unique_ptr<T>;
 
 template<class T> using Span = eastl::span<T>;
-template<class T, size_t N, bool bEnableOverflow = true> using Vector_ = eastl::fixed_vector<T, N, bEnableOverflow>;
 
+template<class DST, class SRC> inline 
+Span<DST> spanCast(Span<SRC> src) {
+	size_t sizeInBytes = src.size() * sizeof(SRC);
+	return Span<DST>(reinterpret_cast<DST*>(src.data()), sizeInBytes / sizeof(DST));
+}
+
+template<class T, size_t N, bool bEnableOverflow = true> using Vector_ = eastl::fixed_vector<T, N, bEnableOverflow>;
 template<class T> using Vector = eastl::vector<T>;
+
 template<class KEY, class VALUE> using Map = eastl::map<KEY, VALUE>;
 template<class KEY, class VALUE> using VectorMap = eastl::vector_map<KEY, VALUE>;
 
