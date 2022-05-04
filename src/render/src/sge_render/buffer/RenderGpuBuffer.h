@@ -19,12 +19,10 @@ struct RenderGpuBuffer_CreateDesc {
 
 class RenderGpuBuffer : public Object {
 public:
+	using Type = RenderGpuBufferType;
 	using CreateDesc = RenderGpuBuffer_CreateDesc;
 
 	RenderGpuBuffer(CreateDesc& desc);
-
-	using Type = RenderGpuBufferType;
-	using CreateDesc = RenderGpuBuffer_CreateDesc;
 
 	void uploadToGpu(Span<const u8> data, size_t offset = 0) {
 		if (data.size() + offset > _desc.bufferSize) {
