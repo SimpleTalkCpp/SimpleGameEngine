@@ -11,7 +11,9 @@ void RenderCommandBuffer::drawMesh(const SrcLoc& debugLoc, const RenderMesh& mes
 
 void RenderCommandBuffer::drawSubMesh(const SrcLoc& debugLoc, const RenderSubMesh& subMesh) {
 	auto* cmd = newCommand<RenderCommand_DrawCall>();
+#if _DEBUG
 	cmd->debugLoc = debugLoc;
+#endif
 
 	cmd->primitive		= subMesh.primitive();
 	cmd->vertexLayout	= subMesh.vertexLayout();

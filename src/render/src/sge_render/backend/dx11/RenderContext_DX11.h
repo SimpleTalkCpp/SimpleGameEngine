@@ -25,7 +25,7 @@ protected:
 
 	ComPtr<DX11_ID3DBuffer>				_testVertexBuffer;
 	ComPtr<DX11_ID3DVertexShader>		_testVertexShader;
-	ComPtr<ID3DBlob>					_testVertexShaderBytecode;
+	ComPtr<DX11_ID3DBlob>				_testVertexShaderBytecode;
 	ComPtr<DX11_ID3DPixelShader>		_testPixelShader;
 	ComPtr<DX11_ID3DRasterizerState>	_testRasterizerState;
 
