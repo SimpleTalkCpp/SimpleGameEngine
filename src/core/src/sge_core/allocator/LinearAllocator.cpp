@@ -20,9 +20,7 @@ void* LinearAllocator::allocate(size_t reqSize, size_t align) {
 }
 
 void LinearAllocator::clear() {
-	for (auto& c : _chunks) {
-		c->clear();
-	}
+	_chunks.clear();
 }
 
 LinearAllocator::Chunk::Chunk(size_t n) {

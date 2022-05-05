@@ -190,6 +190,11 @@ struct VertexT_Pos : public VertexBase
 	static const RenderDataType	kPosType    = RenderDataTypeUtil::get<POS_TYPE>();
 	static const VertexType kType = VertexTypeUtil::addPos(VertexType::None, kPosType);
 
+	static const VertexLayout* layout() {
+		static const VertexLayout* s = VertexLayoutManager::current()->getLayout(Vertex_PosColorUv::kType);
+		return s;
+	}
+
 	static void onRegister(VertexLayout* layout) {
 		layout->addElement(Semantic::Pos, &VertexT_Pos::pos);
 	}
@@ -204,6 +209,11 @@ struct VertexT_Color : public BASE
 	static const RenderDataType	kColorType    = RenderDataTypeUtil::get<COLOR_TYPE>();
 	static const u8 kColorCount = COLOR_COUNT;
 	static const VertexType kType = VertexTypeUtil::addColor(BASE::kType, kColorType, kColorCount);
+
+	static const VertexLayout* layout() {
+		static const VertexLayout* s = VertexLayoutManager::current()->getLayout(Vertex_PosColorUv::kType);
+		return s;
+	}
 
 	static void onRegister(VertexLayout* layout) {
 		BASE::onRegister(layout);
@@ -221,6 +231,11 @@ struct VertexT_Uv : public BASE
 	static const u8 kUvCount = UV_COUNT;
 	static const VertexType kType = VertexTypeUtil::addUv(BASE::kType, kUvType, kUvCount);
 
+	static const VertexLayout* layout() {
+		static const VertexLayout* s = VertexLayoutManager::current()->getLayout(Vertex_PosColorUv::kType);
+		return s;
+	}
+
 	static void onRegister(VertexLayout* layout) {
 		BASE::onRegister(layout);
 		layout->addElement(Semantic::TexCoord0, &VertexT_Uv::uv);
@@ -237,6 +252,11 @@ struct VertexT_Normal : public BASE
 	static const u8 kNormalCount = NORMAL_COUNT;
 	static const VertexType kType = VertexTypeUtil::addNormal(BASE::kType, kNormalType, kNormalCount);
 
+	static const VertexLayout* layout() {
+		static const VertexLayout* s = VertexLayoutManager::current()->getLayout(Vertex_PosColorUv::kType);
+		return s;
+	}
+
 	static void onRegister(VertexLayout* layout) {
 		BASE::onRegister(layout);
 		layout->addElement(Semantic::Normal, &VertexT_Normal::normal);
@@ -252,6 +272,11 @@ struct VertexT_Tangent : public BASE
 	static const RenderDataType	kTangentType    = RenderDataTypeUtil::get<TANGENT_TYPE>();
 	static const u8 kTangentCount = TANGENT_COUNT;
 	static const VertexType kType = VertexTypeUtil::addTangent(BASE::kType, kTangentCount);
+
+	static const VertexLayout* layout() {
+		static const VertexLayout* s = VertexLayoutManager::current()->getLayout(Vertex_PosColorUv::kType);
+		return s;
+	}
 
 	static void onRegister(VertexLayout* layout) {
 		static_assert(std::is_same<TangentType, NormalType>::value, "");
@@ -271,16 +296,16 @@ struct VertexT_Binormal : public BASE
 	static const u8 kBinormalCount = BINORMAL_COUNT;
 	static const VertexType kType = VertexTypeUtil::addBinormal(BASE::kType, kBinormalCount);
 
+	static const VertexLayout* layout() {
+		static const VertexLayout* s = VertexLayoutManager::current()->getLayout(Vertex_PosColorUv::kType);
+		return s;
+	}
+
 	static void onRegister(VertexLayout* layout) {
 		static_assert(std::is_same<BinormalType, NormalType>::value, "");
 
 		BASE::onRegister(layout);
 		layout->addElement(Semantic::Binormal, &VertexT_Binormal::binormal);
-	}
-
-	static const VertexLayout* layout() {
-		static const VertexLayout* s = VertexLayoutManager::current()->getLayout(Vertex_PosColorUv::kType);
-		return s;
 	}
 };
 
