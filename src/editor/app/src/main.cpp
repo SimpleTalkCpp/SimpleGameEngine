@@ -27,6 +27,10 @@ public:
 			_renderContext = renderer->createContext(renderContextDesc);
 		}
 
+		//_material = renderer->createMaterial();
+		//_material = Shader::Find("/Assets/shaders/test.shader");
+		//_material.setParam("a", 10.0f);
+
 		EditMesh editMesh;
 
 	#if 1
@@ -69,7 +73,7 @@ public:
 
 		_cmdBuf.reset();
 		_cmdBuf.clearFrameBuffers()->setColor({0, 0, 0.2f, 1});
-		_cmdBuf.drawMesh(SGE_LOC, _renderMesh);
+		_cmdBuf.drawMesh(SGE_LOC, _renderMesh);//, _material);
 		_cmdBuf.swapBuffers();
 		
 		_renderContext->commit(_cmdBuf);
@@ -77,6 +81,8 @@ public:
 		_renderContext->endRender();
 		drawNeeded();
 	}
+
+//	SPtr<Material> _material;
 
 	SPtr<RenderContext>	_renderContext;
 	RenderCommandBuffer _cmdBuf;

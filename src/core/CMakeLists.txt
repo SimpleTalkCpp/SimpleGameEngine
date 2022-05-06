@@ -6,4 +6,4 @@ project(${PROJECT_NAME})
 
 sge_add_library(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties (${PROJECT_NAME} PROPERTIES FOLDER sge/core)
-target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt EASTL)
+target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt EASTL nlohmann_json::nlohmann_json)
