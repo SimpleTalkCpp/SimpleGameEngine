@@ -1,8 +1,10 @@
 #pragma once
 
+#include <sge_core/app/AppBase.h>
+
 namespace sge {
 
-class NativeUIApp_Base : public NonCopyable {
+class NativeUIApp_Base : public AppBase {
 public:
 	class CreateDesc {
 	};
@@ -11,16 +13,7 @@ public:
 			void quit(int returnCode);
 	virtual void willQuit() {}
 
-	void	setCurrentDir(StrView dir)	{ onSetCurrentDir(dir); }
-	String	getCurrentDir()				{ return onGetCurrentDir(); }
-
-	String	getExecutableFilename()		{ return onGetExecutableFilename(); }
-
 protected:
-	virtual String	onGetExecutableFilename() = 0;
-	virtual String	onGetCurrentDir() = 0;
-	virtual void	onSetCurrentDir(StrView dir) = 0;
-
 	virtual void onCreate(CreateDesc& desc) {}
 	virtual void onRun() {}
 	virtual	void onQuit() {}

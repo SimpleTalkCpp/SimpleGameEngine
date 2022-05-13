@@ -10,6 +10,8 @@
 
 #include "sge_core/allocator/LinearAllocator.h"
 
+#include "sge_core/app/ConsoleApp.h"
+
 #include "sge_core/math/Math.h"
 #include "sge_core/math/Tuple2.h"
 #include "sge_core/math/Tuple3.h"

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sge_core.h>
+
 namespace sge {
 
 struct RenderAdapterInfo {
@@ -17,6 +19,12 @@ enum class RenderPrimitiveType {
 	Points,
 	Lines,
 	Triangles,
+};
+
+enum class RenderShaderType {
+	None,
+	Vertex,
+	Pixel,
 };
 
 }

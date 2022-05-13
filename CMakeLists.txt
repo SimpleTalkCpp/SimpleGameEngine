@@ -44,7 +44,7 @@ function(sge_add_library target_name src_path)
 	sge_source_group(${src_path} "${src_files}")
 	
 	add_library(${target_name} ${src_files})	
-	target_precompile_headers(${target_name} PUBLIC src/${target_name}/${target_name}-pch.h)
+	target_precompile_headers(${target_name} PUBLIC src/${target_name}-pch.h)
 	target_include_directories(${target_name} PUBLIC src)
 	sge_set_target_warning_level(${target_name})
 endfunction()
@@ -56,7 +56,7 @@ function(sge_add_executable target_name src_path)
 	sge_source_group(${src_path} "${src_files}")
 	
 	add_executable(${target_name} ${src_files})	
-	target_precompile_headers(${target_name} INTERFACE src/${target_name}/${target_name}-pch.h)
+	target_precompile_headers(${target_name} PUBLIC src/${target_name}-pch.h)
 	sge_set_target_warning_level(${target_name})
 endfunction()
 
@@ -66,6 +66,7 @@ add_subdirectory(src/core/test)
 
 #-- render --
 add_subdirectory(src/render)
+add_subdirectory(src/render/shader_compiler)
 
 #-- engine
 add_subdirectory(src/engine)
