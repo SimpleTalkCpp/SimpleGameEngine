@@ -143,6 +143,10 @@ using TempStringW = StringW_<220>;
 using StrView		= StrViewA;
 using String		= StringA;
 
+inline StrView StrView_make(Span<const u8> s) {
+	return StrView(reinterpret_cast<const char*>(s.data()), s.size());
+}
+
 template<size_t N> using String_ = StringA_<N>;
 using TempString	= TempStringA;
 

@@ -1,7 +1,10 @@
-Shader "Test" {
+Shader {
 	Properties {
-		Color4f		color = {1,1,1,1}
-		Color4f		colorA = {1,1,1,1}
+		Float	test  = {0,0,0,1}
+		Vec4f	test2 = 0.5
+		
+		[DisplayName="Color Test"]
+		Color4f	color = {1,1,1,1}
 	}
 	
 	Pass {

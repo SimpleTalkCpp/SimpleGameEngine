@@ -1,4 +1,5 @@
 #include "ShaderCompiler_DX11.h"
+#include "ShaderParser.h"
 
 namespace sge {
 
@@ -17,9 +18,15 @@ protected:
 			SGE_LOG("dir = {}", dir);
 		}		
 
+		ShaderInfo info;
+
+		ShaderParser parser;
+		parser.readFile(info, "Assets/Shaders/test.shader");
 
 		//ShaderCompiler_DX11 c;
 		//c.compile(RenderShaderType::VertexShader, "");
+
+		SGE_LOG("---- end ----");
 	}
 
 	void compile(StrView filename) {

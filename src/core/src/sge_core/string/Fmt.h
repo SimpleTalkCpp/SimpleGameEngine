@@ -16,9 +16,22 @@
 	template<> \
 	struct fmt::formatter<T> { \
 		auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); } \
-		auto format(const T& v, fmt::format_context& ctx) { return v.onFormat(ctx); } \
-	};
+		auto format(const T& v, fmt::format_context& ctx) { \
+			v.onFormat(ctx); \
+			return ctx.out(); \
+		} \
+	}; \
 //------
+
+#define SGE_FORMATTER_ENUM(T) \
+	template<> \
+	struct fmt::formatter<T> { \
+		auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); } \
+		auto format(const T& v, fmt::format_context& ctx) { \
+			return fmt::format_to(ctx.out(), "{}", sge::enumStr(v)); \
+		} \
+	}; \
+//-----
 
 namespace sge {
 
