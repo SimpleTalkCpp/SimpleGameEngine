@@ -11,7 +11,7 @@ class RenderGpuBuffer_DX11 : public RenderGpuBuffer {
 public:
 	RenderGpuBuffer_DX11(CreateDesc& desc);
 
-	virtual void onUploadToGpu(Span<const u8> data, size_t offset) override;
+	virtual void onUploadToGpu(ByteSpan data, size_t offset) override;
 
 	DX11_ID3DBuffer* d3dBuf() { return _d3dBuf; }
 private:

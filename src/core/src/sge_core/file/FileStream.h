@@ -34,7 +34,7 @@ public:
 	void setPosFromEnd(FileSize pos);
 
 	void readBytes	(Span<u8>       data);
-	void writeBytes	(Span<const u8> data);
+	void writeBytes	(ByteSpan data);
 
 	const String& filename() const { return _filename; }
 

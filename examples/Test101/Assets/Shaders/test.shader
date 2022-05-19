@@ -22,12 +22,12 @@ Shader {
 	}
 }
 
-struct VIn {
+struct VertexIn {
 	float4 position : POSITION;
-	float4 color : COLOR
-}
+	float4 color : COLOR;
+};
 
-struct VOut {
+struct PixelIn {
     float4 position : SV_POSITION;
     float4 color : COLOR;
 };
@@ -38,17 +38,14 @@ float x;
 float b;
 float c;
 
-VOut vs_main(VIn in)
-{
-    VOut output;
-
-    output.position = position;
-    output.color = color;
-
-    return output;
+PixelIn vs_main(VertexIn i) {
+    PixelIn o;
+    o.position = i.position;
+    o.color    = i.color;
+    return o;
 }
 
-float4 ps_main(VOut) : SV_TARGET
+float4 ps_main(PixelIn i) : SV_TARGET
 {
-    return color;
+    return i.color;
 }

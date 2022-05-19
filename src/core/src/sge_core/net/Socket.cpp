@@ -128,7 +128,7 @@ bool Socket::accept(Socket & acceptedSocket) {
 	return true;
 }
 
-int Socket::sendto(const SockAddr& addr, Span<const u8> data) {
+int Socket::sendto(const SockAddr& addr, ByteSpan data) {
 	if (data.size() > kIntMax)
 		throw SGE_ERROR("send dataSize is too big");
 
@@ -136,7 +136,7 @@ int Socket::sendto(const SockAddr& addr, Span<const u8> data) {
 	return ret;
 }
 
-int Socket::send(Span<const u8> data) {
+int Socket::send(ByteSpan data) {
 	if (!isValid()) return 0;
 	if (data.size() > kIntMax)
 		throw SGE_ERROR("send dataSize is too big");

@@ -8,12 +8,12 @@ void WavefrontObjLoader::loadFile(EditMesh& mesh, StrView filename) {
 	loadMem(mesh, mm);
 }
 
-void WavefrontObjLoader::loadMem(EditMesh& mesh, Span<const u8> src) {
+void WavefrontObjLoader::loadMem(EditMesh& mesh, ByteSpan src) {
 	WavefrontObjLoader inst;
 	inst._loadMem(mesh, src);
 }
 
-void WavefrontObjLoader::_loadMem(EditMesh& mesh, Span<const u8> src) {
+void WavefrontObjLoader::_loadMem(EditMesh& mesh, ByteSpan src) {
 	mesh.clear();
 	_outMesh = &mesh;
 	_outMesh->primitive = RenderPrimitiveType::Triangles;

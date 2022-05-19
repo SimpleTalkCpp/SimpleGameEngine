@@ -7,10 +7,10 @@ namespace sge {
 class WavefrontObjLoader : public NonCopyable {
 public:
 	static void loadFile	(EditMesh& mesh, StrView filename);
-	static void loadMem		(EditMesh& mesh, Span<const u8> src);
+	static void loadMem		(EditMesh& mesh, ByteSpan src);
 
 private:
-	void _loadMem	(EditMesh& mesh, Span<const u8> src);
+	void _loadMem	(EditMesh& mesh, ByteSpan src);
 
 	void _nextLine();
 	void _nextToken();

@@ -133,7 +133,7 @@ void RenderSubMesh::create(const EditMesh& src) {
 	}
 
 	if (_indexCount > 0) {
-		Span<const u8> indexData;
+		ByteSpan indexData;
 		Vector_<u16, 1024> index16Data;
 
 		if (_vertexCount > UINT16_MAX) {

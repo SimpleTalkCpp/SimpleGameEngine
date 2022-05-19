@@ -24,7 +24,7 @@ void MemMapFile::open(StrView filename) {
 		throw SGE_ERROR("memmap");
 	}
 
-	_span = Span<const u8>(data, size);
+	_span = ByteSpan(data, size);
 }
 
 void MemMapFile::close() {
@@ -36,7 +36,7 @@ void MemMapFile::close() {
 		_mapping = nullptr;
 	}
 
-	_span = Span<const u8>();
+	_span = ByteSpan();
 	_fs.close();
 }
 
@@ -56,14 +56,14 @@ void MemMapFile::open(StrView filename) {
 	if (data == MAP_FAILED || data == nullptr) {
 		throw SGE_ERROR("memmap");
 	}
-	_span = Span<const u8>(data, size);
+	_span = ByteSpan(data, size);
 }
 
 void MemMapFile::close() {
 	if (_span.data()) {	
 		::munmap(_span.data(), _span.size());
 	}
-	_span = Span<const u8>();
+	_span = ByteSpan();
 	_fs.close();
 }
 

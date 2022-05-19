@@ -1,14 +1,13 @@
 #pragma once
 
-#include <sge_core/string/Lexer.h>
 #include <sge_render/shader/ShaderInfo.h>
 
 namespace sge {
 
-class ShaderParser : protected Lexer {
+class ShaderParser : public Lexer {
 public:
 	void readFile(ShaderInfo& outInfo, StrView filename);
-	void readMem(ShaderInfo& outInfo, Span<const u8> data, StrView filename);
+	void readMem(ShaderInfo& outInfo, ByteSpan data, StrView filename);
 
 private:
 	void _readShader();
@@ -18,6 +17,7 @@ private:
 
 	template<class E> void _readEnum(E& v);
 
+	MemMapFile _memMapFile;
 	ShaderInfo* _outInfo = nullptr;
 };
 

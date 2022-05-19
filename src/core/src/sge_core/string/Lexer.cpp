@@ -9,7 +9,7 @@ void Lexer::Token::onFormat(fmt::format_context& ctx) const {
 	fmt::format_to(ctx.out(), "({}, {})", type, str);
 }
 
-void Lexer::reset(Span<const u8> source, StrView filename) {
+void Lexer::reset(ByteSpan source, StrView filename) {
 	reset(StrView_make(source), filename);
 }
 
@@ -43,7 +43,7 @@ bool Lexer::nextChar() {
 
 bool Lexer::nextToken() {
 	if (!_nextToken()) return false;
-	SGE_DUMP_VAR(_token);
+	SGE_DUMP_VAR(_line, _token);
 	return true;
 }
 
@@ -276,6 +276,12 @@ StrView Lexer::getSourceAtPos(size_t lineBefore) {
 	p++;
 
 	return StrView(p, _cur - p);
+}
+
+StrView Lexer::getRemainSource() const {
+	if (!_cur) return StrView();
+	auto* s = _cur - 1;
+	return StrView(s, _source.end() - s);
 }
 
 }

@@ -95,7 +95,7 @@ void FileStream::readBytes(Span<u8> data) {
 	}
 }
 
-void FileStream::writeBytes(Span<const u8> data) {
+void FileStream::writeBytes(ByteSpan data) {
 	_ensure_fd();
 	if (data.size() <= 0) return;
 	if (data.size() >= UINT32_MAX)
@@ -273,7 +273,7 @@ void FileStream::readBytes(Span<u8> data) {
 		throw SGE_ERROR("file read");
 }
 
-void FileStream::writeBytes(Span<const u8> data) {
+void FileStream::writeBytes(ByteSpan data) {
 	_ensure_fd();
 
 	if (data.size() <= 0) return 0;

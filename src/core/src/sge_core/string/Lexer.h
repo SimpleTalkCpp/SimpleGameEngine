@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sge_core/base/Error.h>
+#include <sge_core/string/String.h>
 
 namespace sge {
 
@@ -37,7 +38,7 @@ public:
 		void onFormat(fmt::format_context& ctx) const;
 	};
 
-	void reset(Span<const u8> source, StrView filename);
+	void reset(ByteSpan source, StrView filename);
 	void reset(StrView source, StrView filename);
 
 	bool nextChar();
@@ -69,6 +70,13 @@ public:
 	void readIdentifier(String& s);
 
 	StrView getSourceAtPos(size_t lineBefore);
+
+	const char* cur() const { return _cur; }
+	StrView source() const	{ return _source; }
+	size_t line() const { return _line; }
+	size_t col() const { return _col; }
+
+	StrView getRemainSource() const;
 
 protected:
 	void _error(StrView msg);

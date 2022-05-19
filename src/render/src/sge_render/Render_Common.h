@@ -21,7 +21,7 @@ enum class RenderPrimitiveType {
 	Triangles,
 };
 
-enum class RenderShaderType {
+enum class ShaderStage {
 	None,
 	Vertex,
 	Pixel,

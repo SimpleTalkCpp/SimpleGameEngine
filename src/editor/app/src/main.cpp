@@ -95,11 +95,11 @@ public:
 	virtual void onCreate(CreateDesc& desc) override {
 		{
 			String file = getExecutableFilename();
-			String path = FilePath::getDir(file);
+			String path = FilePath::dirname(file);
 			path.append("/../../../../../../examples/Test101");
-			setCurrentDir(path);
+			Directory::setCurrent(path);
 
-			auto dir = getCurrentDir();
+			auto dir = Directory::getCurrent();
 			SGE_LOG("dir = {}", dir);
 		}
 

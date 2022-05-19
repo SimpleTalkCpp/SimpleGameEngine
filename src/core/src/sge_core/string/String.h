@@ -14,7 +14,7 @@ struct StringUtil {
 		appendBinToHex(result, data);
 	}
 
-	static void appendBinToHex(String& result, Span<const u8> data);
+	static void appendBinToHex(String& result, ByteSpan data);
 	
 	static bool hasChar(StrView view, char ch) { return StrView::npos != view.find(ch); }
 
@@ -22,6 +22,11 @@ struct StringUtil {
 	static std::pair<StrView, StrView> splitByChar	(StrView view, char seperator);
 
 	static StrView	trimChar(StrView view, StrView seperators);
+
+	static const char* findChar			(StrView view, StrView charList, bool ignoreCase);
+	static const char* findCharFromEnd	(StrView view, StrView charList, bool ignoreCase);
+
+	static bool ignoreCaseCompare(char a, char b) { return tolower(a) == tolower(b); }
 
 	static bool tryParse(StrView view, i8 & outValue);
 	static bool tryParse(StrView view, i16& outValue);
@@ -75,33 +80,15 @@ std::ostream& operator<<(std::ostream& s, const sge::StrView& v) {
 }
 
 template<>
-struct fmt::formatter<sge::StrView> {
+struct fmt::formatter<sge::StrViewA> {
 	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const sge::StrView& v, fmt::format_context& ctx) {
+	auto format(const sge::StrViewA& v, fmt::format_context& ctx) {
 		auto it = *ctx.out();
 		for (const auto& c : v) {
 			it = c;
 			it++;
 		}
 		return ctx.out();
-	}
-};
-
-template<>
-struct fmt::formatter<sge::String> {
-	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const sge::String& v, fmt::format_context& ctx) {
-		sge::StrView view(v.data(), v.size());
-		return fmt::format_to(ctx.out(), "{}", view);
-	}
-};
-
-template<size_t N>
-struct fmt::formatter<sge::String_<N>> {
-	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const sge::String_<N>& v, fmt::format_context& ctx) {
-		sge::StrView view(v.data(), v.size());
-		return fmt::format_to(ctx.out(), "{}", view);
 	}
 };
 
@@ -114,20 +101,10 @@ struct fmt::formatter<sge::StrViewW> {
 	}
 };
 
-template<>
-struct fmt::formatter<sge::StringW> {
+template<class T, size_t N, bool bEnableOverflow>
+struct fmt::formatter<sge::StringT<T, N, bEnableOverflow> > {
 	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const sge::StringW& v, fmt::format_context& ctx) {
-		sge::StrViewW view(v.data(), v.size());
-		return fmt::format_to(ctx.out(), "{}", view);
-	}
-};
-
-template<size_t N>
-struct fmt::formatter<sge::StringW_<N>> {
-	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const sge::StringW_<N>& v, fmt::format_context& ctx) {
-		sge::StrViewW view(v.data(), v.size());
-		return fmt::format_to(ctx.out(), "{}", view);
+	auto format(const sge::StringT<T, N, bEnableOverflow>& v, fmt::format_context& ctx) {
+		return fmt::format_to(ctx.out(), "{}", v.view());
 	}
 };

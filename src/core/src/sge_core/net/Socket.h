@@ -45,11 +45,11 @@ public:
 
 	bool accept(Socket & acceptedSocket);
 
-	int sendto(const SockAddr& addr, Span<const u8> data);
-	int sendto(const SockAddr& addr, StrView  data)		{ return sendto(addr, Span<const u8>(reinterpret_cast<const u8*>(data.data()), data.size())); }
+	int sendto(const SockAddr& addr, ByteSpan data);
+	int sendto(const SockAddr& addr, StrView  data)		{ return sendto(addr, ByteSpan(reinterpret_cast<const u8*>(data.data()), data.size())); }
 
-	int send(const Span<const u8> data);
-	int send(const StrView  data)						{ return send(Span<const u8>(reinterpret_cast<const u8*>(data.data()), data.size())); }
+	int send(const ByteSpan data);
+	int send(const StrView  data)						{ return send(ByteSpan(reinterpret_cast<const u8*>(data.data()), data.size())); }
 
 	//template<size_t N>
 	//int send(const char (&sz)[N])		{ return N ? send(sz, N-1) : 0; }

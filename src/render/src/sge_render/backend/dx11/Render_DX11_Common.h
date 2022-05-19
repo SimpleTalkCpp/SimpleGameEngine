@@ -65,11 +65,23 @@ struct DX11Util {
 
 	static String getStrFromHRESULT(HRESULT hr);
 
+	static const char* getDxStageProfile(ShaderStage s);
+
+	static ByteSpan toSpan(ID3DBlob* blob);
+	static StrView  toStrView(ID3DBlob* blob) { return StrView_make(toSpan(blob)); }
+
 private:
 	static bool _checkError(HRESULT hr) {
 		return SUCCEEDED(hr);
 	}
 };
+
+inline
+ByteSpan DX11Util::toSpan(ID3DBlob* blob) {
+	if (!blob) return ByteSpan();
+	return ByteSpan(reinterpret_cast<const u8*>(blob->GetBufferPointer()),
+					static_cast<size_t>(blob->GetBufferSize()));
+}
 
 inline
 String DX11Util::getStrFromHRESULT(HRESULT hr) {
@@ -82,6 +94,15 @@ String DX11Util::getStrFromHRESULT(HRESULT hr) {
 
 	auto str = UtfUtil::toString(buf);
 	return str;
+}
+
+inline
+const char* DX11Util::getDxStageProfile(ShaderStage s) {
+	switch (s) {
+		case ShaderStage::Vertex:	return "vs_5_0";
+		case ShaderStage::Pixel:	return "ps_5_0";
+		default: return "";
+	}
 }
 
 inline

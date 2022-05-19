@@ -3,12 +3,11 @@
 namespace sge {
 
 void ShaderParser::readFile(ShaderInfo& outInfo, StrView filename) {
-	MemMapFile mm;
-	mm.open(filename);
-	readMem(outInfo, mm, filename);
+	_memMapFile.open(filename);
+	readMem(outInfo, _memMapFile, filename);
 }
 
-void ShaderParser::readMem(ShaderInfo& outInfo, Span<const u8> data, StrView filename) {
+void ShaderParser::readMem(ShaderInfo& outInfo, ByteSpan data, StrView filename) {
 	outInfo.clear();
 	_outInfo = &outInfo;
 	reset(data, filename);

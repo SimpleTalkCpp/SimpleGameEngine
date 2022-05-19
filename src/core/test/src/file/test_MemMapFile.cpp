@@ -10,7 +10,7 @@ public:
 		filename.append("_sample.txt");
 
 		static const char* sample_sz = "1234ABCD";
-		Span<const u8> sample(reinterpret_cast<const u8*>(sample_sz), sizeof(sample_sz));
+		ByteSpan sample(reinterpret_cast<const u8*>(sample_sz), sizeof(sample_sz));
 
 		MemMapFile mm;
 		mm.open(filename);
