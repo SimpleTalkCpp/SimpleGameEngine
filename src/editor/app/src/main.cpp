@@ -28,7 +28,7 @@ public:
 		}
 
 		//_material = renderer->createMaterial();
-		//_material = Shader::Find("/Assets/shaders/test.shader");
+		//_material.setShader("Assets/shaders/test.shader");
 		//_material.setParam("a", 10.0f);
 
 		EditMesh editMesh;

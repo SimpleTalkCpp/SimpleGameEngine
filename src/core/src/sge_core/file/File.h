@@ -25,4 +25,9 @@ enum class FileShareMode {
 	ReadWrite,
 };
 
+struct File {
+	static void write(StrView filename, Span<const u8> data);
+	static void read (StrView filename, Vector<u8> data);
+};
+
 }
