@@ -25,11 +25,11 @@ void RenderCommandBuffer::drawSubMesh(const SrcLoc& debugLoc, const RenderSubMes
 }
 
 void RenderCommandBuffer::reset() {
-	_allocator.clear();
 	for (auto* cmd : _commands) {
 		cmd->~RenderCommand();
 	}
 	_commands.clear();
+	_allocator.clear();
 }
 
 }
