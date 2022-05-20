@@ -1,7 +1,7 @@
 Shader {
 	Properties {
-		Float	test  = {0,0,0,1}
-		Vec4f	test2 = 0.5
+		Float	test  = 0.5
+		Vec4f	test2 = {0,0,0,1}
 		
 		[DisplayName="Color Test"]
 		Color4f	color = {1,1,1,1}
