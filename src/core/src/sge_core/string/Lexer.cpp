@@ -81,10 +81,10 @@ void Lexer::errorUnexpectedToken() {
 
 void Lexer::_error(StrView msg) {
 	TempString tmp = msg;
-	FmtTo(tmp, "\n{}\n", getSourceAtPos(3));
+	FmtTo(tmp, "\n{}\n", getLastFewLines(3));
 
 	{
-		TempString lastLine = getSourceAtPos(1);
+		TempString lastLine = getLastFewLines(1);
 		size_t i = 0;
 		for (auto& c : lastLine) {
 			if (i >= _col) break;
@@ -260,10 +260,10 @@ void Lexer::readIdentifier(String& s) {
 	nextToken();
 }
 
-StrView Lexer::getSourceAtPos(size_t lineBefore) {
+StrView Lexer::getLastFewLines(size_t lineCount) {
 	if (!_cur) return StrView();
 
-	auto n = lineBefore;
+	auto n = lineCount;
 
 	auto* start = _source.data();
 

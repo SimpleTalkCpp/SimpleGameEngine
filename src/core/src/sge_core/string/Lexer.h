@@ -69,7 +69,7 @@ public:
 	void readString(String& s);
 	void readIdentifier(String& s);
 
-	StrView getSourceAtPos(size_t lineBefore);
+	StrView getLastFewLines(size_t lineCount);
 
 	const char* cur() const { return _cur; }
 	StrView source() const	{ return _source; }
