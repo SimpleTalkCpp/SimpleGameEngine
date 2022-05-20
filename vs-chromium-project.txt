@@ -1,0 +1,7 @@
+[SearchableFiles.ignore]
+
+[SearchableFiles.include]
+/src/
+#/externals/vcpkg/buildtrees/
+
+[SourceExplorer.ignore]
