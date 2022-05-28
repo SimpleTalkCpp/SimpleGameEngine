@@ -189,12 +189,12 @@ public:
 	SrcLoc() = default;
 	SrcLoc(const char* file_, int line_, const char* func_)
 		: file(file_)
+		, func(func_)
 		, line(line_)
-		, func(func_) {
-	}
+	{}
 
 	const char* file = "";
-	const char* func;
+	const char* func = "";
 	int line = 0;
 };
 
