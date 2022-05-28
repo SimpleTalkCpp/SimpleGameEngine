@@ -195,6 +195,7 @@ bool Lexer::_parseString() {
 	for (;;) {
 		nextChar();
 		if (_ch == '\\') {
+			nextChar();
 			switch (_ch) {
 				case '\\':
 				case '/':
