@@ -43,7 +43,7 @@ bool Lexer::nextChar() {
 
 bool Lexer::nextToken() {
 	if (!_nextToken()) return false;
-	SGE_DUMP_VAR(_line, _token);
+//	SGE_DUMP_VAR(_line, _token);
 	return true;
 }
 

@@ -1,5 +1,5 @@
 #include "UnitTest.h"
-#include "../string/String.h"
+#include "../string/StringUtil.h"
 
 namespace sge {
 

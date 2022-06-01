@@ -13,24 +13,28 @@
 #endif
 
 #define SGE_FORMATTER(T) \
+	} /* namespace sge */ \
 	template<> \
-	struct fmt::formatter<T> { \
+	struct fmt::formatter<sge::T> { \
 		auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); } \
-		auto format(const T& v, fmt::format_context& ctx) { \
+		auto format(const sge::T& v, fmt::format_context& ctx) { \
 			v.onFormat(ctx); \
 			return ctx.out(); \
 		} \
 	}; \
+	namespace sge { \
 //------
 
 #define SGE_FORMATTER_ENUM(T) \
+	} /* namespace sge */ \
 	template<> \
-	struct fmt::formatter<T> { \
+	struct fmt::formatter<sge::T> { \
 		auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); } \
-		auto format(const T& v, fmt::format_context& ctx) { \
+		auto format(const sge::T& v, fmt::format_context& ctx) { \
 			return fmt::format_to(ctx.out(), "{}", sge::enumStr(v)); \
 		} \
 	}; \
+	namespace sge { \
 //-----
 
 namespace sge {

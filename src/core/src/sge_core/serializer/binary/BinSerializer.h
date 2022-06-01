@@ -1,8 +1,7 @@
 #pragma once
 
-#include "sge_base.h"
-#include "Error.h"
-#include "ByteOrder.h"
+#include <sge_core/base/Error.h>
+#include <sge_core/base/ByteOrder.h>
 
 namespace sge {
 

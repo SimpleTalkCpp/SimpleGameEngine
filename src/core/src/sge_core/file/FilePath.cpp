@@ -1,6 +1,6 @@
 #include "FilePath.h"
 #include "Directory.h"
-#include <sge_core/string/String.h>
+#include <sge_core/string/StringUtil.h>
 
 namespace sge {
 

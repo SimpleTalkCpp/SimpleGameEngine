@@ -1,6 +1,6 @@
 #include <sge_core/base/UnitTest.h>
-#include <sge_core/base/BinSerializer.h>
-#include <sge_core/base/BinDeserializer.h>
+#include <sge_core/serializer/binary/BinSerializer.h>
+#include <sge_core/serializer/binary/BinDeserializer.h>
 
 namespace sge {
 

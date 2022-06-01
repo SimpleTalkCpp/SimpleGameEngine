@@ -1,7 +1,7 @@
 #pragma once
 
 #include <sge_core/base/Error.h>
-#include <sge_core/string/String.h>
+#include <sge_core/string/StringUtil.h>
 
 namespace sge {
 
@@ -115,7 +115,7 @@ const char* enumStr(Lexer::TokenType v) {
 	}
 }
 
-}
+SGE_FORMATTER_ENUM(Lexer::TokenType)
+SGE_FORMATTER(Lexer::Token);
 
-SGE_FORMATTER_ENUM(sge::Lexer::TokenType)
-SGE_FORMATTER(sge::Lexer::Token);
+}

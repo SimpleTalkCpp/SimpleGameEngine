@@ -1,8 +1,16 @@
 #pragma once
 
 #include <sge_render/RenderDataType.h>
+#include <sge_render/vertex/Vertex.h>
+#include <sge_core/serializer/json/JsonUtil.h>
 
 namespace sge {
+
+enum class ShaderStage {
+	None,
+	Vertex	= 1 << 0,
+	Pixel	= 1 << 1,
+};
 
 enum class ShaderPropType {
 	None,
@@ -14,35 +22,15 @@ enum class ShaderPropType {
 	Color4f,
 };
 
-inline
-bool enumTryParse(ShaderPropType& outValue, StrView str) {
-#define E(V) if (str == #V) { outValue = ShaderPropType::V; return true; }
-	E(None)
-	E(Int)
-	E(Float)
-	E(Vec2f)
-	E(Vec3f)
-	E(Vec4f)
-	E(Color4f)
-#undef E
-	return false;
-}
-
-inline
-StrView enumStr(ShaderPropType v) {
-	switch (v) {		
-#define E(V) case ShaderPropType::V: return #V;
-	E(None)
-	E(Int)
-	E(Float)
-	E(Vec2f)
-	E(Vec3f)
-	E(Vec4f)
-	E(Color4f);
-#undef E
-	default: return "";
-	}
-}
+#define ShaderPropType_ENUM_LIST(E) \
+	E(Int) \
+	E(Float) \
+	E(Vec2f) \
+	E(Vec3f) \
+	E(Vec4f) \
+	E(Color4f) \
+//----
+SGE_ENUM_STR_UTIL(ShaderPropType)
 
 struct ShaderInfo {
 	struct Prop {
@@ -62,6 +50,134 @@ struct ShaderInfo {
 	Vector_<Pass, 1>	passes;
 
 	void clear();
+};
+
+class ShaderStageInfo {
+public:
+	using DataType		= RenderDataType;
+
+	void loadFile(StrView filename_) {
+		filename = filename_;
+		JsonUtil::readFile(filename_, *this);
+	}
+
+	String	filename;
+	String	profile;
+	ShaderStage	stage = ShaderStage::None;
+
+	class Param {
+	public:
+		String name;
+		DataType dataType;
+		i16	bindPoint = 0;
+		i16	bindCount = 0;
+
+		template<class SE>
+		void named_io(SE & se) {
+			SGE_NAMED_IO(se, name);
+			SGE_NAMED_IO(se, dataType);
+			SGE_NAMED_IO(se, bindPoint);
+			SGE_NAMED_IO(se, bindCount);
+		}
+	};
+
+	class Input {
+	public:
+		String			name;
+		VertexSemantic	semantic = VertexSemantic::None;
+		RenderDataType	dataType = RenderDataType::None;
+
+		template<class SE>
+		void named_io(SE & se) {
+			SGE_NAMED_IO(se, name);
+			SGE_NAMED_IO(se, semantic);
+			SGE_NAMED_IO(se, dataType);
+		}
+	};
+
+	class Variable {
+	public:
+		String		name;
+		size_t		offset   = 0;
+		DataType	dataType = DataType::None;
+		bool		rowMajor = true;
+
+		template<class SE>
+		void named_io(SE & se) {
+			SGE_NAMED_IO(se, name);
+			SGE_NAMED_IO(se, offset);
+			SGE_NAMED_IO(se, dataType);
+		}
+	};
+
+	class ConstBuffer {
+	public:
+		String			name;
+		i16				bindPoint = 0;
+		i16				bindCount = 0;
+		size_t			dataSize  = 0;
+		Vector_<Variable, 4>	variables;
+
+		template<class SE>
+		void named_io(SE & se) {
+			SGE_NAMED_IO(se, name);
+			SGE_NAMED_IO(se, bindPoint);
+			SGE_NAMED_IO(se, bindCount);
+			SGE_NAMED_IO(se, dataSize);
+			SGE_NAMED_IO(se, variables);
+		}
+	};
+
+	Vector_<Input, 8>		inputs;
+	Vector_<Param, 8>		params;
+	Vector_<ConstBuffer, 4>	constBuffers;
+
+//----------
+	class Texture {
+	public:
+		String		name;
+		i16			bindPoint = 0;
+		i16			bindCount = 0;
+		DataType	dataType = DataType::None;
+
+		template<class SE>
+		void named_io(SE & se) {
+			SGE_NAMED_IO(se, name);
+			SGE_NAMED_IO(se, bindPoint);
+			SGE_NAMED_IO(se, bindCount);
+			SGE_NAMED_IO(se, dataType);
+		}
+	};
+	Vector_<Texture, 8>		textures;
+
+//----------
+	class Sampler {
+	public:
+		String		name;
+		i16			bindPoint = 0;
+		i16			bindCount = 0;
+		RenderDataType	dataType = RenderDataType::None;
+
+		template<class SE>
+		void named_io(SE & se) {
+			SGE_NAMED_IO(se, name);
+			SGE_NAMED_IO(se, bindPoint);
+			SGE_NAMED_IO(se, bindCount);
+			SGE_NAMED_IO(se, dataType);
+		}
+	};
+	Vector_<Sampler, 8>		samplers;
+
+//----------
+	template<class SE>
+	void named_io(SE & se) {
+		SGE_NAMED_IO(se, profile);
+		SGE_NAMED_IO(se, inputs);
+		SGE_NAMED_IO(se, params);
+		SGE_NAMED_IO(se, constBuffers);
+		SGE_NAMED_IO(se, textures);
+		SGE_NAMED_IO(se, samplers);
+	}
 };
 
 }

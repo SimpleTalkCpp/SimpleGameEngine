@@ -2,7 +2,7 @@
 
 #include "../base/Error.h"
 #include "../log/Log.h"
-#include "../string/String.h"
+#include "../string/StringUtil.h"
 #include "../string/Fmt.h"
 
 namespace sge {
@@ -75,7 +75,7 @@ protected:
 	};
 };
 
-} // namespace
+SGE_FORMATTER(IPv4)
+SGE_FORMATTER(SockAddr)
 
-SGE_FORMATTER(sge::IPv4)
-SGE_FORMATTER(sge::SockAddr)
+} // namespace

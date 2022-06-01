@@ -72,3 +72,33 @@
 	SGE_ENUM_ARITHMETIC_OPERATOR(T) \
 	SGE_ENUM_ARITHMETIC_OPERATOR_INT(T) \
 //-------
+
+#define SGE_ENUM_STR__CASE(V) case E::V: return #V;
+
+#define SGE_ENUM_STR(T) \
+	inline const char* enumStr(const T& v) { \
+		using E = T; \
+		switch (v) { \
+			T##_ENUM_LIST(SGE_ENUM_STR__CASE) \
+			default: return nullptr; \
+		} \
+	} \
+//----
+
+#define SGE_ENUM_TRY_PARSE__CASE(V) if (str == #V) { outValue = E::V; return true; }
+
+#define SGE_ENUM_TRY_PARSE(T) \
+	inline bool enumTryParse(T& outValue, StrView str) { \
+		using E = T; \
+		T##_ENUM_LIST(SGE_ENUM_TRY_PARSE__CASE) \
+		return false; \
+	} \
+//----
+
+#define SGE_ENUM_STR_UTIL(T) \
+	SGE_ENUM_STR(T) \
+	SGE_ENUM_TRY_PARSE(T) \
+	SGE_FORMATTER_ENUM(T) \
+//----
+
+#define SGE_NAMED_IO(SE, V)	SE.named_io(#V, V)

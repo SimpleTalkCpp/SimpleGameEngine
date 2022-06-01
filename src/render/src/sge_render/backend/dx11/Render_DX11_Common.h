@@ -13,6 +13,7 @@
 
 #include <sge_render/Render_Common.h>
 #include <sge_render/vertex/Vertex.h>
+#include <sge_render/shader/Shader.h>
 
 namespace sge {
 
@@ -61,7 +62,9 @@ struct DX11Util {
 
 	static D3D11_PRIMITIVE_TOPOLOGY	getDxPrimitiveTopology	(RenderPrimitiveType t);
 	static DXGI_FORMAT				getDxFormat				(RenderDataType v);
-	static const char*				getDxSemanticName		(Vertex_SemanticType t);
+
+	static const char*				getDxSemanticName		(VertexSemanticType t);
+	static VertexSemanticType		parseDxSemanticName		(StrView s);
 
 	static String getStrFromHRESULT(HRESULT hr);
 
@@ -128,20 +131,6 @@ D3D11_PRIMITIVE_TOPOLOGY DX11Util::getDxPrimitiveTopology(RenderPrimitiveType t)
 		case SRC::Lines:		return D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 		case SRC::Triangles:	return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		default: throw SGE_ERROR("unknown RenderPrimitiveType");
-	}
-}
-
-inline
-const char* DX11Util::getDxSemanticName(Vertex_SemanticType t) {
-	using SRC = Vertex_SemanticType;
-	switch (t) {
-		case SRC::Pos:			return "POSITION";
-		case SRC::Color:		return "COLOR";
-		case SRC::TexCoord:		return "TEXCOORD";
-		case SRC::Normal:		return "NORMAL";
-		case SRC::Tangent:		return "TANGENT";
-		case SRC::Binormal:		return "BINORMAL";
-		default: throw SGE_ERROR("unknown VertexLayout_SemanticType");
 	}
 }
 

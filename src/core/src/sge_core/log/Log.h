@@ -2,7 +2,7 @@
 
 #include <sge_core/base/sge_base.h>
 #include <sge_core/string/Fmt.h>
-#include <sge_core/string/String.h>
+#include <sge_core/string/StringUtil.h>
 
 #define SGE_LOG(...)       do{ sge::g_log.write(sge::Log::Level::Info,    __VA_ARGS__); } while(false)
 #define SGE_LOG_WARN(...)  do{ sge::g_log.write(sge::Log::Level::Warning, __VA_ARGS__); } while(false)

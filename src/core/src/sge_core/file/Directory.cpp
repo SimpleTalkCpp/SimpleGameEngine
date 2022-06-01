@@ -1,6 +1,6 @@
 #include "Directory.h"
 
-#include <sge_core/string/String.h>
+#include <sge_core/string/StringUtil.h>
 #include <sge_core/base/Error.h>
 #include "FilePath.h"
 

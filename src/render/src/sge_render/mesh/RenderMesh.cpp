@@ -97,15 +97,15 @@ void RenderSubMesh::create(const EditMesh& src) {
 	auto vc = _vertexCount;
 
 	for (auto& e : vertexLayout->elements) {
-		using S  = Vertex_Semantic;
-		using ST = Vertex_SemanticType;
-		using U  = Vertex_SemanticUtil;
+		using S  = VertexSemantic;
+		using ST = VertexSemanticType;
+		using U  = VertexSemanticUtil;
 
 		auto semanticType  = U::getType(e.semantic);
 		auto semanticIndex = U::getIndex(e.semantic);
 
 		switch (semanticType) {
-			case ST::TexCoord: {
+			case ST::TEXCOORD: {
 				if (semanticIndex < EditMesh::kUvCountMax) {
 					Helper::copyVertexData(pData, vc, e, stride, src.uv[semanticIndex].data()); break;
 				}
@@ -114,11 +114,11 @@ void RenderSubMesh::create(const EditMesh& src) {
 		}
 
 		switch (e.semantic) {
-			case S::Pos:		Helper::copyVertexData(pData, vc, e, stride, src.pos.data());   break;
-			case S::Color0:		Helper::copyVertexData(pData, vc, e, stride, src.color.data()); break;
-			case S::Normal:		Helper::copyVertexData(pData, vc, e, stride, src.normal.data()); break;
-			case S::Tangent:	Helper::copyVertexData(pData, vc, e, stride, src.tangent.data()); break;
-			case S::Binormal:	Helper::copyVertexData(pData, vc, e, stride, src.binormal.data()); break;
+			case S::POSITION:	Helper::copyVertexData(pData, vc, e, stride, src.pos.data());   break;
+			case S::COLOR0:		Helper::copyVertexData(pData, vc, e, stride, src.color.data()); break;
+			case S::NORMAL:		Helper::copyVertexData(pData, vc, e, stride, src.normal.data()); break;
+			case S::TANGENT:	Helper::copyVertexData(pData, vc, e, stride, src.tangent.data()); break;
+			case S::BINORMAL:	Helper::copyVertexData(pData, vc, e, stride, src.binormal.data()); break;
 		}
 	}
 
