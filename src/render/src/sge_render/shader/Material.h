@@ -10,6 +10,8 @@ public:
 
 	void setShader(Shader* shader);
 
+	void setParam(StrView name, float v);
+
 private:
 	SPtr<Shader> _shader;
 	virtual void onSetShader(Shader* shader) = 0;

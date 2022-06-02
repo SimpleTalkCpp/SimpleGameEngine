@@ -38,18 +38,38 @@ struct ShaderInfo {
 		String		name;
 		String		displayName;
 		String		defaultValue;
+
+		template<class SE>
+		void onJson(SE & se) {
+			SGE_NAMED_IO(se, name);
+			SGE_NAMED_IO(se, displayName);
+			SGE_NAMED_IO(se, defaultValue);
+		}
 	};
 
 	struct Pass {
 		String name;
 		String vsFunc;
 		String psFunc;
+
+		template<class SE>
+		void onJson(SE & se) {
+			SGE_NAMED_IO(se, name);
+			SGE_NAMED_IO(se, vsFunc);
+			SGE_NAMED_IO(se, psFunc);
+		}
 	};
 
 	Vector_<Prop, 8>	props;
 	Vector_<Pass, 1>	passes;
 
 	void clear();
+
+	template<class SE>
+	void onJson(SE & se) {
+		SGE_NAMED_IO(se, props);
+		SGE_NAMED_IO(se, passes);
+	}
 };
 
 class ShaderStageInfo {

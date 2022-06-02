@@ -17,6 +17,7 @@ public:
 
 private:
 	String	_filename;
+	ShaderInfo	_info;
 };
 
 }

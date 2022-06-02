@@ -30,7 +30,7 @@ public:
 		auto shader = renderer->createShader("Assets/Shaders/test.shader");
 		_material = renderer->createMaterial();
 		_material->setShader(shader);
-		//_material.setParam("a", 10.0f);
+		_material->setParam("a", 10.0f);
 
 		EditMesh editMesh;
 
@@ -98,10 +98,9 @@ public:
 			String file = getExecutableFilename();
 			String path = FilePath::dirname(file);
 			path.append("/../../../../../../examples/Test101");
-			Directory::setCurrent(path);
 
-			auto dir = Directory::getCurrent();
-			SGE_LOG("dir = {}", dir);
+			auto* proj = ProjectSettings::instance();
+			proj->setProjectRoot(path);
 		}
 
 		Base::onCreate(desc);

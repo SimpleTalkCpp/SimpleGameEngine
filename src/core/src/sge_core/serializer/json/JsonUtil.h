@@ -24,7 +24,10 @@ template<class T> inline
 void JsonUtil::readFile(StrView filename, T& obj) {
 	MemMapFile mm;
 	mm.open(filename);
-	JsonDeserializer de(StrView_make(mm));
+
+	auto str = StrView_make(mm);
+	auto json = Json::parse(str.begin(), str.end());
+	JsonDeserializer de(json);
 	de.io(obj);
 }
 

@@ -83,12 +83,13 @@ enum class VertexSemanticType : u8 {
 };
 
 #define VertexSemanticType_ENUM_LIST(E) \
-	E(POSITION) \
-	E(COLOR) \
-	E(TEXCOORD) \
-	E(NORMAL) \
-	E(TANGENT) \
-	E(BINORMAL) \
+	E(None)		\
+	E(POSITION)	\
+	E(COLOR)	\
+	E(TEXCOORD)	\
+	E(NORMAL)	\
+	E(TANGENT)	\
+	E(BINORMAL)	\
 //----
 SGE_ENUM_STR_UTIL(VertexSemanticType)
 
@@ -132,6 +133,31 @@ enum class VertexSemantic : u16 {
 	TANGENT		= VertexSemanticUtil::_make(VertexSemanticType::TANGENT,  0),
 	BINORMAL	= VertexSemanticUtil::_make(VertexSemanticType::BINORMAL, 0),
 };
+
+#define VertexSemantic_ENUM_LIST(E) \
+	E(None)	\
+	E(POSITION) \
+	\
+	E(COLOR0) \
+	E(COLOR1) \
+	E(COLOR2) \
+	E(COLOR3) \
+	\
+	E(TEXCOORD0) \
+	E(TEXCOORD1) \
+	E(TEXCOORD2) \
+	E(TEXCOORD3) \
+	E(TEXCOORD4) \
+	E(TEXCOORD5) \
+	E(TEXCOORD6) \
+	E(TEXCOORD7) \
+	\
+	E(NORMAL)   \
+	E(TANGENT)  \
+	E(BINORMAL) \
+//----
+SGE_ENUM_STR_UTIL(VertexSemantic)
+
 
 struct VertexLayout : public NonCopyable {
 	using Semantic = VertexSemantic;

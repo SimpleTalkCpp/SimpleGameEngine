@@ -14,8 +14,8 @@ protected:
 			path.append("/../../../../../../examples/Test101");
 			Directory::setCurrent(path);
 
-			auto dir = Directory::getCurrent();
-			SGE_LOG("dir = {}", dir);
+			auto* proj = ProjectSettings::instance();
+			proj->setProjectRoot(path);
 		}		
 
 		ShaderInfo info;
@@ -28,6 +28,9 @@ protected:
 		{
 			ShaderParser parser;
 			parser.readFile(info, shaderFilename);
+
+			auto jsonFilename = Fmt("{}/info.json", outputPath);
+			JsonUtil::writeFile(jsonFilename, info, false);
 		}
 
 		{ // DX11

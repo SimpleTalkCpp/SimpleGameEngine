@@ -7,5 +7,9 @@ void Material::setShader(Shader* shader) {
 	onSetShader(shader);
 }
 
+void Material::setParam(StrView name, float v) {
+	SGE_ASSERT(false);
+}
+
 }
 
