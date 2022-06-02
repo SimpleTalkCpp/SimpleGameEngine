@@ -1,3 +1,4 @@
+#if 0
 Shader {
 	Properties {
 		Float	test  = 0.5
@@ -21,6 +22,7 @@ Shader {
 		PsFunc		ps_main
 	}
 }
+#endif
 
 struct VertexIn {
 	float4 position : POSITION;

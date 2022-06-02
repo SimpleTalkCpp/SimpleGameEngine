@@ -79,6 +79,7 @@ public:
 	StrView getRemainSource() const;
 
 protected:
+
 	void _error(StrView msg);
 
 	bool _nextToken();
