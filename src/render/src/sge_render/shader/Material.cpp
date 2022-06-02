@@ -8,7 +8,6 @@ void Material::setShader(Shader* shader) {
 }
 
 void Material::setParam(StrView name, float v) {
-	SGE_ASSERT(false);
 }
 
 }

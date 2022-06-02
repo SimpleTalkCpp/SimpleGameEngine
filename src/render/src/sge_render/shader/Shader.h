@@ -4,8 +4,12 @@
 
 namespace sge {
 
-class ShaderPass {
-public:
+struct ShaderStage : public NonCopyable {
+
+};
+
+struct ShaderPass : public NonCopyable {
+
 };
 
 class Shader : public RefCountBase {
@@ -15,7 +19,7 @@ public:
 
 	const String& filename() const { return _filename; }
 
-private:
+protected:
 	String	_filename;
 	ShaderInfo	_info;
 };

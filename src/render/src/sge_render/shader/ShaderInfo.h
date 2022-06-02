@@ -6,7 +6,7 @@
 
 namespace sge {
 
-enum class ShaderStage {
+enum class ShaderStageMask {
 	None,
 	Vertex	= 1 << 0,
 	Pixel	= 1 << 1,
@@ -83,7 +83,7 @@ public:
 
 	String	filename;
 	String	profile;
-	ShaderStage	stage = ShaderStage::None;
+	ShaderStageMask	stage = ShaderStageMask::None;
 
 	class Param {
 	public:

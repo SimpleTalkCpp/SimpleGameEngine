@@ -11,7 +11,7 @@
 
 namespace sge {
 
-void ShaderCompiler_DX11::compile(StrView outPath, ShaderStage shaderStage, StrView srcFilename, StrView entryFunc) {
+void ShaderCompiler_DX11::compile(StrView outPath, ShaderStageMask shaderStage, StrView srcFilename, StrView entryFunc) {
 	TempStringA entryPoint = entryFunc;
 
 
@@ -50,12 +50,12 @@ void ShaderCompiler_DX11::compile(StrView outPath, ShaderStage shaderStage, StrV
 	auto bytecodeSpan = Util::toSpan(bytecode);
 
 	auto outFilename = Fmt("{}/{}.bin", outPath, profile);
-	File::writeFile(outFilename, bytecodeSpan, false);
+	File::writeFileIfChanged(outFilename, bytecodeSpan, false);
 
-	_reflect(outFilename, bytecodeSpan, profile);
+	_reflect(outFilename, bytecodeSpan, shaderStage, profile);
 }
 
-void ShaderCompiler_DX11::_reflect(StrView outFilename, ByteSpan bytecode, StrView profile) {
+void ShaderCompiler_DX11::_reflect(StrView outFilename, ByteSpan bytecode, ShaderStageMask stage, StrView profile) {
 	ComPtr<ID3D11ShaderReflection>	reflect;
 	auto hr = D3DReflect(bytecode.data(), bytecode.size(), IID_PPV_ARGS(reflect.ptrForInit()));
 	Util::throwIfError(hr);
@@ -66,6 +66,7 @@ void ShaderCompiler_DX11::_reflect(StrView outFilename, ByteSpan bytecode, StrVi
 
 	ShaderStageInfo outInfo;
 	outInfo.profile = profile;
+	outInfo.stage   = stage;
 
 	{
 		_reflect_inputs			(outInfo, reflect, desc);
@@ -76,7 +77,7 @@ void ShaderCompiler_DX11::_reflect(StrView outFilename, ByteSpan bytecode, StrVi
 
 	{
 		auto jsonFilename = Fmt("{}.json", outFilename);
-		JsonUtil::writeFile(jsonFilename, outInfo, false);
+		JsonUtil::writeFileIfChanged(jsonFilename, outInfo, false);
 	}
 }
 

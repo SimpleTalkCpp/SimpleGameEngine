@@ -37,8 +37,9 @@ protected:
 	template<class V>
 	void toValue(V& v) {
 		auto& cur = _stack.back();
-		SGE_ASSERT(cur->is_null());
-//		v = *cur;
+		if (cur->is_null())
+			throw SGE_ERROR("value is null");
+		v = *cur;
 	}
 
 	StrView toStrView() {
@@ -63,50 +64,60 @@ protected:
 	}
 
 	void beginObject() {
-		SGE_ASSERT(_stack.back()->is_object());
+		auto& cur = _stack.back();
+		if (!cur->is_object()) {
+			throw SGE_ERROR("is not object");
+		}
 	}
 
 	void endObject() {
-		SGE_ASSERT(_stack.back()->is_object());
+		auto& cur = _stack.back();
+		if (!cur->is_object()) {
+			throw SGE_ERROR("endObject");
+		}
 	}
 
 	template<class V>
 	void toObjectMember(const char* name, V& v) {
-		auto& obj = _stack.back();
-		SGE_ASSERT(obj->is_object());
-		auto& memberValue = obj->operator[](name);
+		auto& cur = _stack.back();
+		if(!cur->is_object())
+			throw SGE_ERROR("not object member");
+
+		auto& memberValue = cur->operator[](name);
 		_stack.emplace_back(&memberValue);
-
 		io(v);
-
 		_stack.pop_back();
-		SGE_ASSERT(_stack.back()->is_object());
 	}
 	
 	size_t beginArray() {
-		SGE_ASSERT(_stack.back()->is_array());
-		auto* arr = _stack.back()->get_ptr<Json::array_t*>();
+		auto& cur = _stack.back();
+		if (!cur->is_array())
+			throw SGE_ERROR("is not array");
+
+		auto* arr = cur->get_ptr<Json::array_t*>();
 		return arr->size();
 	}
 
 	void endArray() {
-		SGE_ASSERT(_stack.back()->is_array());
+		auto& cur = _stack.back();
+		if (!cur->is_array())
+			throw SGE_ERROR("endArray");
 	}
 
 	template<class V>
 	void toArrayElement(size_t index, V& v) {
-		SGE_ASSERT(_stack.back()->is_array());
-		auto* arr = _stack.back()->get_ptr<Json::array_t*>();
+		auto& cur = _stack.back();
+		if (!cur->is_array())
+			throw SGE_ERROR("not array elemnt");
+
+		auto* arr = cur->get_ptr<Json::array_t*>();
 		if (index >= arr->size())
 			throw SGE_ERROR("array out of range");
 
 		auto& elementValue = arr->at(index);
 		_stack.emplace_back(&elementValue);
-
 		io(v);
-
 		_stack.pop_back();
-		SGE_ASSERT(_stack.back()->is_array());
 	}
 
 private:
@@ -119,6 +130,7 @@ template<class T, size_t N>
 struct JsonIO <JsonDeserializer, Vector_<T, N>> {
 	static void io(JsonDeserializer& se, Vector_<T, N>& data) {
 		size_t n = se.beginArray();
+		data.clear(); // ensure elements dtor get called
 		data.resize(n);
 		for (size_t i = 0; i < n; i++) {
 			se.toArrayElement(i, data[i]);
