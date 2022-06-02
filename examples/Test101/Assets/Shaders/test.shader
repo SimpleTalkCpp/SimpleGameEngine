@@ -37,6 +37,7 @@ float4x4	SGE_MVP;
 float x;
 float b;
 float c;
+float test_color;
 
 PixelIn vs_main(VertexIn i) {
     PixelIn o;
@@ -47,5 +48,5 @@ PixelIn vs_main(VertexIn i) {
 
 float4 ps_main(PixelIn i) : SV_TARGET
 {
-    return i.color;
+    return i.color * test_color;
 }

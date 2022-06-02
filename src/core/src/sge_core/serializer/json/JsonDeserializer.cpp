@@ -3,7 +3,7 @@
 namespace sge {
 
 JsonDeserializer::JsonDeserializer(StrView json) {
-	_json.parse(json);
+	_json = Json::parse(json.begin(), json.end());
 }
 
 }

@@ -2,6 +2,6 @@
 
 [SearchableFiles.include]
 /src/
-#/externals/vcpkg/buildtrees/
+/externals/vcpkg/buildtrees/nlohmann-json
 
 [SourceExplorer.ignore]

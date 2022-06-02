@@ -73,7 +73,7 @@ public:
 		i16	bindCount = 0;
 
 		template<class SE>
-		void named_io(SE & se) {
+		void onJson(SE & se) {
 			SGE_NAMED_IO(se, name);
 			SGE_NAMED_IO(se, dataType);
 			SGE_NAMED_IO(se, bindPoint);
@@ -88,7 +88,7 @@ public:
 		RenderDataType	dataType = RenderDataType::None;
 
 		template<class SE>
-		void named_io(SE & se) {
+		void onJson(SE & se) {
 			SGE_NAMED_IO(se, name);
 			SGE_NAMED_IO(se, semantic);
 			SGE_NAMED_IO(se, dataType);
@@ -103,7 +103,7 @@ public:
 		bool		rowMajor = true;
 
 		template<class SE>
-		void named_io(SE & se) {
+		void onJson(SE & se) {
 			SGE_NAMED_IO(se, name);
 			SGE_NAMED_IO(se, offset);
 			SGE_NAMED_IO(se, dataType);
@@ -119,7 +119,7 @@ public:
 		Vector_<Variable, 4>	variables;
 
 		template<class SE>
-		void named_io(SE & se) {
+		void onJson(SE & se) {
 			SGE_NAMED_IO(se, name);
 			SGE_NAMED_IO(se, bindPoint);
 			SGE_NAMED_IO(se, bindCount);
@@ -141,7 +141,7 @@ public:
 		DataType	dataType = DataType::None;
 
 		template<class SE>
-		void named_io(SE & se) {
+		void onJson(SE & se) {
 			SGE_NAMED_IO(se, name);
 			SGE_NAMED_IO(se, bindPoint);
 			SGE_NAMED_IO(se, bindCount);
@@ -159,7 +159,7 @@ public:
 		RenderDataType	dataType = RenderDataType::None;
 
 		template<class SE>
-		void named_io(SE & se) {
+		void onJson(SE & se) {
 			SGE_NAMED_IO(se, name);
 			SGE_NAMED_IO(se, bindPoint);
 			SGE_NAMED_IO(se, bindCount);
@@ -170,7 +170,7 @@ public:
 
 //----------
 	template<class SE>
-	void named_io(SE & se) {
+	void onJson(SE & se) {
 		SGE_NAMED_IO(se, profile);
 		SGE_NAMED_IO(se, inputs);
 		SGE_NAMED_IO(se, params);

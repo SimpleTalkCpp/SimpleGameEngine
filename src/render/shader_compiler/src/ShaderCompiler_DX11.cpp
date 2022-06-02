@@ -69,10 +69,9 @@ void ShaderCompiler_DX11::_reflect(StrView outFilename, ByteSpan bytecode, StrVi
 
 	{
 		_reflect_inputs			(outInfo, reflect, desc);
-		//_reflect_uniformBuffers	(outInfo, reflect, desc);
-		//_reflect_textures		(outInfo, reflect, desc);
-		//_reflect_samplers		(outInfo, reflect, desc);
-		//_reflect_storageBuffers	(outInfo, reflect, desc);
+		_reflect_constBuffers	(outInfo, reflect, desc);
+		_reflect_textures		(outInfo, reflect, desc);
+		_reflect_samplers		(outInfo, reflect, desc);
 	}
 
 	{
@@ -120,6 +119,129 @@ void ShaderCompiler_DX11::_reflect_inputs(ShaderStageInfo& outInfo, ID3D11Shader
 			throw SGE_ERROR("cannot parse dataType enum {}", dataType);
 		}
 	}
+}
+
+void ShaderCompiler_DX11::_reflect_constBuffers(ShaderStageInfo& outInfo, ID3D11ShaderReflection* reflect, D3D11_SHADER_DESC& desc) {
+	HRESULT hr;
+
+	outInfo.constBuffers.reserve(desc.BoundResources);
+
+	for (UINT i=0; i<desc.BoundResources; i++) {
+		D3D11_SHADER_INPUT_BIND_DESC resDesc;
+		hr = reflect->GetResourceBindingDesc(i, &resDesc);
+		Util::throwIfError(hr);
+
+		if (resDesc.Type != D3D_SIT_CBUFFER) continue;
+
+		auto& outCB = outInfo.constBuffers.emplace_back();
+
+		D3D11_SHADER_BUFFER_DESC bufDesc;
+		auto cb = reflect->GetConstantBufferByName(resDesc.Name);
+		hr = cb->GetDesc(&bufDesc);
+		Util::throwIfError(hr);
+
+		outCB.name		= bufDesc.Name;
+		outCB.bindPoint	= static_cast<i16>(resDesc.BindPoint);
+		outCB.bindCount	= static_cast<i16>(resDesc.BindCount);
+		outCB.dataSize	= bufDesc.Size;
+
+		{
+			outCB.variables.reserve(bufDesc.Variables);
+			for (UINT j=0; j<bufDesc.Variables; j++) {
+				auto cbv = cb->GetVariableByIndex(j);
+				D3D11_SHADER_VARIABLE_DESC varDesc;
+				hr = cbv->GetDesc(&varDesc);
+				Util::throwIfError(hr);
+
+				D3D11_SHADER_TYPE_DESC varType;
+				hr = cbv->GetType()->GetDesc(&varType);
+				Util::throwIfError(hr);
+
+				if (0 == (varDesc.uFlags & D3D_SVF_USED)) continue;
+
+				auto& outVar = outCB.variables.emplace_back();
+				outVar.name = varDesc.Name;
+				outVar.offset = varDesc.StartOffset;
+				//------------------------------
+				TempString dataType;
+				switch (varType.Type) {
+					case D3D_SVT_BOOL:	dataType.append("Bool");	break;
+					case D3D_SVT_INT:	dataType.append("Int32");	break;
+					case D3D_SVT_UINT:	dataType.append("UInt32");	break;
+					case D3D_SVT_UINT8:	dataType.append("Uint8");	break;
+					case D3D_SVT_FLOAT: dataType.append("Float32");	break;
+					case D3D_SVT_DOUBLE:dataType.append("Float64");	break;
+					default: throw SGE_ERROR("unsupported type {}", varType.Type);
+				}
+
+				switch (varType.Class) {
+					case D3D_SVC_SCALAR: break;
+					case D3D_SVC_VECTOR:			FmtTo(dataType, "x{}",		varType.Columns); break;
+					case D3D_SVC_MATRIX_COLUMNS:	FmtTo(dataType, "_{}x{}",	varType.Rows, varType.Columns); break;
+					case D3D_SVC_MATRIX_ROWS:		FmtTo(dataType, "_{}x{}",	varType.Rows, varType.Columns); break;
+					default: throw SGE_ERROR("unsupported Class {}", varType.Class);
+				}
+
+				if (!enumTryParse(outVar.dataType, dataType)) {
+					throw SGE_ERROR("cannot parse dataType {}", dataType);
+				}
+
+				if (outVar.dataType == DataType::None) {
+					throw SGE_ERROR("dataType is None");
+				}
+			}
+		}
+	}
+
+}
+
+void ShaderCompiler_DX11::_reflect_textures(ShaderStageInfo& outInfo, ID3D11ShaderReflection* reflect, D3D11_SHADER_DESC& desc) {
+	HRESULT hr;
+
+	outInfo.textures.reserve(desc.BoundResources);
+	for (UINT i=0; i<desc.BoundResources; i++) {
+		D3D11_SHADER_INPUT_BIND_DESC resDesc;
+		hr = reflect->GetResourceBindingDesc(i, &resDesc);
+		Util::throwIfError(hr);
+
+		if (resDesc.Type != D3D_SIT_TEXTURE) continue;
+
+		auto& outTex = outInfo.textures.emplace_back();
+		outTex.name			= resDesc.Name;
+		outTex.bindPoint	= static_cast<i16>(resDesc.BindPoint);
+		outTex.bindCount	= static_cast<i16>(resDesc.BindCount);
+
+		switch (resDesc.Dimension) {
+			case D3D_SRV_DIMENSION_TEXTURE1D:		outTex.dataType = DataType::Texture1D;   break;
+			case D3D_SRV_DIMENSION_TEXTURE2D:		outTex.dataType = DataType::Texture2D;   break;
+			case D3D_SRV_DIMENSION_TEXTURE3D:		outTex.dataType = DataType::Texture3D;   break;
+			case D3D_SRV_DIMENSION_TEXTURECUBE:		outTex.dataType = DataType::TextureCube; break;
+		//----
+			case D3D_SRV_DIMENSION_TEXTURE1DARRAY:	outTex.dataType = DataType::Texture1DArray;   break;
+			case D3D_SRV_DIMENSION_TEXTURE2DARRAY:	outTex.dataType = DataType::Texture2DArray;   break;
+			case D3D_SRV_DIMENSION_TEXTURECUBEARRAY:outTex.dataType = DataType::TextureCubeArray; break;
+		//----
+			default: throw SGE_ERROR("unsupported texture dimension {}", resDesc.Dimension);
+		}
+	}
+}
+
+void ShaderCompiler_DX11::_reflect_samplers(ShaderStageInfo& outInfo, ID3D11ShaderReflection* reflect, D3D11_SHADER_DESC& desc) {
+	HRESULT hr;
+	outInfo.samplers.reserve(desc.BoundResources);
+	for (UINT i=0; i<desc.BoundResources; i++) {
+		D3D11_SHADER_INPUT_BIND_DESC resDesc;
+		hr = reflect->GetResourceBindingDesc(i, &resDesc);
+		Util::throwIfError(hr);
+
+		if (resDesc.Type != D3D_SIT_SAMPLER) continue;
+
+		auto& outSampler = outInfo.samplers.emplace_back();
+		outSampler.name			= resDesc.Name;
+		outSampler.bindPoint	= static_cast<i16>(resDesc.BindPoint);
+		outSampler.bindCount	= static_cast<i16>(resDesc.BindCount);
+	}
+
 }
 
 }

@@ -45,7 +45,11 @@
 #include <EASTL/shared_ptr.h>
 #include <EASTL/weak_ptr.h>
 
+#include <nlohmann/json.hpp>
+
 #include "sge_macro.h"
+
+using Json = nlohmann::json;
 
 //==== EASTL ====
 

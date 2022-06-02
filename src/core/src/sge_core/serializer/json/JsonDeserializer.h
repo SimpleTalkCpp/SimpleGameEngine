@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Json.h"
-
 namespace sge {
 
 struct JsonDeserializer : public NonCopyable {

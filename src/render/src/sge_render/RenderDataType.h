@@ -28,6 +28,9 @@ enum class RenderDataType : u8 {
 	UNorm8,		UNorm8x2,	UNorm8x3,	UNorm8x4,
 	UNorm16,	UNorm16x2,	UNorm16x3,	UNorm16x4,
 	UNorm32,	UNorm32x2,	UNorm32x3,	UNorm32x4,
+
+	Texture1D,		Texture2D,		Texture3D,		TextureCube,
+	Texture1DArray,	Texture2DArray,	Texture3DArray,	TextureCubeArray,
 };
 
 #define RenderDataType_ENUM_LIST(E) \
