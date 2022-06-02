@@ -9,7 +9,7 @@ class VertexLayoutManager {
 public:
 	VertexLayoutManager();
 
-	static VertexLayoutManager* current();
+	static VertexLayoutManager* instance();
 
 	const VertexLayout* getLayout(VertexType type);
 
@@ -25,7 +25,7 @@ public:
 
 private:
 
-	static VertexLayoutManager* s_current;	
+	static VertexLayoutManager* s_instance;
 	Map<VertexType, VertexLayout>	_table;
 };
 

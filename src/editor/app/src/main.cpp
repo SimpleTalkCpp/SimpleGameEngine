@@ -19,7 +19,7 @@ public:
 //		SGE_DUMP_VAR(sizeof(Vertex_PosColorUv2));
 
 		Base::onCreate(desc);
-		auto* renderer = Renderer::current();
+		auto* renderer = Renderer::instance();
 
 		{
 			RenderContext::CreateDesc renderContextDesc;
@@ -27,8 +27,9 @@ public:
 			_renderContext = renderer->createContext(renderContextDesc);
 		}
 
-		//_material = renderer->createMaterial();
-		//_material.setShader("Assets/shaders/test.shader");
+		auto shader = renderer->createShader("Assets/Shaders/test.shader");
+		_material = renderer->createMaterial();
+		_material->setShader(shader);
 		//_material.setParam("a", 10.0f);
 
 		EditMesh editMesh;
@@ -56,7 +57,7 @@ public:
 
 		_renderMesh.create(editMesh);
 
-		VertexLayoutManager::current()->getLayout(Vertex_Pos::kType);
+		VertexLayoutManager::instance()->getLayout(Vertex_Pos::kType);
 	}
 
 	virtual void onCloseButton() override {
@@ -82,7 +83,7 @@ public:
 		drawNeeded();
 	}
 
-//	SPtr<Material> _material;
+	SPtr<Material> _material;
 
 	SPtr<RenderContext>	_renderContext;
 	RenderCommandBuffer _cmdBuf;

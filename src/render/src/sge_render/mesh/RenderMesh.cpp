@@ -61,7 +61,7 @@ void RenderMesh::create(const EditMesh& src) {
 						RenderDataTypeUtil::get<Tuple2f>(), uvCount,
 						RenderDataTypeUtil::get<Tuple3f>(), normalCount, tangentCount, binormalCount);
 
-	_vertexLayout = VertexLayoutManager::current()->getLayout(vertexType);
+	_vertexLayout = VertexLayoutManager::instance()->getLayout(vertexType);
 
 	if (!_vertexLayout) {
 		throw SGE_ERROR("cannot find vertex Layout for mesh");
@@ -123,7 +123,7 @@ void RenderSubMesh::create(const EditMesh& src) {
 	}
 
 //------
-	auto* renderer = Renderer::current();
+	auto* renderer = Renderer::instance();
 	{
 		RenderGpuBuffer::CreateDesc desc;
 		desc.type = RenderGpuBufferType::Vertex;

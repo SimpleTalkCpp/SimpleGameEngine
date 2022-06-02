@@ -32,7 +32,7 @@ RenderGpuBuffer_DX11::RenderGpuBuffer_DX11(CreateDesc& desc)
 		default: throw SGE_ERROR("unsupport gpu buffer type");
 	}
 
-	auto* renderer = Renderer_DX11::current();
+	auto* renderer = Renderer_DX11::instance();
 	auto* dev = renderer->d3dDevice();
 
 	auto hr = dev->CreateBuffer(&bd, nullptr, _d3dBuf.ptrForInit());
@@ -40,7 +40,7 @@ RenderGpuBuffer_DX11::RenderGpuBuffer_DX11(CreateDesc& desc)
 }
 
 void RenderGpuBuffer_DX11::onUploadToGpu(ByteSpan data, size_t offset) {
-	auto* renderer = Renderer_DX11::current();
+	auto* renderer = Renderer_DX11::instance();
 	auto* ctx = renderer->d3dDeviceContext();
 
 	D3D11_MAPPED_SUBRESOURCE mapped = {};
