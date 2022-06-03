@@ -14,57 +14,56 @@ Shader_DX11::Shader_DX11(StrView filename)
 	_passes.reserve(n);
 	for (size_t i = 0; i < n; i++) {
 		FmtTo(passPath, "{}/{}/dx11/pass{}", proj->importedPath(), filename, i);
-		auto* pass = new Pass(this, passPath, _info.passes[i]);
+		auto* pass = new MyPass(this, passPath, _info.passes[i]);
 		_passes.emplace_back(pass);
 	}
 }
 
-template<ShaderStageMask STAGE_MASK>
-void Shader_DX11::Stage<STAGE_MASK>::_load(Pass* pass, StrView passPath) {
-	_pass = pass;
-	auto* profile = Util::getDxStageProfile(stageMask());
+void Shader_DX11::_loadStageFile(StrView passPath, ShaderStageMask stageMask, Vector<u8>& outBytecode, ShaderStageInfo& outInfo) {
+	auto* profile = Util::getDxStageProfile(stageMask);
 
 	auto filename = Fmt("{}/{}.bin", passPath, profile);
-	File::readFile(filename, _bytecode);
+	File::readFile(filename, outBytecode);
 
 	filename += ".json";
-	JsonUtil::readFile(filename, _info);
+	JsonUtil::readFile(filename, outInfo);
 }
 
-void Shader_DX11::VertexStage::load(Pass* pass, StrView passPath, DX11_ID3DDevice* dev) {
-	_load(pass, passPath);
+void Shader_DX11::MyVertexStage::load(MyPass* pass, StrView passPath, DX11_ID3DDevice* dev) {
+	_loadStageFile(passPath, stageMask(), _bytecode, _info);
 	auto hr = dev->CreateVertexShader(_bytecode.data(), _bytecode.size(), nullptr, _shader.ptrForInit());
 	Util::throwIfError(hr);
 }
 
-void Shader_DX11::PixelStage::load(Pass* pass, StrView passPath, DX11_ID3DDevice* dev) {
-	_load(pass, passPath);
+void Shader_DX11::MyPixelStage::load(MyPass* pass, StrView passPath, DX11_ID3DDevice* dev) {
+	_loadStageFile(passPath, stageMask(), _bytecode, _info);
 	auto hr = dev->CreatePixelShader(_bytecode.data(), _bytecode.size(), nullptr, _shader.ptrForInit());
 	Util::throwIfError(hr);
 }
 
-void Shader_DX11::VertexStage::bind(RenderContext_DX11* ctx) {
+void Shader_DX11::MyVertexStage::bind(RenderContext_DX11* ctx) {
 	auto* dc = ctx->renderer()->d3dDeviceContext();
 	if (!_shader) throw SGE_ERROR("dx shader is null");
 	dc->VSSetShader(_shader, 0, 0);
 }
 
-void Shader_DX11::PixelStage::bind(RenderContext_DX11* ctx) {
+void Shader_DX11::MyPixelStage::bind(RenderContext_DX11* ctx) {
 	auto* dc = ctx->renderer()->d3dDeviceContext();
 	if (!_shader) throw SGE_ERROR("dx shader is null");
 	dc->PSSetShader(_shader, 0, 0);
 }
 
-Shader_DX11::Pass::Pass(Shader_DX11* shader, StrView passPath, ShaderInfo::Pass& info) 	
+Shader_DX11::MyPass::MyPass(Shader_DX11* shader, StrView passPath, ShaderInfo::Pass& info) 
+	: Base(shader, info)
 {
-	_shader = shader;
-	_info = &info;
+	_vertexStage = &_myVertexStage;
+	_pixelStage  = &_myPixelStage;
 
 	auto* renderer = Renderer_DX11::instance();
 	auto* dev = renderer->d3dDevice();
 
-	if (info.vsFunc.size()) { _vertexStage.load(this, passPath, dev); }
-	if (info.psFunc.size()) {  _pixelStage.load(this, passPath, dev); }
+	if (info.vsFunc.size()) { _myVertexStage.load(this, passPath, dev); }
+	if (info.psFunc.size()) {  _myPixelStage.load(this, passPath, dev); }
 }
 
 }

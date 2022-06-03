@@ -50,6 +50,6 @@ PixelIn vs_main(VertexIn i) {
 
 float4 ps_main(PixelIn i) : SV_TARGET
 {
-    // return i.color;
-	return float4(1,0,0,1);
+//	return float4(1,0,0,1);
+    return i.color * test_color;
 }

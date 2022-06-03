@@ -67,7 +67,7 @@ public:
 	SPtr<RenderGpuBuffer>	vertexBuffer;
 	SPtr<RenderGpuBuffer>	indexBuffer;
 
-	SPtr<Material>			material;
+	SPtr<MaterialPass>		materialPass;
 
 	size_t vertexCount = 0;
 	size_t indexCount = 0;

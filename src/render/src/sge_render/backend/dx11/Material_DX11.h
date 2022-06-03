@@ -5,49 +5,41 @@
 namespace sge {
 
 class Material_DX11 : public Material {
-public:	
-	void bind(RenderContext_DX11* ctx, const VertexLayout* vertexLayout);
+public:
 
 private:
 	using Util = DX11Util;
+	Shader_DX11* shader() { return static_cast<Shader_DX11*>(_shader.ptr()); }
 
-	Shader_DX11*	shader() { return static_cast<Shader_DX11*>(_shader.ptr()); }
-	virtual void onSetShader() override;
+	struct MyVertexStage : public VertexStage {
+		using Base = VertexStage;
+		MyVertexStage(MaterialPass* pass, ShaderVertexStage* shaderStage) : Base(pass, shaderStage) {}
 
-	struct Pass;
-
-	template<class SHADER_STAGE>
-	struct Stage : public NonCopyable {
-		void reset(Pass* pass, SHADER_STAGE* _shaderStage);
-	protected:
-		Pass* _pass = nullptr;
-		SHADER_STAGE* _shaderStage = nullptr;
-		Vector_<SPtr<RenderGpuBuffer_DX11>, 4>	_constBuffers;
-	};
-
-	struct VertexStage : public Stage<Shader_DX11::VertexStage> {
 		void bind(RenderContext_DX11* ctx, const VertexLayout* vertexLayout);
 		void bindInputLayout(RenderContext_DX11* ctx, const VertexLayout* vertexLayout);
 
 		VectorMap<const VertexLayout*, ComPtr<DX11_ID3DInputLayout>> _inputLayoutsMap;
 	};
-	struct PixelStage : public Stage<Shader_DX11::PixelStage> {
+
+	struct MyPixelStage : public PixelStage {
+		using Base = PixelStage;
+
+		MyPixelStage(MaterialPass* pass, ShaderPixelStage* shaderStage) : Base(pass, shaderStage) {}
 		void bind(RenderContext_DX11* ctx, const VertexLayout* vertexLayout);
 	};
 
-	struct Pass : public NonCopyable {
-		Pass(Material_DX11* material, Shader_DX11::Pass* shPass);
+	struct MyPass : public Pass {
+		MyPass(Material* material, ShaderPass* shaderPass);
 
-		void bind(RenderContext_DX11* ctx, const VertexLayout* vertexLayout);
+		virtual void onBind(RenderContext* ctx, const VertexLayout* vertexLayout) override;
 
-		Material_DX11*				_material	= nullptr;
-		const Shader_DX11::Pass*	_shPass		= nullptr;
-
-		VertexStage _vertexStage;
-		PixelStage  _pixelStage;
+		MyVertexStage _myVertexStage;
+		MyPixelStage  _myPixelStage;
 	};
 
-	Vector_<UPtr<Pass>, 1>	_passes;
+	virtual Pass* onCreatePass(Material* material, ShaderPass* shaderPass) override {
+		return new MyPass(material, shaderPass);
+	}
 };
 
 }

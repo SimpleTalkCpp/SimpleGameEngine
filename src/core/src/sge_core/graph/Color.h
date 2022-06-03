@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sge_core/math/Tuple4.h>
+
 namespace sge {
 
 template<class T>
@@ -60,6 +62,8 @@ struct ColorRGBA {
 		: r(r_), g(g_), b(b_), a(a_) {}
 
 	ColorRGB<T> rgb() const { return ColorRGB(r,g,b); }
+
+	Tuple4<T>	toTuple() const { return Tuple4<T>(r,g,b,a); }
 
 };
 

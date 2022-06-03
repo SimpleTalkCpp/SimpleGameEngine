@@ -16,5 +16,12 @@ Shader::~Shader() {
 	renderer->onShaderDestory(this);
 }
 
+ShaderPass::ShaderPass(Shader* shader, ShaderInfo::Pass& info) 
+	: _shader(shader)
+	, _info(&info)
+{
+
+}
+
 }
 

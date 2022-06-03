@@ -61,6 +61,8 @@ enum class RenderDataType : u8 {
 SGE_ENUM_STR_UTIL(RenderDataType)
 
 struct RenderDataTypeUtil {
+	RenderDataTypeUtil() = delete;
+	
 	using Type = RenderDataType;
 
 	template<class T> static constexpr Type get();

@@ -32,6 +32,44 @@ enum class ShaderPropType {
 //----
 SGE_ENUM_STR_UTIL(ShaderPropType)
 
+struct ShaderPropTypeUtil {	
+	ShaderPropTypeUtil() = delete;
+
+	using Type = ShaderPropType;
+
+	template<class T> static constexpr Type get();
+
+	template<> static constexpr	Type get<i32>()		{ return Type::Int; }
+	template<> static constexpr	Type get<f32>()		{ return Type::Float; }
+	template<> static constexpr	Type get<Vec2f>()	{ return Type::Vec2f; }
+//	template<> static constexpr	Type get<Vec3f>()	{ return Type::Vec3f; }
+//	template<> static constexpr	Type get<Vec4f>()	{ return Type::Vec4f; }
+	template<> static constexpr	Type get<Color4f>()	{ return Type::Color4f; }
+};
+
+struct ShaderPropValueConstPtr {
+	using Type = ShaderPropType;
+	Type	type = Type::None;
+	const void*	data = nullptr;
+	size_t	dataSize = 0;
+
+	ShaderPropValueConstPtr() = default;
+	
+	template<class V>
+	ShaderPropValueConstPtr(const V& v) {
+		type = ShaderPropTypeUtil::get<V>();
+		data = &v;
+		dataSize = sizeof(v);
+	}
+
+	template<class V>
+	const V& asValue() {
+		if (type != ShaderPropTypeUtil::get<V>())
+			throw SGE_ERROR("invalid type");
+		return *reinterpret_cast<const V*>(data);
+	}
+};
+
 struct ShaderInfo {
 	struct Prop {
 		ShaderPropType	propType = ShaderPropType::None;
@@ -146,6 +184,8 @@ public:
 			SGE_NAMED_IO(se, dataSize);
 			SGE_NAMED_IO(se, variables);
 		}
+
+		void setParamToBuffer(Span<u8> dstBuf, StrView propName, const ShaderPropValueConstPtr& valuePtr) const;
 	};
 
 	Vector_<Input, 8>		inputs;

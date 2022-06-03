@@ -30,7 +30,6 @@ public:
 		auto shader = renderer->createShader("Assets/Shaders/test.shader");
 		_material = renderer->createMaterial();
 		_material->setShader(shader);
-		_material->setParam("a", 10.0f);
 
 		EditMesh editMesh;
 
@@ -67,6 +66,9 @@ public:
 	virtual void onDraw() {
 		Base::onDraw();
 		if (!_renderContext) return;
+
+//		auto t = (GetTickCount() % 255) / 255.0f;
+//		_material->setParam("test_color", Color4f(t, 0, 0, 1));
 
 		_renderContext->setFrameBufferSize(clientRect().size);
 

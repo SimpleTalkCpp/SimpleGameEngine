@@ -63,9 +63,8 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 
 	auto* ctx = _renderer->d3dDeviceContext();
 
-	auto* mat = static_cast<Material_DX11*>(cmd.material.ptr());
-	if (mat) {
-		mat->bind(this, cmd.vertexLayout);
+	if (cmd.materialPass) {
+		cmd.materialPass->bind(this, cmd.vertexLayout);
 	} else {
 		_setTestShaders(cmd.vertexLayout);
 	}
