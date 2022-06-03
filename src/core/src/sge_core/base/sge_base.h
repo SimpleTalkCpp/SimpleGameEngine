@@ -148,6 +148,10 @@ public:
 	template<class R> void operator=(R&& r) { Base::operator=(SGE_FORWARD(r)); }
 
 	void operator+=(StrViewT<T> v) { Base::append(v.begin(), v.end()); }
+
+	template<size_t N>
+	void operator+=(const StringT<T, N>& v) { Base::append(v.begin(), v.end()); }
+
 	template<class R> void operator+=(const R& r) { Base::operator+=(r); }
 
 	StrViewT<T>	view() const { return StrViewT<T>(data(), size()); }
