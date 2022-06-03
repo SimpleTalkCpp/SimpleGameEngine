@@ -31,6 +31,8 @@ public:
 		bool isString() const					{ return type == TokenType::String; }
 		bool isString(StrView s) const			{ return type == TokenType::String && s == str; }
 
+		bool isNumber() const					{ return type == TokenType::Number; }
+
 		bool isNewline() const					{ return type == TokenType::Newline; }
 
 		void setNone() { type = TokenType::None; str.clear(); }
