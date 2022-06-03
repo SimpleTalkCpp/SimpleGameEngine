@@ -92,6 +92,7 @@ void Lexer::_error(StrView msg) {
 			if (c == '\n') { tmp += c;		continue; }
 			if (c == '\t') { tmp += "----";	continue; }
 			tmp += '-';
+			i++;
 		}
 		tmp += "^^^\n";
 	}
@@ -139,7 +140,7 @@ bool Lexer::_nextToken() {
 			}
 
 			_token.type = TokenType::Operator;
-			_token.str += _ch;
+			_token.str = '/';
 			return true;
 		}
 
