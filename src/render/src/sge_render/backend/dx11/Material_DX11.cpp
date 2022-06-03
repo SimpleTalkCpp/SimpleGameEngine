@@ -4,59 +4,38 @@
 
 namespace sge {
 
-#if 0
+template<class STAGE>
+void Material_DX11::_bindStageHelper(RenderContext_DX11* ctx, STAGE* stage) {
+	auto* shaderStage = stage->shaderStage();
+	if (!shaderStage) return;
+	shaderStage->bind(ctx);
 
-template<class SHADER_STAGE>
-void Material_DX11::Stage<SHADER_STAGE>::setParam(StrView name, const ShaderPropValueConstPtr& valuePtr) {
-	if (!_shaderStage) { SGE_ASSERT(false); return; }
+	auto* dc = ctx->renderer()->d3dDeviceContext();
 
-	auto* info_ = info();
-	size_t i = 0;
-	for (auto& cb : info_->constBuffers) {
-		SGE_ASSERT(i < _constBuffers.size());
-		cb.setParamToBuffer(_constBuffers[i]._cpuBuffer, name, valuePtr);
-		i++;
+	for (auto& cb : stage->constBuffers()) {
+		cb.uploadToGpu();
+
+		auto* cbInfo = cb.info();
+		UINT bindPoint = cbInfo->bindPoint;
+		
+		auto* gpuBuffer = static_cast<RenderGpuBuffer_DX11*>(cb.gpuBuffer.ptr());
+		if (!gpuBuffer) throw SGE_ERROR("cosnt buffer is null");
+
+		auto* d3dBuf = gpuBuffer->d3dBuf();
+		if (!d3dBuf) throw SGE_ERROR("d3dbuffer is null");
+
+		stage->_dxSetConstBuffer(dc, bindPoint, d3dBuf);
 	}
 }
-
-template<class SHADER_STAGE>
-void Material_DX11::Stage<SHADER_STAGE>::reset(Pass* pass, SHADER_STAGE* shaderStage) {
-	auto* renderer = Renderer_DX11::instance();
-
-	_pass = pass;
-	_shaderStage = shaderStage;
-
-	auto* info_ = info();
-	auto constBufferCount = info_->constBuffers.size();
-
-	_constBuffers.clear();
-	_constBuffers.reserve(constBufferCount);
-
-	for (auto& cbInfo : info_->constBuffers) {
-		RenderGpuBuffer::CreateDesc desc;
-		desc.type = RenderGpuBufferType::Const;
-		desc.bufferSize = cbInfo.dataSize;
-
-		auto& dst = _constBuffers.emplace_back();
-		auto gpuBuf = renderer->createGpuBuffer(desc);
-		dst._gpuBuffer = static_cast<RenderGpuBuffer_DX11*>(gpuBuf.ptr());
-	}
-}
-#endif
 
 void Material_DX11::MyPixelStage::bind(RenderContext_DX11* ctx, const VertexLayout* vertexLayout) {
-	if (!_pass) return;
-	auto* ss = static_cast<Shader_DX11::MyPixelStage*>(_shaderStage);
-	if (!ss) return;
-	ss->bind(ctx);
+	_bindStageHelper(ctx, this);
 }
 
 void Material_DX11::MyVertexStage::bind(RenderContext_DX11* ctx, const VertexLayout* vertexLayout) {
-	if (!_pass) return;
-	if (!_shaderStage) return;
+	_bindStageHelper(ctx, this);
+
 	bindInputLayout(ctx, vertexLayout);
-	auto* ss = static_cast<Shader_DX11::MyVertexStage*>(_shaderStage);
-	ss->bind(ctx);
 }
 
 void Material_DX11::MyVertexStage::bindInputLayout(RenderContext_DX11* ctx, const VertexLayout* vertexLayout) {
@@ -111,10 +90,6 @@ void Material_DX11::MyPass::onBind(RenderContext* ctx_, const VertexLayout* vert
 	 _myPixelStage.bind(ctx, vertexLayout);
 }
 
-//void Material_DX11::MyPass::setParam(StrView name, const ShaderPropValueConstPtr& valuePtr) {
-//	_myVertexStage.setParam(name, valuePtr);
-//	 _myPixelStage.setParam(name, valuePtr);
-//}
 
 Material_DX11::MyPass::MyPass(Material* material, ShaderPass* shaderPass) 
 	: Pass(material, shaderPass)

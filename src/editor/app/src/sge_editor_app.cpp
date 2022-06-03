@@ -67,8 +67,11 @@ public:
 		Base::onDraw();
 		if (!_renderContext) return;
 
-//		auto t = (GetTickCount() % 255) / 255.0f;
-//		_material->setParam("test_color", Color4f(t, 0, 0, 1));
+		auto time = GetTickCount() * 0.001f;
+		auto s = abs(sin(time * 2));
+
+		_material->setParam("test_float", s * 0.5f);
+		_material->setParam("test_color", Color4f(s, 0, 0, 1));
 
 		_renderContext->setFrameBufferSize(clientRect().size);
 

@@ -36,14 +36,14 @@ struct PixelIn {
 
 float4x4	SGE_MVP;
 
-float x;
-float b;
-float c;
-float test_color;
+float  test_float;
+float4 test_color;
 
 PixelIn vs_main(VertexIn i) {
     PixelIn o;
     o.position = i.position;
+	o.position.y += test_float;
+	
     o.color    = i.color;
     return o;
 }

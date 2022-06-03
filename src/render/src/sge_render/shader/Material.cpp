@@ -17,26 +17,57 @@ void Material::setShader(Shader* shader) {
 }
 
 MaterialPass_Stage::MaterialPass_Stage(MaterialPass* pass, ShaderStage* shaderStage) 
-	: _pass(pass) 
+	: _pass(pass)
+	, _shaderStage(shaderStage)
 {
-	auto* renderer = Renderer::instance();
-
 	auto* info = shaderStage->info();
 	auto cbCount = info->constBuffers.size();
 	_constBuffers.resize(cbCount);
 
 	for (size_t i = 0; i < cbCount; i++) {
-		auto& cb = _constBuffers[i];
-		auto& cbInfo = info->constBuffers[i];
-		
-		cb.cpuBuffer.resize(cbInfo.dataSize);
-
-		RenderGpuBuffer::CreateDesc desc;
-		desc.type = RenderGpuBufferType::Const;
-		desc.bufferSize = cbInfo.dataSize;
-
-		cb.gpuBuffer = renderer->createGpuBuffer(desc);
+		auto& cb = _constBuffers[i];	
+		cb.create(info->constBuffers[i]);
 	}
+}
+
+void MaterialPass_Stage::ConstBuffer::create(const Info& info) {
+	_info = &info;
+	_gpuDirty = true;
+
+	cpuBuffer.resize(info.dataSize);
+
+	RenderGpuBuffer::CreateDesc desc;
+	desc.type = RenderGpuBufferType::Const;
+	desc.bufferSize = info.dataSize;
+
+	gpuBuffer = Renderer::instance()->createGpuBuffer(desc);
+}
+
+
+void MaterialPass_Stage::ConstBuffer::uploadToGpu() {
+	if (!_gpuDirty) return;
+	_gpuDirty = false;
+
+	if (!gpuBuffer) return;
+	gpuBuffer->uploadToGpu(cpuBuffer);
+}
+
+void MaterialPass_Stage::ConstBuffer::_setParam(const VarInfo* varInfo, const float& value) {
+	switch (varInfo->dataType) {
+		case DataType::Float32: _setValueAs(varInfo, value); break;
+		default: errorType();
+	}
+}
+
+void MaterialPass_Stage::ConstBuffer::_setParam(const VarInfo* varInfo, const Tuple4f& value) {
+	switch (varInfo->dataType) {
+		case DataType::Float32x4: _setValueAs(varInfo, value); break;
+		default: errorType();
+	}
+}
+
+void MaterialPass_Stage::ConstBuffer::errorType() {
+	throw SGE_ERROR("ConstBuffer setParam type mismatch");
 }
 
 }

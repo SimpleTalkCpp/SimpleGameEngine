@@ -185,7 +185,12 @@ public:
 			SGE_NAMED_IO(se, variables);
 		}
 
-		void setParamToBuffer(Span<u8> dstBuf, StrView propName, const ShaderPropValueConstPtr& valuePtr) const;
+		const Variable* findVariable(StrView propName) const {
+			for (auto& v : variables) {
+				if (v.name == propName) return &v;
+			}
+			return nullptr;
+		}
 	};
 
 	Vector_<Input, 8>		inputs;
