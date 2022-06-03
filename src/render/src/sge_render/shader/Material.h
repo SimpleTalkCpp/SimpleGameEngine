@@ -12,9 +12,9 @@ public:
 
 	void setParam(StrView name, float v);
 
-private:
+protected:
 	SPtr<Shader> _shader;
-	virtual void onSetShader(Shader* shader) = 0;
+	virtual void onSetShader() = 0;
 };
 
 }

@@ -3,18 +3,19 @@
 
 namespace sge {
 
-void RenderCommandBuffer::drawMesh(const SrcLoc& debugLoc, const RenderMesh& mesh) {
+void RenderCommandBuffer::drawMesh(const SrcLoc& debugLoc, const RenderMesh& mesh, Material* material) {
 	for (auto& sm : mesh.subMeshes()) {
-		drawSubMesh(debugLoc, sm);
+		drawSubMesh(debugLoc, sm, material);
 	}
 }
 
-void RenderCommandBuffer::drawSubMesh(const SrcLoc& debugLoc, const RenderSubMesh& subMesh) {
+void RenderCommandBuffer::drawSubMesh(const SrcLoc& debugLoc, const RenderSubMesh& subMesh, Material* material) {
 	auto* cmd = newCommand<RenderCommand_DrawCall>();
 #if _DEBUG
 	cmd->debugLoc = debugLoc;
 #endif
 
+	cmd->material		= material;
 	cmd->primitive		= subMesh.primitive();
 	cmd->vertexLayout	= subMesh.vertexLayout();
 	cmd->vertexBuffer	= subMesh.vertexBuffer();

@@ -18,6 +18,7 @@
 namespace sge {
 
 class Renderer_DX11;
+class RenderContext_DX11;
 
 using DX11_IDXGIFactory				= IDXGIFactory1;
 using DX11_IDXGIDevice				= IDXGIDevice;

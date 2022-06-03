@@ -5,7 +5,10 @@
 namespace sge {
 
 struct ShaderStage : public NonCopyable {
+	const ShaderStageInfo* info() const { return &_info; }
 
+protected:
+	ShaderStageInfo _info;
 };
 
 struct ShaderPass : public NonCopyable {

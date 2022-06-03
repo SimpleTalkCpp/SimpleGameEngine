@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../vertex/Vertex.h"
-#include "../buffer/RenderGpuBuffer.h"
+#include <sge_render/vertex/Vertex.h>
+#include <sge_render/buffer/RenderGpuBuffer.h>
+#include <sge_render/shader/Material.h>
 
 namespace sge {
 
@@ -66,6 +67,8 @@ public:
 	SPtr<RenderGpuBuffer>	vertexBuffer;
 	SPtr<RenderGpuBuffer>	indexBuffer;
 
+	SPtr<Material>			material;
+
 	size_t vertexCount = 0;
 	size_t indexCount = 0;
 };
@@ -80,8 +83,8 @@ public:
 		return newCommand<RenderCommand_SwapBuffers>();
 	}
 
-	void drawMesh	(const SrcLoc& debugLoc, const RenderMesh& mesh);
-	void drawSubMesh(const SrcLoc& debugLoc, const RenderSubMesh& subMesh);
+	void drawMesh	(const SrcLoc& debugLoc, const RenderMesh&    mesh,	   Material* material);
+	void drawSubMesh(const SrcLoc& debugLoc, const RenderSubMesh& subMesh, Material* material);
 
 	void reset();
 

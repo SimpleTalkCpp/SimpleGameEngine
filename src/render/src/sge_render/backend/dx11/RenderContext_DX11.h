@@ -15,6 +15,8 @@ public:
 	void onCmd_SwapBuffers		(RenderCommand_SwapBuffers&			cmd);
 	void onCmd_DrawCall			(RenderCommand_DrawCall&			cmd);
 
+	Renderer_DX11*	renderer() { return _renderer; }
+
 protected:
 	Renderer_DX11*	_renderer = nullptr;
 
@@ -41,7 +43,7 @@ protected:
 	virtual void onBeginRender() override;
 	virtual void onEndRender() override;
 
-	void _setTestShaders();
+	void _setTestShaders(const VertexLayout* vertexLayout);
 
 	virtual void onCommit(RenderCommandBuffer& cmdBuf);
 };

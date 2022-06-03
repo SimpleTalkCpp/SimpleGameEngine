@@ -1,5 +1,6 @@
 #include "Shader_DX11.h"
 #include "Renderer_DX11.h"
+#include "RenderContext_DX11.h"
 
 namespace sge {
 
@@ -10,7 +11,7 @@ Shader_DX11::Shader_DX11(StrView filename)
 	TempString passPath;
 
 	size_t n = _info.passes.size();
-	_passes.resize(n);
+	_passes.reserve(n);
 	for (size_t i = 0; i < n; i++) {
 		FmtTo(passPath, "{}/{}/dx11/pass{}", proj->importedPath(), filename, i);
 		auto* pass = new Pass(this, passPath, _info.passes[i]);
@@ -40,6 +41,18 @@ void Shader_DX11::PixelStage::load(Pass* pass, StrView passPath, DX11_ID3DDevice
 	_load(pass, passPath);
 	auto hr = dev->CreatePixelShader(_bytecode.data(), _bytecode.size(), nullptr, _shader.ptrForInit());
 	Util::throwIfError(hr);
+}
+
+void Shader_DX11::VertexStage::bind(RenderContext_DX11* ctx) {
+	auto* dc = ctx->renderer()->d3dDeviceContext();
+	if (!_shader) throw SGE_ERROR("dx shader is null");
+	dc->VSSetShader(_shader, 0, 0);
+}
+
+void Shader_DX11::PixelStage::bind(RenderContext_DX11* ctx) {
+	auto* dc = ctx->renderer()->d3dDeviceContext();
+	if (!_shader) throw SGE_ERROR("dx shader is null");
+	dc->PSSetShader(_shader, 0, 0);
 }
 
 Shader_DX11::Pass::Pass(Shader_DX11* shader, StrView passPath, ShaderInfo::Pass& info) 	

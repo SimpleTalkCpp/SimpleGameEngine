@@ -1,6 +1,7 @@
 #include "RenderContext_DX11.h"
 #include "Renderer_DX11.h"
 #include "RenderGpuBuffer_DX11.h"
+#include "Material_DX11.h"
 
 namespace sge {
 
@@ -60,16 +61,17 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 		if (!indexBuffer) { SGE_ASSERT(false); return; }
 	}
 
-	_setTestShaders();
-
 	auto* ctx = _renderer->d3dDeviceContext();
+
+	auto* mat = static_cast<Material_DX11*>(cmd.material.ptr());
+	if (mat) {
+		mat->bind(this, cmd.vertexLayout);
+	} else {
+		_setTestShaders(cmd.vertexLayout);
+	}
+
 	auto primitive = Util::getDxPrimitiveTopology(cmd.primitive);
 	ctx->IASetPrimitiveTopology(primitive);
-
-	auto* inputLayout = _getTestInputLayout(cmd.vertexLayout);
-	if (!inputLayout) { SGE_ASSERT(false); return; }
-
-	ctx->IASetInputLayout(inputLayout);
 
 	UINT stride = static_cast<UINT>(cmd.vertexLayout->stride);
 	UINT offset = 0;
@@ -167,7 +169,7 @@ void RenderContext_DX11::onEndRender() {
 
 }
 
-void RenderContext_DX11::_setTestShaders() {
+void RenderContext_DX11::_setTestShaders(const VertexLayout* vertexLayout) {
 	HRESULT hr;
 	const wchar_t* shaderFile = L"Assets/Shaders/test.hlsl";
 
@@ -267,6 +269,10 @@ void RenderContext_DX11::_setTestShaders() {
 
 	ctx->VSSetShader(_testVertexShader, 0, 0);
 	ctx->PSSetShader(_testPixelShader,  0, 0);
+
+	auto* inputLayout = _getTestInputLayout(vertexLayout);
+	if (!inputLayout) { SGE_ASSERT(false); return; }
+	ctx->IASetInputLayout(inputLayout);
 }
 
 void RenderContext_DX11::onCommit(RenderCommandBuffer& cmdBuf) {

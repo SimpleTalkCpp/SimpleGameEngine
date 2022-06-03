@@ -74,7 +74,7 @@ public:
 
 		_cmdBuf.reset();
 		_cmdBuf.clearFrameBuffers()->setColor({0, 0, 0.2f, 1});
-		_cmdBuf.drawMesh(SGE_LOC, _renderMesh);//, _material);
+		_cmdBuf.drawMesh(SGE_LOC, _renderMesh, _material);
 		_cmdBuf.swapBuffers();
 		
 		_renderContext->commit(_cmdBuf);
