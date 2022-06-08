@@ -5,15 +5,15 @@
 
 namespace sge {
 
-// posType			: 8 bit
-// colorType		: 8 bit
-// colorCount		: 2 bit
-// uvType			: 8 bit
-// uvCount			: 8 bit
-// normalType		: 8 bit
-// normalCount		: 2 bit
-// tangentCount		: 2 bit
-// binormalCount	: 2 bit
+// posType          : 8 bit (from 0)
+// colorType        : 8 bit (from 8)
+// colorCount       : 2 bit (from 16)
+// uvType           : 8 bit (from 18)
+// uvCount          : 8 bit (from 26)
+// normalType       : 8 bit (from 34)
+// normalCount      : 2 bit (from 42)
+// tangentCount     : 2 bit (from 44)
+// binormalCount    : 2 bit (from 46)
 enum class VertexType : u64 { None };
 
 struct VertexTypeUtil {
