@@ -16,8 +16,8 @@ struct Vec4_SSE_Data {
 		M _m;
 	};
 
-			T& operator[](int i)		{ return data[i]; }
-	const	T& operator[](int i) const	{ return data[i]; }
+	SGE_INLINE			T& operator[](int i)		{ return data[i]; }
+	SGE_INLINE	const	T& operator[](int i) const	{ return data[i]; }
 };
 
 using Vec4f_SSE_Data = Vec4_SSE_Data<float,  __m128 >; // SSE

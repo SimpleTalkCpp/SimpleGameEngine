@@ -12,8 +12,8 @@ struct Tuple3 {
 		T data[kElementCount];
 	};
 
-			T& operator[](int i)		{ return data[i]; }
-	const	T& operator[](int i) const	{ return data[i]; }
+	SGE_INLINE			T& operator[](int i)		{ return data[i]; }
+	SGE_INLINE	const	T& operator[](int i) const	{ return data[i]; }
 
 	SGE_INLINE Tuple3() = default;
 	SGE_INLINE Tuple3(const T& x_, const T& y_, const T& z_) { set(x_, y_, z_); }

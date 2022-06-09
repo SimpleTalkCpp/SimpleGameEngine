@@ -27,6 +27,9 @@ public:
 	SGE_INLINE void set(const Tuple4<T> & v) { DATA::set(v); }
 	SGE_INLINE void set(const T& x_, const T& y_, const T& z_, const T& w_) { set(Tuple4<T>(x_, y_, z_, w_)); }
 
+	SGE_INLINE bool equals(const Vec4& r, const T& epsilon = Math::epsilon<T>()) const;
+	SGE_INLINE bool equals0(              const T& epsilon = Math::epsilon<T>()) const;
+
 	SGE_INLINE void setAll(const T& v) { set(v,v,v,v); }
 	SGE_INLINE bool isAll (const T& v) { return operator==(Vec4(v,v,v,v)); }
 
@@ -67,4 +70,20 @@ using Vec4d_Basic = Vec4_Basic<double>;
 
 SGE_FORMATTER_T( SGE_ARGS(class T, class DATA), Vec4_Basic< SGE_ARGS(T, DATA) >)
 
+
+template<class T, class DATA> SGE_INLINE
+bool sge::Vec4_Basic<T, DATA>::equals(const Vec4& r, const T& epsilon) const {
+	return Math::equals(x, r.x, epsilon)
+		&& Math::equals(y, r.y, epsilon)
+		&& Math::equals(z, r.z, epsilon)
+		&& Math::equals(w, r.w, epsilon);
+}
+
+template<class T, class DATA> SGE_INLINE
+bool sge::Vec4_Basic<T, DATA>::equals0(const T& epsilon) const {
+	return Math::equals0(x, epsilon)
+		&& Math::equals0(y, epsilon)
+		&& Math::equals0(z, epsilon)
+		&& Math::equals0(w, epsilon);
+}
 }

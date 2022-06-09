@@ -27,8 +27,11 @@ public:
 	SGE_INLINE void set(const Tuple3<T> & v) { DATA::set(v); }
 	SGE_INLINE void set(const T& x_, const T& y_, const T& z_) { set(Tuple3<T>(x_, y_, z_)); }
 
+	SGE_INLINE bool equals(const Vec3& r, const T& epsilon = Math::epsilon<T>()) const;
+	SGE_INLINE bool equals0(              const T& epsilon = Math::epsilon<T>()) const;
+
 	SGE_INLINE void setAll(const T& v) { set(v,v,v); }
-	SGE_INLINE bool isAll (const T& v) { return operator==(Vec3(v,v,v)); }
+	SGE_INLINE bool isAll (const T& v) { return equals(Vec3(v,v,v)); }
 
 	SGE_INLINE Vec3 operator+(const Vec3& r) const { return Vec3(x + r.x, y + r.y, z + r.z); }
 	SGE_INLINE Vec3 operator-(const Vec3& r) const { return Vec3(x - r.x, y - r.y, z - r.z); }
@@ -69,5 +72,20 @@ using Vec3d_Basic = Vec3_Basic<double>;
 
 // another work around for comma
 SGE_FORMATTER_T( SGE_ARGS(class T, class DATA), Vec3_Basic< SGE_ARGS(T, DATA) >)
+
+
+template<class T, class DATA> SGE_INLINE
+bool sge::Vec3_Basic<T, DATA>::equals(const Vec3& r, const T& epsilon) const {
+	return Math::equals(x, r.x, epsilon)
+		&& Math::equals(y, r.y, epsilon)
+		&& Math::equals(z, r.z, epsilon);
+}
+
+template<class T, class DATA> SGE_INLINE
+bool sge::Vec3_Basic<T, DATA>::equals0(const T& epsilon) const {
+	return Math::equals0(x, epsilon)
+		&& Math::equals0(y, epsilon)
+		&& Math::equals0(z, epsilon);
+}
 
 }

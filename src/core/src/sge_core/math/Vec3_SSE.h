@@ -16,8 +16,8 @@ struct Vec3_SSE_Data {
 		M _m;
 	};
 
-			T& operator[](int i)		{ return data[i]; }
-	const	T& operator[](int i) const	{ return data[i]; }
+	SGE_INLINE			T& operator[](int i)		{ return data[i]; }
+	SGE_INLINE	const	T& operator[](int i) const	{ return data[i]; }
 
 	SGE_INLINE Vec3_SSE_Data() = default;
 	SGE_INLINE Vec3_SSE_Data(const T& x_, const T& y_, const T& z_) {
