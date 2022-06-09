@@ -60,11 +60,4 @@ void JsonUtil::deserialize(StrView json, T& obj) {
 	se.io(obj);
 }
 
-template<class T> inline
-void JsonUtil::stringify(String& json, const T& obj) {
-	JsonWriter wr(json);
-	wr.writeValue(obj);
-}
-
-
 }
