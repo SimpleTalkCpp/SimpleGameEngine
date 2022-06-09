@@ -35,8 +35,8 @@ public:
 void test_Vec3() {
 	using namespace sge;
 // 	SGE_TEST_CASE(Test_Vec3< Vec3_Basic<f32> >, operator_test1());
- 	SGE_TEST_CASE(Test_Vec3< Vec3_SSE<  f32> >, operator_test1());
-// 	SGE_TEST_VEC3_CASE(operator_test1());
+// 	SGE_TEST_CASE(Test_Vec3< Vec3_SSE<  f32> >, operator_test1());
+ 	SGE_TEST_VEC3_CASE(operator_test1());
 
 	return;
 }
