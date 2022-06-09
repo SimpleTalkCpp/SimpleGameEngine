@@ -5,35 +5,57 @@
 
 namespace sge {
 
-template<class T, class DATA = Tuple4<T> >
+template<class T> using Vec4_Basic_Data = Tuple4<T>;
+
+template<class T, class DATA = Vec4_Basic_Data<T> >
 struct Vec4_Basic : public DATA {
 public:
-	using ElementType = T;
+	using Vec4 = Vec4_Basic;
 	static const size_t kElementCount = 4;
 
-	using Vec4 = Vec4_Basic;
-
+	using ElementType = typename DATA::ElementType;
 	using DATA::x; // require this on gcc/clang, otherwise the fullname `Base::x` is needed instead of `x`
 	using DATA::y;
 	using DATA::z;
+	using DATA::w;
 	using DATA::data;
 
 	SGE_INLINE Vec4() = default;
-	SGE_INLINE Vec4(const T& x_, const T& y_, const T& z_, const T& w_) : DATA(x_, y_, z_, w_) {}
-	SGE_INLINE Vec4(const Tuple4<T> & v) : DATA(v) {}
+	SGE_INLINE Vec4(const Tuple4<T> & v) { set(v); }
+	SGE_INLINE Vec4(const T& x_, const T& y_, const T& z_, const T& w_) { set(x_, y_, z_, w_); }
+
+	SGE_INLINE void set(const Tuple4<T> & v) { DATA::set(v); }
+	SGE_INLINE void set(const T& x_, const T& y_, const T& z_, const T& w_) { set(Tuple4<T>(x_, y_, z_, w_)); }
+
+	SGE_INLINE void setAll(const T& v) { set(v,v,v,v); }
+	SGE_INLINE bool isAll (const T& v) { return operator==(Vec4(v,v,v,v)); }
 
 	SGE_INLINE Vec4 operator+(const Vec4& r) const { return Vec4(x + r.x, y + r.y, z + r.z, w + r.w); }
 	SGE_INLINE Vec4 operator-(const Vec4& r) const { return Vec4(x - r.x, y - r.y, z - r.z, w - r.w); }
 	SGE_INLINE Vec4 operator*(const Vec4& r) const { return Vec4(x * r.x, y * r.y, z * r.z, w * r.w); }
 	SGE_INLINE Vec4 operator/(const Vec4& r) const { return Vec4(x / r.x, y / r.y, z / r.z, w / r.w); }
 
+	// Scalar operators
 	SGE_INLINE Vec4 operator+(const T& s) const { return Vec4(x + s, y + s, z + s, w + s); }
 	SGE_INLINE Vec4 operator-(const T& s) const { return Vec4(x - s, y - s, z - s, w - s); }
 	SGE_INLINE Vec4 operator*(const T& s) const { return Vec4(x * s, y * s, z * s, w * s); }
 	SGE_INLINE Vec4 operator/(const T& s) const { return Vec4(x / s, y / s, z / s, w / s); }
 
+	SGE_INLINE void operator+=(const Vec4& r) { x += r.x; y += r.y; z += r.z; w += r.w; }
+	SGE_INLINE void operator-=(const Vec4& r) { x -= r.x; y -= r.y; z -= r.z; w -= r.w; }
+	SGE_INLINE void operator*=(const Vec4& r) { x *= r.x; y *= r.y; z *= r.z; w *= r.w; }
+	SGE_INLINE void operator/=(const Vec4& r) { x /= r.x; y /= r.y; z /= r.z; w /= r.w; }
+
+	SGE_INLINE void operator+=(const T& s) { x += s; y += s; z += s; w += s; }
+	SGE_INLINE void operator-=(const T& s) { x -= s; y -= s; z -= s; w -= s; }
+	SGE_INLINE void operator*=(const T& s) { x *= s; y *= s; z *= s; w *= s; }
+	SGE_INLINE void operator/=(const T& s) { x /= s; y /= s; z /= s; w /= s; }
+
 	SGE_INLINE bool operator==(const Vec4& r) const { return x == r.x && y == r.y && z == r.z && w == r.w; }
 	SGE_INLINE bool operator!=(const Vec4& r) const { return x != r.x || y != r.y || z != r.z || w != r.w; }
+
+			T& operator[](int i)		{ return data[i]; }
+	const	T& operator[](int i) const	{ return data[i]; }
 
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {}, {}, {})", x, y, z, w);
@@ -43,15 +65,6 @@ public:
 using Vec4f_Basic = Vec4_Basic<float>;
 using Vec4d_Basic = Vec4_Basic<double>;
 
+SGE_FORMATTER_T( SGE_ARGS(class T, class DATA), Vec4_Basic< SGE_ARGS(T, DATA) >)
+
 }
-
-template<class T, class OPT>
-struct fmt::formatter< sge::Vec4_Basic<T, OPT> > {
-	using V = sge::Vec4_Basic<T, OPT>;
-
-	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const V& v, fmt::format_context& ctx) {
-		v.onFormat(ctx);
-		return ctx.out();
-	}
-};

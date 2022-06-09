@@ -12,18 +12,20 @@
 	#endif
 #endif
 
-#define SGE_FORMATTER(T) \
+#define SGE_FORMATTER_T(TEMPLATE_ARGS, CLASS) \
 	} /* namespace sge */ \
-	template<> \
-	struct fmt::formatter<sge::T> { \
+	template<TEMPLATE_ARGS> \
+	struct fmt::formatter<sge::CLASS> { \
 		auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); } \
-		auto format(const sge::T& v, fmt::format_context& ctx) { \
+		auto format(const sge::CLASS& v, fmt::format_context& ctx) { \
 			v.onFormat(ctx); \
 			return ctx.out(); \
 		} \
 	}; \
 	namespace sge { \
 //------
+
+#define SGE_FORMATTER(CLASS) SGE_FORMATTER_T(SGE_EMPTY, CLASS)
 
 #define SGE_FORMATTER_ENUM(T) \
 	} /* namespace sge */ \

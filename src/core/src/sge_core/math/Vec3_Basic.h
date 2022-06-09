@@ -1,26 +1,34 @@
 #pragma once
 
 #include "Tuple3.h"
-#include "Vec3.h"
+#include "Vec2.h"
 
 namespace sge {
 
-template<class T, class DATA = Tuple3<T> >
+template<class T> using Vec3_Basic_Data = Tuple3<T>;
+
+template<class T, class DATA = Vec3_Basic_Data<T> >
 struct Vec3_Basic : public DATA {
 public:
-	using ElementType = T;
+	using Vec3 = Vec3_Basic;
 	static const size_t kElementCount = 3;
 
-	using Vec3 = Vec3_Basic;
-
+	using ElementType = typename DATA::ElementType;
 	using DATA::x; // require this on gcc/clang, otherwise the fullname `Base::x` is needed instead of `x`
 	using DATA::y;
 	using DATA::z;
+
 	using DATA::data;
 
 	SGE_INLINE Vec3() = default;
-	SGE_INLINE Vec3(const T& x_, const T& y_, const T& z_) : DATA(x_, y_, z_) {}
-	SGE_INLINE Vec3(const Tuple3<T> & v) : DATA(v) {}
+	SGE_INLINE Vec3(const Tuple3<T> & v) { set(v); }
+	SGE_INLINE Vec3(const T& x_, const T& y_, const T& z_) { set(x_, y_, z_); }
+
+	SGE_INLINE void set(const Tuple3<T> & v) { DATA::set(v); }
+	SGE_INLINE void set(const T& x_, const T& y_, const T& z_) { set(Tuple3<T>(x_, y_, z_)); }
+
+	SGE_INLINE void setAll(const T& v) { set(v,v,v); }
+	SGE_INLINE bool isAll (const T& v) { return operator==(Vec3(v,v,v)); }
 
 	SGE_INLINE Vec3 operator+(const Vec3& r) const { return Vec3(x + r.x, y + r.y, z + r.z); }
 	SGE_INLINE Vec3 operator-(const Vec3& r) const { return Vec3(x - r.x, y - r.y, z - r.z); }
@@ -32,8 +40,21 @@ public:
 	SGE_INLINE Vec3 operator*(const T& s) const { return Vec3(x * s, y * s, z * s); }
 	SGE_INLINE Vec3 operator/(const T& s) const { return Vec3(x / s, y / s, z / s); }
 
+	SGE_INLINE void operator+=(const Vec3& r) { x += r.x; y += r.y; z += r.z; }
+	SGE_INLINE void operator-=(const Vec3& r) { x -= r.x; y -= r.y; z -= r.z; }
+	SGE_INLINE void operator*=(const Vec3& r) { x *= r.x; y *= r.y; z *= r.z; }
+	SGE_INLINE void operator/=(const Vec3& r) { x /= r.x; y /= r.y; z /= r.z; }
+
+	SGE_INLINE void operator+=(const T& s) { x += s; y += s; z += s; }
+	SGE_INLINE void operator-=(const T& s) { x -= s; y -= s; z -= s; }
+	SGE_INLINE void operator*=(const T& s) { x *= s; y *= s; z *= s; }
+	SGE_INLINE void operator/=(const T& s) { x /= s; y /= s; z /= s; }
+
 	SGE_INLINE bool operator==(const Vec3& r) const { return x == r.x && y == r.y && z == r.z; }
 	SGE_INLINE bool operator!=(const Vec3& r) const { return x != r.x || y != r.y || z != r.z; }
+
+			T& operator[](int i)		{ return data[i]; }
+	const	T& operator[](int i) const	{ return data[i]; }
 
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {}, {})", x, y, z);
@@ -43,15 +64,10 @@ public:
 using Vec3f_Basic = Vec3_Basic<float>;
 using Vec3d_Basic = Vec3_Basic<double>;
 
+// work around for comma
+// SGE_FORMATTER_T(class T SGE_COMMA class DATA, Vec3_Basic<T SGE_COMMA DATA>)
+
+// another work around for comma
+SGE_FORMATTER_T( SGE_ARGS(class T, class DATA), Vec3_Basic< SGE_ARGS(T, DATA) >)
+
 }
-
-template<class T, class OPT>
-struct fmt::formatter< sge::Vec3_Basic<T, OPT> > {
-	using V = sge::Vec3_Basic<T, OPT>;
-
-	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const V& v, fmt::format_context& ctx) {
-		v.onFormat(ctx);
-		return ctx.out();
-	}
-};

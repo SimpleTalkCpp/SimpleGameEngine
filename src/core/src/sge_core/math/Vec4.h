@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Vec3.h"
 #include "Vec4_Basic.h"
 #include "Vec4_SSE.h"
 
