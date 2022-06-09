@@ -89,7 +89,7 @@ public:
 	SGE_NODISCARD SGE_INLINE T		distance		(const Vec3 &r) const	{ return (*this - r).length();    }
 	SGE_NODISCARD SGE_INLINE T		distanceSq		(const Vec3 &r) const	{ return (*this - r).sqrLength(); }
 
-	Vec3 normalize() const { T m = magnitude(); return Math::equals0(m) ? s_zero() : (*this / m); }
+	SGE_NODISCARD Vec3 normalize() const { T m = magnitude(); return Math::equals0(m) ? s_zero() : (*this / m); }
 
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {}, {})", x, y, z);
