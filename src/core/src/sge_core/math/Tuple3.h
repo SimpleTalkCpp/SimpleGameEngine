@@ -12,7 +12,8 @@ struct Tuple3 {
 		T data[kElementCount];
 	};
 
-	Tuple3(const T& x_, const T& y_, const T& z_)
+	SGE_INLINE Tuple3() = default;
+	SGE_INLINE Tuple3(const T& x_, const T& y_, const T& z_)
 		: x(x_) , y(y_), z(z_) {}
 };
 

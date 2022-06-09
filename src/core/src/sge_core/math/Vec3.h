@@ -1,0 +1,19 @@
+#pragma once
+
+#include "Vec3_Basic.h"
+#include "Vec3_SSE.h"
+
+namespace sge {
+
+#ifndef SGE_MATH_USE_SSE
+	#error
+#elif SGE_MATH_USE_SSE
+	template<class T> using Vec3 = Vec3_SSE<T>;
+#else
+	template<class T> using Vec3 = Vec3_Basic<T>;
+#endif
+
+using Vec3f = Vec3<float>;
+using Vec3d = Vec3<double>;
+
+}

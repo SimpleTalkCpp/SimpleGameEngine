@@ -12,7 +12,8 @@ struct Tuple4 {
 		T data[kElementCount];
 	};
 
-	Tuple4(const T& x_, const T& y_, const T& z_, const T& w_)
+	SGE_INLINE Tuple4() = default;
+	SGE_INLINE Tuple4(const T& x_, const T& y_, const T& z_, const T& w_)
 		: x(x_), y(y_), z(z_), w(w_) {}
 };
 

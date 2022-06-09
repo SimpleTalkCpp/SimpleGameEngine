@@ -12,7 +12,8 @@ struct Tuple2 {
 		T data[kElementCount];
 	};
 
-	Tuple2(const T& x_, const T& y_)
+	SGE_INLINE Tuple2() = default;
+	SGE_INLINE Tuple2(const T& x_, const T& y_)
 		: x(x_), y(y_) {}
 };
 

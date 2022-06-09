@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sge_core/base/Error.h>
+
 namespace sge {
 
 template<class T>
