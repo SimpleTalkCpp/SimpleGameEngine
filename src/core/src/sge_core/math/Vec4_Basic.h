@@ -72,7 +72,7 @@ SGE_FORMATTER_T( SGE_ARGS(class T, class DATA), Vec4_Basic< SGE_ARGS(T, DATA) >)
 
 
 template<class T, class DATA> SGE_INLINE
-bool sge::Vec4_Basic<T, DATA>::equals(const Vec4& r, const T& epsilon) const {
+bool Vec4_Basic<T, DATA>::equals(const Vec4& r, const T& epsilon) const {
 	return Math::equals(x, r.x, epsilon)
 		&& Math::equals(y, r.y, epsilon)
 		&& Math::equals(z, r.z, epsilon)
@@ -80,7 +80,7 @@ bool sge::Vec4_Basic<T, DATA>::equals(const Vec4& r, const T& epsilon) const {
 }
 
 template<class T, class DATA> SGE_INLINE
-bool sge::Vec4_Basic<T, DATA>::equals0(const T& epsilon) const {
+bool Vec4_Basic<T, DATA>::equals0(const T& epsilon) const {
 	return Math::equals0(x, epsilon)
 		&& Math::equals0(y, epsilon)
 		&& Math::equals0(z, epsilon)

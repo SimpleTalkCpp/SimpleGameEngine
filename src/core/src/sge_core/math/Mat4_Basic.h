@@ -40,19 +40,22 @@ struct Mat4_Basic : public DATA {
 	using DATA::cz;
 	using DATA::cw;
 
-	static SGE_INLINE const Mat4&	identity();
+	static SGE_INLINE const Mat4&	s_identity();
 	
-	static SGE_INLINE		Mat4	translate	(const Vec3 & t);
+	static SGE_INLINE		Mat4	s_translate	(const Vec3 & t);
+	static SGE_INLINE		Mat4	s_rotate		(const Vec3 & r);
+	static SGE_INLINE		Mat4	s_rotateX		(const T & rad);
+	static SGE_INLINE		Mat4	s_rotateY		(const T & rad);
+	static SGE_INLINE		Mat4	s_rotateZ		(const T & rad);
+	static SGE_INLINE		Mat4	s_scale			(const Vec3 & s);
+	static SGE_INLINE		Mat4	s_shear			(const Vec3 & v);
 
-	static SGE_INLINE		Mat4	rotate		(const Vec3 & r);
-	static SGE_INLINE		Mat4	rotateX		(const T & rad);
-	static SGE_INLINE		Mat4	rotateY		(const T & rad);
-	static SGE_INLINE		Mat4	rotateZ		(const T & rad);
+	static SGE_INLINE		Mat4	s_TRS(const Vec3 & translate, const Vec3 & rotate, const Vec3 & scale);
+	static SGE_INLINE		Mat4	s_TS (const Vec3 & translate, const Vec3 & scale);
 
-	static SGE_INLINE		Mat4	scale		(const Vec3 & s);
-
-	static SGE_INLINE		Mat4	TRS(const Vec3 & translate, const Vec3 & rotate, const Vec3 & scale);
-	static SGE_INLINE		Mat4	TS (const Vec3 & translate, const Vec3 & scale);
+	static SGE_INLINE		Mat4	s_perspective	(T fovy_rad, T aspect, T zNear, T zFar);
+	static SGE_INLINE		Mat4	s_ortho			(T left, T right, T bottom, T top, T zNear, T zFar);
+	static SGE_INLINE		Mat4	s_lookAt		(const Vec3 & eye, const Vec3 & aim, const Vec3 & up);
 
 	SGE_INLINE Mat4_Basic() = default;
 	SGE_INLINE Mat4_Basic(const Vec4& cx_, const Vec4& cy_, const Vec4& cz_, const Vec4& cw_) 
@@ -64,10 +67,16 @@ struct Mat4_Basic : public DATA {
 	SGE_INLINE Vec4 col(int i) const	{ return _columns[i]; }
 	SGE_INLINE Vec4 row(int i) const	{ return Vec4(cx[i], cy[i], cz[i], cw[i]); }
 
-	SGE_INLINE Mat4 transpose() const;
-
 	SGE_INLINE void setCol(int i, const Vec4& v) { _columns[i] = v; }
 	SGE_INLINE void setRow(int i, const Vec4& v) { cx[i] = v.x; cy[i] = v.y; cz[i] = v.z; cw[i] = v.w; }
+
+	SGE_INLINE Mat4 transpose() const;
+
+	T determinant3x3() const;
+
+	Mat4 inverse			() const;
+	Mat4 inverse3x3			() const;
+	Mat4 inverse3x3Transpose() const;
 
 	SGE_INLINE Mat4 operator*(const Mat4& r) const;
 
@@ -90,8 +99,27 @@ struct Mat4_Basic : public DATA {
 	}
 };
 
+using Mat4f_Basic = Mat4_Basic<float >;
+using Mat4d_Basic = Mat4_Basic<double>;
+
+SGE_FORMATTER_T( SGE_ARGS(class T, class DATA), Mat4_Basic< SGE_ARGS(T, DATA) >)
+
+#if 0
+#pragma mark ------------------- static functions -------------------
+#endif
+
 template<class T, class DATA> SGE_INLINE
-Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::translate(const Vec3& t) {
+const Mat4_Basic<T, DATA> & Mat4_Basic<T, DATA>::s_identity() {
+	static Mat4 s(	{1, 0, 0, 0},
+					{0, 1, 0, 0},
+					{0, 0, 1, 0},
+					{0, 0, 0, 1});
+	return s;
+}
+
+
+template<class T, class DATA> SGE_INLINE
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_translate(const Vec3& t) {
 	return Mat4( {1,   0,   0,   0},
 				 {0,   1,   0,   0},
 				 {0,   0,   1,   0},
@@ -99,8 +127,8 @@ Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::translate(const Vec3& t) {
 }
 
 template<class T, class DATA> SGE_INLINE
-Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::rotate(const Vec3& rad) {
-	if (rad.equals0()) return identity();
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_rotate(const Vec3& rad) {
+	if (rad.equals0()) return s_identity();
 
 	Vec3 s, c;
 	Math::sincos(rad.x, s.x, c.x);
@@ -116,8 +144,8 @@ Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::rotate(const Vec3& rad) {
 }
 
 template<class T, class DATA> SGE_INLINE
-Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::rotateX(const T& rad) {
-	if (Math::equals0(rad)) return identity();
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_rotateX(const T& rad) {
+	if (Math::equals0(rad)) return s_identity();
 
 	T s, c;
 	Math::sincos(rad, s, c);
@@ -128,8 +156,8 @@ Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::rotateX(const T& rad) {
 }
 
 template<class T, class DATA> SGE_INLINE
-Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::rotateY(const T& rad) {
-	if (Math::equals0(rad)) return identity();
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_rotateY(const T& rad) {
+	if (Math::equals0(rad)) return s_identity();
 
 	T s, c;
 	Math::sincos(rad, s, c);
@@ -140,8 +168,8 @@ Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::rotateY(const T& rad) {
 }
 
 template<class T, class DATA> SGE_INLINE
-Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::rotateZ(const T& rad) {
-	if (Math::equals0(rad)) return identity();
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_rotateZ(const T& rad) {
+	if (Math::equals0(rad)) return s_identity();
 
 	T s, c;
 	Math::sincos(rad, s, c);
@@ -152,15 +180,24 @@ Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::rotateZ(const T& rad) {
 }
 
 template<class T, class DATA> SGE_INLINE
-Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::scale(const Vec3& s) {
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_scale(const Vec3& s) {
 	return Mat4({s.x, 0,   0,   0},
 				{0,   s.y, 0,   0},
 				{0,   0,   s.z, 0},
 				{0,   0,   0,   1});
 }
 
+
+template<class T, class DATA> SGE_INLINE
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_shear(const Vec3& v) {
+	return Mat4( {  1,   0,  0,  0},
+				 {v.x,   1,  0,  0},
+				 {v.y, v.z,  1,  0},
+				 {  0,   0,  0,  1});
+}
+
 template<class T, class DATA> SGE_INLINE 
-Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::TRS(const Vec3& translate, const Vec3& rotate, const Vec3& scale) {
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_TRS(const Vec3& translate, const Vec3& rotate, const Vec3& scale) {
 	Vec3 s, c;
 	Math::sincos(rotate.x, s.x, c.x);
 	Math::sincos(rotate.y, s.y, c.y);
@@ -174,25 +211,184 @@ Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::TRS(const Vec3& translate, const Vec3& 
 }
 
 template<class T, class DATA> SGE_INLINE 
-Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::TS(const Vec3& translate, const Vec3& scale) {
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_TS(const Vec3& translate, const Vec3& scale) {
 	return Mat4({scale.x, 0, 0, 0},
 				{0, scale.y, 0, 0},
 				{0, 0, scale.z, 0},
 				{translate.x, translate.y, translate.z, 1});
 }
 
-using Mat4f_Basic = Mat4_Basic<float >;
-using Mat4d_Basic = Mat4_Basic<double>;
-
-SGE_FORMATTER_T( SGE_ARGS(class T, class DATA), Mat4_Basic< SGE_ARGS(T, DATA) >)
 
 template<class T, class DATA> SGE_INLINE
-const Mat4_Basic<T, DATA> & Mat4_Basic<T, DATA>::identity() {
-	static Mat4 s(	{1, 0, 0, 0},
-					{0, 1, 0, 0},
-					{0, 0, 1, 0},
-					{0, 0, 0, 1});
-	return s;
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_perspective(T fovy_rad, T aspect, T zNear, T zFar) {
+	if (Math::equals0(aspect)) {
+		return s_identity();
+	}
+
+	T deltaZ = zFar - zNear;
+	T tf = Math::tan(fovy_rad / T(2));
+		
+	return Mat4(
+		{1 / (aspect * tf), 0,      0,                           0},
+		{0,                 1 / tf, 0,                           0},
+		{0,                 0,      -(zFar + zNear) / deltaZ,   -1},
+		{0,                 0,      -2 * zNear * zFar / deltaZ,  0}
+	);
+}
+
+template<class T, class DATA> SGE_INLINE
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_ortho(T left, T right, T bottom, T top, T zNear, T zFar) {
+	T w = right - left;
+	T h = top - bottom;
+	T d = zFar - zNear;
+
+	if( w == 0 || h == 0 || d == 0 ) {
+		return s_identity();
+	}
+
+	return Mat4(
+		{2/w, 0,    0,   0},
+		{0,   2/h,  0,   0},
+		{0,   0,   -2/d, 0},
+		{-(right+left) / w, -(top+bottom) / h, -(zFar+zNear) / d, 1}
+	);
+}
+
+template<class T, class DATA> SGE_INLINE
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_lookAt(const Vec3& eye, const Vec3& aim, const Vec3& up) {
+	auto f = (aim - eye).normalize();
+	auto s = f.cross(up).normalize();
+	auto u = s.cross(f);
+
+	return Mat4(
+		{s.x,  u.x, -f.x, 0},
+		{s.y,  u.y, -f.y, 0},
+		{s.z,  u.z, -f.z, 0},
+		{-s.dot(eye), -u.dot(eye), f.dot(eye), 1}
+	);
+}
+
+#if 0
+#pragma mark ------------------- instance functions -------------------
+#endif
+
+template<class T, class DATA>
+T sge::Mat4_Basic<T, DATA>::determinant3x3() const {
+	return cx.x * (cy.y * cz.z - cz.y * cy.z)
+		 - cy.x * (cx.y * cz.z - cz.y * cx.z)
+		 + cz.x * (cx.y * cy.z - cy.y * cx.z);
+}
+
+template<class T, class DATA>
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::inverse3x3() const {
+	T oneOverDeterminant = T(1) / determinant3x3();
+
+	return Mat4(
+		{
+			(cy.y * cz.z - cz.y * cy.z) *  oneOverDeterminant, // xx
+			(cx.y * cz.z - cz.y * cx.z) * -oneOverDeterminant, // xy
+			(cx.y * cy.z - cy.y * cx.z) *  oneOverDeterminant, // xz
+			0
+		},
+		{
+			(cy.x * cz.z - cz.x * cy.z) * -oneOverDeterminant, // yx
+			(cx.x * cz.z - cz.x * cx.z) *  oneOverDeterminant, // yy
+			(cx.x * cy.z - cy.x * cx.z) * -oneOverDeterminant, // yz
+			0
+		},
+		{
+			(cy.x * cz.y - cz.x * cy.y) *  oneOverDeterminant, // zx
+			(cx.x * cz.y - cz.x * cx.y) * -oneOverDeterminant, // zy
+			(cx.x * cy.y - cy.x * cx.y) *  oneOverDeterminant, // zz
+			0
+		},
+		{0,0,0,1}
+	);
+}
+
+template<class T, class DATA>
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::inverse3x3Transpose() const {
+	T oneOverDeterminant = T(1) / determinant3x3();
+
+	return Mat4(
+		{
+			(cy.y * cz.z - cz.y * cy.z) *  oneOverDeterminant, // xx
+			(cy.x * cz.z - cz.x * cy.z) * -oneOverDeterminant, // yx
+			(cy.x * cz.y - cz.x * cy.y) *  oneOverDeterminant, // zx
+			0
+		},
+		{
+			(cx.y * cz.z - cz.y * cx.z) * -oneOverDeterminant, // xy
+			(cx.x * cz.z - cz.x * cx.z) *  oneOverDeterminant, // yy
+			(cx.x * cz.y - cz.x * cx.y) * -oneOverDeterminant, // zy
+			0
+		},
+		{
+			(cx.y * cy.z - cy.y * cx.z) *  oneOverDeterminant, // xz
+			(cx.x * cy.z - cy.x * cx.z) * -oneOverDeterminant, // yz
+			(cx.x * cy.y - cy.x * cx.y) *  oneOverDeterminant, // zz
+			0
+		},
+		{0,0,0,1}
+	);
+}
+
+template<class T, class DATA> SGE_INLINE
+Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::inverse() const {
+	T coef00 = cz.z * cw.w - cw.z * cz.w;
+	T coef02 = cy.z * cw.w - cw.z * cy.w;
+	T coef03 = cy.z * cz.w - cz.z * cy.w;
+
+	T coef04 = cz.y * cw.w - cw.y * cz.w;
+	T coef06 = cy.y * cw.w - cw.y * cy.w;
+	T coef07 = cy.y * cz.w - cz.y * cy.w;
+
+	T coef08 = cz.y * cw.z - cw.y * cz.z;
+	T coef10 = cy.y * cw.z - cw.y * cy.z;
+	T coef11 = cy.y * cz.z - cz.y * cy.z;
+
+	T coef12 = cz.x * cw.w - cw.x * cz.w;
+	T coef14 = cy.x * cw.w - cw.x * cy.w;
+	T coef15 = cy.x * cz.w - cz.x * cy.w;
+
+	T coef16 = cz.x * cw.z - cw.x * cz.z;
+	T coef18 = cy.x * cw.z - cw.x * cy.z;
+	T coef19 = cy.x * cz.z - cz.x * cy.z;
+
+	T coef20 = cz.x * cw.y - cw.x * cz.y;
+	T coef22 = cy.x * cw.y - cw.x * cy.y;
+	T coef23 = cy.x * cz.y - cz.x * cy.y;
+
+	Vec4 fac0(coef00, coef00, coef02, coef03);
+	Vec4 fac1(coef04, coef04, coef06, coef07);
+	Vec4 fac2(coef08, coef08, coef10, coef11);
+	Vec4 fac3(coef12, coef12, coef14, coef15);
+	Vec4 fac4(coef16, coef16, coef18, coef19);
+	Vec4 fac5(coef20, coef20, coef22, coef23);
+
+	Vec4 v0(cy.x, cx.x, cx.x, cx.x);
+	Vec4 v1(cy.y, cx.y, cx.y, cx.y);
+	Vec4 v2(cy.z, cx.z, cx.z, cx.z);
+	Vec4 v3(cy.w, cx.w, cx.w, cx.w);
+
+	Vec4 signA(+1, -1, +1, -1);
+	Vec4 signB(-1, +1, -1, +1);
+
+	Vec4 inv0(v1 * fac0 - v2 * fac1 + v3 * fac2);
+	Vec4 inv1(v0 * fac0 - v2 * fac3 + v3 * fac4);
+	Vec4 inv2(v0 * fac1 - v1 * fac3 + v3 * fac5);
+	Vec4 inv3(v0 * fac2 - v1 * fac4 + v2 * fac5);
+
+	Mat4 inv(inv0 * signA,
+			 inv1 * signB,
+			 inv2 * signA,
+			 inv3 * signB);
+
+	Vec4 dot0(cx * inv.row(0));
+	T dot1 = (dot0.x + dot0.y) + (dot0.z + dot0.w);
+	T oneOverDeterminant = T(1) / dot1;
+
+	return inv * oneOverDeterminant;
 }
 
 template<class T, class DATA> SGE_INLINE

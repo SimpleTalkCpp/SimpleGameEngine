@@ -11,6 +11,8 @@ template<class T, class DATA = Vec3_Basic_Data<T> >
 struct Vec3_Basic : public DATA {
 public:
 	using Vec3 = Vec3_Basic;
+	using Vec2 = sge::Vec2<T>;
+
 	static const size_t kElementCount = 3;
 
 	using ElementType = typename DATA::ElementType;
@@ -19,6 +21,18 @@ public:
 	using DATA::z;
 
 	using DATA::data;
+
+	SGE_INLINE static Vec3 s_zero()		{ return Vec3(0,0,0); }
+	SGE_INLINE static Vec3 s_one()		{ return Vec3(1,1,1); }
+
+	SGE_INLINE static Vec3 s_forward()	{ return Vec3( 0, 0, 1); }
+	SGE_INLINE static Vec3 s_back()		{ return Vec3( 0, 0,-1); }
+	SGE_INLINE static Vec3 s_up()		{ return Vec3( 0, 1, 0); }
+	SGE_INLINE static Vec3 s_down()		{ return Vec3( 0,-1, 0); }
+	SGE_INLINE static Vec3 s_right()	{ return Vec3( 1 ,0, 0); }
+	SGE_INLINE static Vec3 s_left()		{ return Vec3(-1 ,0, 0); }
+
+	SGE_INLINE static Vec3 s_inf()		{ auto f = Math::inf<T>(); return Vec3(f,f,f); }
 
 	SGE_INLINE Vec3() = default;
 	SGE_INLINE Vec3(const Tuple3<T> & v) { set(v); }
@@ -33,6 +47,10 @@ public:
 	SGE_INLINE void setAll(const T& v) { set(v,v,v); }
 	SGE_INLINE bool isAll (const T& v) { return equals(Vec3(v,v,v)); }
 
+//----
+	SGE_INLINE Vec2 xy() const { return Vec2(x,y); }
+
+//----
 	SGE_INLINE Vec3 operator+(const Vec3& r) const { return Vec3(x + r.x, y + r.y, z + r.z); }
 	SGE_INLINE Vec3 operator-(const Vec3& r) const { return Vec3(x - r.x, y - r.y, z - r.z); }
 	SGE_INLINE Vec3 operator*(const Vec3& r) const { return Vec3(x * r.x, y * r.y, z * r.z); }
@@ -59,6 +77,20 @@ public:
 			T& operator[](int i)		{ return data[i]; }
 	const	T& operator[](int i) const	{ return data[i]; }
 
+	SGE_NODISCARD SGE_INLINE Vec3	cross	(const Vec3& v) const	{ return Vec3(y*v.z - z*v.y, z*v.x - x*v.z,x*v.y - y*v.x); }
+	SGE_NODISCARD SGE_INLINE T		dot		(const Vec3& v) const	{ return (x*v.x) + (y*v.y) + (z*v.z); }
+
+	SGE_NODISCARD SGE_INLINE T		magnitude		() const	{ return Math::sqrt (sqrMagnitude()); }
+	SGE_NODISCARD SGE_INLINE T		sqrMagnitude	() const	{ return dot(*this); }
+
+	SGE_NODISCARD SGE_INLINE T		length			() const	{ return magnitude(); }
+	SGE_NODISCARD SGE_INLINE T		sqrLength		() const	{ return sqrMagnitude(); }
+
+	SGE_NODISCARD SGE_INLINE T		distance		(const Vec3 &r) const	{ return (*this - r).length();    }
+	SGE_NODISCARD SGE_INLINE T		distanceSq		(const Vec3 &r) const	{ return (*this - r).sqrLength(); }
+
+	Vec3 normalize() const { T m = magnitude(); return Math::equals0(m) ? s_zero() : (*this / m); }
+
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {}, {})", x, y, z);
 	}
@@ -75,14 +107,14 @@ SGE_FORMATTER_T( SGE_ARGS(class T, class DATA), Vec3_Basic< SGE_ARGS(T, DATA) >)
 
 
 template<class T, class DATA> SGE_INLINE
-bool sge::Vec3_Basic<T, DATA>::equals(const Vec3& r, const T& epsilon) const {
+bool Vec3_Basic<T, DATA>::equals(const Vec3& r, const T& epsilon) const {
 	return Math::equals(x, r.x, epsilon)
 		&& Math::equals(y, r.y, epsilon)
 		&& Math::equals(z, r.z, epsilon);
 }
 
 template<class T, class DATA> SGE_INLINE
-bool sge::Vec3_Basic<T, DATA>::equals0(const T& epsilon) const {
+bool Vec3_Basic<T, DATA>::equals0(const T& epsilon) const {
 	return Math::equals0(x, epsilon)
 		&& Math::equals0(y, epsilon)
 		&& Math::equals0(z, epsilon);

@@ -9,7 +9,7 @@ public:
 	using T = typename Mat4::ElementType;
 
 	void operator_test1() {
-		Mat4 m = Mat4::identity();
+		Mat4 m = Mat4::s_identity();
 		m += 1;
 
 		SGE_TEST_CHECK(m == Mat4({2,1,1,1}, 
