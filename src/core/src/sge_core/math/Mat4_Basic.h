@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Vec4_Basic.h"
+#include "Vec4.h"
+#include "Rect2.h"
 
 namespace sge {
 
@@ -32,8 +33,9 @@ struct Mat4_Basic : public DATA {
 
 	using ElementType = T;
 	using Scalar = ElementType;
-	using Vec4 = typename DATA::Vec4;
-	using Vec3 = sge::Vec3<T>;
+	using Vec4   = typename DATA::Vec4;
+	using Vec3   = sge::Vec3<T>;
+	using Rect2  = sge::Rect2<T>;
 
 	using DATA::cx;
 	using DATA::cy;
@@ -80,19 +82,36 @@ struct Mat4_Basic : public DATA {
 
 	SGE_INLINE Mat4 operator*(const Mat4& r) const;
 
-	SGE_INLINE Mat4 operator+(const Scalar& s) const { return Mat4(cx + s, cy + s, cz + s, cw + s); }
-	SGE_INLINE Mat4 operator-(const Scalar& s) const { return Mat4(cx - s, cy - s, cz - s, cw - s); }
+	SGE_INLINE Mat4 operator+(const Scalar& s) const { Vec4 v(s,s,s,s); return Mat4(cx + v, cy + v, cz + v, cw + v); }
+	SGE_INLINE Mat4 operator-(const Scalar& s) const { Vec4 v(s,s,s,s); return Mat4(cx - v, cy - v, cz - v, cw - v); }
 
-	SGE_INLINE Mat4 operator*(const Scalar& s) const { return Mat4(cx * s, cy * s, cz * s, cw * s); }
-	SGE_INLINE Mat4 operator/(const Scalar& s) const { return Mat4(cx / s, cy / s, cz / s, cw / s); }
+	SGE_INLINE Mat4 operator*(const Scalar& s) const { Vec4 v(s,s,s,s); return Mat4(cx * v, cy * v, cz * v, cw * v); }
+	SGE_INLINE Mat4 operator/(const Scalar& s) const { Vec4 v(s,s,s,s); return Mat4(cx / v, cy / v, cz / v, cw / v); }
 
-	SGE_INLINE void operator+=(const Scalar& s) { cx += s; cy += s; cz += s; cw += s; }
-	SGE_INLINE void operator-=(const Scalar& s) { cx -= s; cy -= s; cz -= s; cw -= s; }
-	SGE_INLINE void operator*=(const Scalar& s) { cx *= s; cy *= s; cz *= s; cw *= s; }
-	SGE_INLINE void operator/=(const Scalar& s) { cx /= s; cy /= s; cz /= s; cw /= s; }
+	SGE_INLINE void operator+=(const Scalar& s) { Vec4 v(s,s,s,s); cx += v; cy += v; cz += v; cw += v; }
+	SGE_INLINE void operator-=(const Scalar& s) { Vec4 v(s,s,s,s); cx -= v; cy -= v; cz -= v; cw -= v; }
+	SGE_INLINE void operator*=(const Scalar& s) { Vec4 v(s,s,s,s); cx *= v; cy *= v; cz *= v; cw *= v; }
+	SGE_INLINE void operator/=(const Scalar& s) { Vec4 v(s,s,s,s); cx /= v; cy /= v; cz /= v; cw /= v; }
 
 	SGE_INLINE bool operator==(const Mat4& r) const { return cx == r.cx && cy == r.cy && cz == r.cz && cw == r.cw; }
 	SGE_INLINE bool operator!=(const Mat4& r) const { return cx != r.cx || cy != r.cy || cz != r.cz || cw != r.cw; }
+
+	SGE_INLINE Vec4	mulPoint	(const Vec4& v) const { return Vec4(cx * v.x + cy * v.y  + cz * v.z + cw * v.w); }
+
+	// faster than mulPoint but no projection
+	SGE_INLINE Vec3 mulPoint4x3	(const Vec3& v) const { return mulPoint(Vec4(v, 1)).xyz(); }
+
+	// for vector (direction)
+	SGE_INLINE Vec3 mulVector	(const Vec3& v) const { return Vec3(cx.xyz() * v.x + cy.xyz() * v.y + cz.xyz() * v.z); }
+
+	// for normal non-uniform scale
+	SGE_INLINE Vec3 mulNormal	(const Vec3& v) const {	return inverse3x3Transpose().mulVector(v); }
+
+	Vec3 unprojectPoint(const Vec3& screenPos, const Rect2& viewport) const {
+		return inverse().unprojectPointFromInv(screenPos, viewport); 
+	}
+
+	Vec3 unprojectPointFromInv(const Vec3& screenPos, const Rect2& viewport) const;
 
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "Mat4(\n  {},\n  {},\n  {},\n  {})", cx, cy, cz, cw);
@@ -431,5 +450,16 @@ Mat4_Basic<T, DATA> sge::Mat4_Basic<T, DATA>::operator*(const Mat4& r) const {
 	return o;
 }
 
+template<class T, class DATA> SGE_INLINE
+Vec3<T> sge::Mat4_Basic<T, DATA>::unprojectPointFromInv(const Vec3& screenPos, const Rect2& viewport) const {
+	auto  tmp = Vec4(screenPos, 1);
+	tmp.y = viewport.h - tmp.y; // y is down
+
+	tmp.x = (tmp.x - viewport.x) / viewport.w * 2 - 1;
+	tmp.y = (tmp.y - viewport.y) / viewport.h * 2 - 1;
+
+	auto obj = mulPoint(tmp);
+	return obj.toVec3();
+}
 
 }

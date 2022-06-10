@@ -9,7 +9,7 @@ template<class T> using Vec4_Basic_Data = Tuple4<T>;
 
 template<class T, class DATA = Vec4_Basic_Data<T> >
 struct Vec4_Basic : public DATA {
-public:
+public:	
 	using Vec4 = Vec4_Basic;
 	static const size_t kElementCount = 4;
 
@@ -20,9 +20,13 @@ public:
 	using DATA::w;
 	using DATA::data;
 
+	using Vec2 = Vec2<T>;
+	using Vec3 = Vec3<T>;
+
 	SGE_INLINE Vec4() = default;
 	SGE_INLINE Vec4(const Tuple4<T> & v) { set(v); }
 	SGE_INLINE Vec4(const T& x_, const T& y_, const T& z_, const T& w_) { set(x_, y_, z_, w_); }
+	SGE_INLINE Vec4(const Vec3& v, const T& w_) { set(v.x, v.y, v.z, w_); }
 
 	SGE_INLINE void set(const Tuple4<T> & v) { DATA::set(v); }
 	SGE_INLINE void set(const T& x_, const T& y_, const T& z_, const T& w_) { set(Tuple4<T>(x_, y_, z_, w_)); }
@@ -59,6 +63,16 @@ public:
 
 			T& operator[](int i)		{ return data[i]; }
 	const	T& operator[](int i) const	{ return data[i]; }
+
+	Vec2 xy		() const { return Vec2(x,y); }
+	Vec2 xz		() const { return Vec2(x,z); }
+	Vec2 yz		() const { return Vec2(y,z); }
+
+	Vec3 xyz	() const { return Vec3(x,y,z); }
+	Vec3 xy0	() const { return Vec3(x,y,0); }
+	Vec3 x0z	() const { return Vec3(x,0,z); }
+
+	Vec3 toVec3	() const { return (*this / w).xyz(); };
 
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {}, {}, {})", x, y, z, w);

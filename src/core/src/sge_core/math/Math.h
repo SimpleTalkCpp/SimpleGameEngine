@@ -6,6 +6,10 @@ namespace Math {
 	template<class T> constexpr T max(const T& a, const T& b) { return a > b ? a : b; }
 	template<class T> constexpr T min(const T& a, const T& b) { return a < b ? a : b; }
 
+	template<class T> constexpr T clamp		(const T& v, const T& a, const T& b) { return max(a, min(v, b)) ; }
+	template<class T> constexpr T clamp01	(const T& v) { return clamp(v, 0, 1); }
+	template<class T> constexpr T saturate	(const T& v) { return clamp01(v); }
+
 	template<class T> constexpr T byteToK(const T& v) { return v / 1024; }
 	template<class T> constexpr T byteToM(const T& v) { return v / (1024 * 1024); }
 	template<class T> constexpr T byteToG(const T& v) { return v / (1024 * 1024 * 1024); }
@@ -75,6 +79,19 @@ namespace Math {
 	SGE_INLINE int	ceilToInt	( double a )	{ return static_cast<int>( ceil (a) ); }
 
 //----------
+
+#if 0
+#pragma mark ------ Trigonometry ------
+#endif
+	template< class T> constexpr T	PI()	{ return static_cast<T>(3.14159265358979323846); }
+
+	template<class T> constexpr T	twoPI	()		{ return PI<T>() * 2; }
+	template<class T> constexpr T	halfPI	()		{ return PI<T>() * 0.5; }
+
+	template<class T> SGE_INLINE T	radians	(T deg) { return deg * (PI<T>() / static_cast<T>(180)); }
+	template<class T> SGE_INLINE T	degrees	(T rad) { return rad * (static_cast<T>(180) / PI<T>()); }
+
+
 	SGE_INLINE float  sin(float  rad) { return ::sinf(rad); }
 	SGE_INLINE double sin(double rad) { return ::sin (rad); }
 
@@ -95,6 +112,11 @@ namespace Math {
 	SGE_INLINE void sincos( double rad, double & out_sin, double & out_cos ) { out_sin = sin(rad); out_cos = cos(rad); }
 #endif
 
+
+#if 0
+#pragma mark ----------------
+#endif
+
 	template<class T> T abs(const T& v) { return v < 0 ? -v : v; }
 
 	template<class T> constexpr T epsilon();
@@ -105,6 +127,22 @@ namespace Math {
 
 	template<class T, class EP = T> SGE_INLINE bool equals (const T& a, const T& b, const EP& ep = epsilon<T>()) { return abs(a-b) <= ep; }
 	template<class T, class EP = T> SGE_INLINE bool equals0(const T& a,             const EP& ep = epsilon<T>()) { return abs( a ) <= ep; }
+
+//-------------- Lerp ----------------
+//! linear interpolation out = a+w*(b-a)
+
+	template<class T, class W>
+	SGE_INLINE T	lerp(const T& a, const T& b, const W& w );
+
+	template<class T, class ENABLE = std::enable_if< std::is_floating_point_v<T> > >
+	SGE_INLINE T	lerp(T a, T b, T w ) { return (1-w)*a + w*b; }
+
+	template<class T, class ENABLE = std::enable_if< std::is_integral_v<T> > >
+	SGE_INLINE T	lerp(T a, T b, double w ) {
+		double a_ = static_cast<double>(a);
+		double b_ = static_cast<double>(b);
+		return static_cast<T>(lerp<double>(a_, b_, w));
+	}
 
 	//---------
 	SGE_INLINE float	sqrt(float  n) { return std::sqrt(n); }

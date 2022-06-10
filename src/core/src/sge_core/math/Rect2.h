@@ -5,7 +5,7 @@
 namespace sge {
 
 template<class T>
-class Rect2 {
+struct Rect2 {
 public:
 	using ElementType = T;
 	static const size_t kElementCount = 4;

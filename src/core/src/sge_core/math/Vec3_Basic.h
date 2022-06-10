@@ -2,6 +2,7 @@
 
 #include "Tuple3.h"
 #include "Vec2.h"
+#include "Rect2.h"
 
 namespace sge {
 
@@ -11,7 +12,7 @@ template<class T, class DATA = Vec3_Basic_Data<T> >
 struct Vec3_Basic : public DATA {
 public:
 	using Vec3 = Vec3_Basic;
-	using Vec2 = sge::Vec2<T>;
+	using Vec2 = Vec2<T>;
 
 	static const size_t kElementCount = 3;
 
@@ -37,6 +38,7 @@ public:
 	SGE_INLINE Vec3() = default;
 	SGE_INLINE Vec3(const Tuple3<T> & v) { set(v); }
 	SGE_INLINE Vec3(const T& x_, const T& y_, const T& z_) { set(x_, y_, z_); }
+	SGE_INLINE Vec3(const Vec2& v, const T& z_) { set(v.x, v.y, z_); }
 
 	SGE_INLINE void set(const Tuple3<T> & v) { DATA::set(v); }
 	SGE_INLINE void set(const T& x_, const T& y_, const T& z_) { set(Tuple3<T>(x_, y_, z_)); }
@@ -46,9 +48,6 @@ public:
 
 	SGE_INLINE void setAll(const T& v) { set(v,v,v); }
 	SGE_INLINE bool isAll (const T& v) { return equals(Vec3(v,v,v)); }
-
-//----
-	SGE_INLINE Vec2 xy() const { return Vec2(x,y); }
 
 //----
 	SGE_INLINE Vec3 operator+(const Vec3& r) const { return Vec3(x + r.x, y + r.y, z + r.z); }
@@ -90,6 +89,9 @@ public:
 	SGE_NODISCARD SGE_INLINE T		distanceSq		(const Vec3 &r) const	{ return (*this - r).sqrLength(); }
 
 	SGE_NODISCARD Vec3 normalize() const { T m = magnitude(); return Math::equals0(m) ? s_zero() : (*this / m); }
+
+	SGE_INLINE	Vec2	xy() const { return Vec2(x,y); }
+	SGE_INLINE	Vec2	xz() const { return Vec2(x,z); }
 
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {}, {})", x, y, z);
