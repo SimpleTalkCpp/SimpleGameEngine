@@ -151,15 +151,70 @@ LRESULT WINAPI NativeUIWindow_Win32::s_wndProc(HWND hwnd, UINT msg, WPARAM wPara
 
 		default: {
 			if (auto* thisObj = s_getThis(hwnd)) {
-				return thisObj->_handleWin32Event(hwnd, msg, wParam, lParam);
+				return thisObj->_handleNativeEvent(hwnd, msg, wParam, lParam);
 			}
 		}break;
 	}
 	return ::DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-LRESULT NativeUIWindow_Win32::_handleWin32Event(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+bool NativeUIWindow_Win32::_handleNativeUIMouseEvent(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	UIMouseEvent ev;
+
+	ev.modifier = _getWin32Modifier();
+
+	using Button = UIMouseEventButton;
+	using Type   = UIMouseEventType;
+
+	auto button = Button::None;
+	switch (HIWORD(wParam)) {
+		case XBUTTON1: button = Button::Button4; break;
+		case XBUTTON2: button = Button::Button5; break;
+	}
+
+	switch (msg) {
+		case WM_LBUTTONUP:		{ ev.type = Type::Up;	ev.button = Button::Left;	} break;
+		case WM_MBUTTONUP:		{ ev.type = Type::Up;	ev.button = Button::Middle;	} break;
+		case WM_RBUTTONUP:		{ ev.type = Type::Up;	ev.button = Button::Right;	} break;
+
+		case WM_LBUTTONDOWN:	{ ev.type = Type::Down;	ev.button = Button::Left;	} break;
+		case WM_MBUTTONDOWN:	{ ev.type = Type::Down;	ev.button = Button::Middle;	} break;
+		case WM_RBUTTONDOWN:	{ ev.type = Type::Down;	ev.button = Button::Right;	} break;
+
+		case WM_MOUSEMOVE:		{ ev.type = Type::Move;	} break;
+
+	#if (_WIN32_WINNT >= 0x0400) || (_WIN32_WINDOWS > 0x0400)
+		// vertical  scroll wheel 
+		case WM_MOUSEWHEEL:		{ ev.type = Type::Scroll;	ev.scroll.set(0,GET_WHEEL_DELTA_WPARAM(wParam)); } break;
+	#endif
+
+	#if (_WIN32_WINNT >= 0x0600)
+		// horizontal scroll wheel 
+		case WM_MOUSEHWHEEL:	{ ev.type = Type::Scroll;	ev.scroll.set(GET_WHEEL_DELTA_WPARAM(wParam),0); } break;
+	#endif
+
+		default:
+			return false;
+	}
+
+	onUIMouseEvent(ev);
+	return true;
+}
+
+LRESULT NativeUIWindow_Win32::_handleNativeEvent(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	if (_handleNativeUIMouseEvent(hwnd, msg, wParam, lParam)) return 0;
 	return ::DefWindowProc(hwnd, msg, wParam, lParam);
+}
+
+UIEventModifier NativeUIWindow_Win32::_getWin32Modifier() {
+	auto o = UIEventModifier::None;
+	if (::GetAsyncKeyState(VK_CONTROL)) o |= UIEventModifier::Ctrl;
+	if (::GetAsyncKeyState(VK_SHIFT  )) o |= UIEventModifier::Shift;
+	if (::GetAsyncKeyState(VK_MENU   )) o |= UIEventModifier::Atl;
+	if (::GetAsyncKeyState(VK_LWIN) || ::GetAsyncKeyState(VK_RWIN)) {
+		o |= UIEventModifier::Cmd;
+	}
+	return o;
 }
 
 }

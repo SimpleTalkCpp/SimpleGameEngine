@@ -24,7 +24,10 @@ private:
 		return reinterpret_cast<This*>(::GetWindowLongPtr(hwnd, GWLP_USERDATA));
 	}
 
-	LRESULT _handleWin32Event(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	LRESULT _handleNativeEvent(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	bool _handleNativeUIMouseEvent(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	UIEventModifier _getWin32Modifier();
 };
 
 }
