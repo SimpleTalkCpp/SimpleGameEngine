@@ -27,7 +27,7 @@ bool Ray3<T>::getClosestPoint(Vec3& outPoint, const Vec3& inPoint) const {
 }
 
 template<class T>
-bool Ray3<T>::getClosestPoint(Vec3& outPoint, const MathLine3& line, T minOnLine, T maxOnLine) const {
+bool Ray3<T>::getClosestPoint(Vec3& outPoint, const Line3& line, T minOnLine, T maxOnLine) const {
 	auto da = line.end - line.start;
 	auto db = dir;
 	auto dc = origin - line.start;

@@ -98,6 +98,11 @@ void ShaderCompiler_DX11::_reflect_inputs(ShaderStageInfo& outInfo, ID3D11Shader
 
 		dst.semantic = VertexSemanticUtil::make(semanticType, static_cast<VertexSemanticIndex>(paramDesc.SemanticIndex));
 
+		TempString  semantic = enumStr(dst.semantic);
+		if (!semantic.size()) {
+			throw SGE_ERROR("unsupported sematic name {}", paramDesc.SemanticName);
+		}
+
 		TempString dataType;
 
 		switch (paramDesc.ComponentType) {

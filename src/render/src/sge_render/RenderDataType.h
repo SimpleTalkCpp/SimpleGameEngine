@@ -29,6 +29,8 @@ enum class RenderDataType : u8 {
 	UNorm16,	UNorm16x2,	UNorm16x3,	UNorm16x4,
 	UNorm32,	UNorm32x2,	UNorm32x3,	UNorm32x4,
 
+	Float32_4x4,
+
 	Texture1D,		Texture2D,		Texture3D,		TextureCube,
 	Texture1DArray,	Texture2DArray,	Texture3DArray,	TextureCubeArray,
 };
@@ -57,6 +59,8 @@ enum class RenderDataType : u8 {
 	E(UNorm8)	E(UNorm8x2)		E(UNorm8x3)		E(UNorm8x4)		\
 	E(UNorm16)	E(UNorm16x2)	E(UNorm16x3)	E(UNorm16x4)	\
 	E(UNorm32)	E(UNorm32x2)	E(UNorm32x3)	E(UNorm32x4)	\
+	\
+	E(Float32_4x4)
 //----
 SGE_ENUM_STR_UTIL(RenderDataType)
 

@@ -56,13 +56,19 @@ struct Vec2_Basic : public DATA {
 
 	bool operator==(const Vec2& r) const { return x == r.x && y == r.y; }
 	bool operator!=(const Vec2& r) const { return x != r.x || y != r.y; }
+
+	Tuple2<T> toTuple() const { return Tuple2<T>(x,y); }
+	operator Tuple2<T>() const { return toTuple(); }
+
+	void onFormat(fmt::format_context& ctx) const {
+		fmt::format_to(ctx.out(), "({}, {})", x, y);
+	}
 };
 
 using Vec2f_Basic = Vec2_Basic<float>;
 using Vec2d_Basic = Vec2_Basic<double>;
 
 SGE_FORMATTER_T( SGE_ARGS(class T, class DATA), Vec2_Basic< SGE_ARGS(T, DATA) >)
-
 
 template<class T, class DATA> SGE_INLINE
 bool Vec2_Basic<T, DATA>::equals(const Vec2& r, const T& epsilon) const {

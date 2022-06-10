@@ -53,6 +53,7 @@ public:
 	virtual void onActive(bool isActive) {}
 	virtual void onDraw() {}
 
+	virtual void onUINativeMouseEvent(UIMouseEvent& ev);
 	virtual void onUIMouseEvent(UIMouseEvent& ev) {}
 
 protected:
@@ -62,6 +63,9 @@ protected:
 	virtual void onDrawNeeded() {}
 
 	Rect2f	_clientRect {0,0,0,0};
+
+	UIMouseEventButton _pressedMouseButtons = UIMouseEventButton::None;
+	Vec2f _mousePos{0,0};
 };
 
 }

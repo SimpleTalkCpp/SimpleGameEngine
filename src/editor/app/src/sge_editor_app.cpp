@@ -27,6 +27,9 @@ public:
 			_renderContext = renderer->createContext(renderContextDesc);
 		}
 
+		_camera.setPos(0,2,2);
+		_camera.setAim(0,0,0);
+
 		auto shader = renderer->createShader("Assets/Shaders/test.shader");
 		_material = renderer->createMaterial();
 		_material->setShader(shader);
@@ -40,9 +43,10 @@ public:
 			editMesh.color.emplace_back(255, 255, 255, 255);
 		}
 
-		// the current shader has no uv or normal
+//		editMesh.normal.clear();
+// 
+		// the current shader has no uv
 		editMesh.uv[0].clear();
-		editMesh.normal.clear();
 
 	#else
 		editMesh.pos.emplace_back( 0.0f,  0.5f, 0.0f);
@@ -64,17 +68,60 @@ public:
 	}
 
 	virtual void onUIMouseEvent(UIMouseEvent& ev) override {
+		if (ev.isDragging()) {
+			using Button = UIMouseEventButton;
+			switch (ev.pressedButtons) {
+				case Button::Left: {
+					auto d = ev.deltaPos * 0.01f;
+					_camera.orbit(d.x, d.y);
+				}break;
+
+				case Button::Middle: {
+					auto d = ev.deltaPos * 0.005f;
+					_camera.move(d.x, d.y, 0);
+				}break;
+
+				case Button::Right: {
+					auto d = ev.deltaPos * -0.005f;
+					_camera.dolly(d.x + d.y);
+				}break;
+			}
+		}
 	}
 
 	virtual void onDraw() {
 		Base::onDraw();
 		if (!_renderContext) return;
 
-		auto time = GetTickCount() * 0.001f;
-		auto s = abs(sin(time * 2));
+		_camera.setViewport(clientRect());
+
+		{
+			auto model	= Mat4f::s_identity();
+			auto view	= _camera.viewMatrix();
+			auto proj	= _camera.projMatrix();
+			auto mvp	= proj * view;
+
+			_material->setParam("sge_matrix_model", model);
+			_material->setParam("sge_matrix_view",  view);
+			_material->setParam("sge_matrix_proj",  proj);
+			_material->setParam("sge_matrix_mvp",   mvp);
+
+			_material->setParam("sge_camera_pos", _camera.pos());
+
+			_material->setParam("sge_light_pos",	Vec3f(10, 10,   0));
+			_material->setParam("sge_light_dir",	Vec3f(-5, -10, -2));
+			_material->setParam("sge_light_power",	1.0f);
+			_material->setParam("sge_light_color",	Vec3f(1,1,1));
+		}
+
+//-----
+//		auto time = GetTickCount() * 0.001f;
+//		auto s = abs(sin(time * 2));
+		auto s = 1.0f;
 
 		_material->setParam("test_float", s * 0.5f);
 		_material->setParam("test_color", Color4f(s, 0, 0, 1));
+//------
 
 		_renderContext->setFrameBufferSize(clientRect().size);
 
@@ -96,6 +143,8 @@ public:
 	SPtr<RenderContext>	_renderContext;
 	RenderCommandBuffer _cmdBuf;
 	RenderMesh	_renderMesh;
+
+	Math::Camera3f	_camera;
 };
 
 class EditorApp : public NativeUIApp {

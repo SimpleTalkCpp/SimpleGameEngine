@@ -166,6 +166,12 @@ bool NativeUIWindow_Win32::_handleNativeUIMouseEvent(HWND hwnd, UINT msg, WPARAM
 	using Button = UIMouseEventButton;
 	using Type   = UIMouseEventType;
 
+	POINT curPos;
+	::GetCursorPos(&curPos);
+	::ScreenToClient(hwnd, &curPos);
+
+	Win32Util::convert(ev.pos, curPos);
+
 	auto button = Button::None;
 	switch (HIWORD(wParam)) {
 		case XBUTTON1: button = Button::Button4; break;
@@ -197,7 +203,12 @@ bool NativeUIWindow_Win32::_handleNativeUIMouseEvent(HWND hwnd, UINT msg, WPARAM
 			return false;
 	}
 
-	onUIMouseEvent(ev);
+	switch (ev.type) {
+		case Type::Down:	::SetCapture(hwnd); break;
+		case Type::Up:		::ReleaseCapture(); break;
+	}
+
+	onUINativeMouseEvent(ev);
 	return true;
 }
 

@@ -93,6 +93,9 @@ public:
 	SGE_INLINE	Vec2	xy() const { return Vec2(x,y); }
 	SGE_INLINE	Vec2	xz() const { return Vec2(x,z); }
 
+	Tuple3<T> toTuple() const { return Tuple3<T>(x,y,z); }
+	operator Tuple3<T>() const { return toTuple(); }
+
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {}, {})", x, y, z);
 	}

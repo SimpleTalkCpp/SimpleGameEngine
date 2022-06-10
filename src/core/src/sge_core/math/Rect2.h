@@ -18,8 +18,9 @@ public:
 		T data[kElementCount];
 	};
 
-	Rect2(const T& x_, const T& y_, const T& w_, const T& h_) : x(x_), y(y_), w(w_), h(h_) {}
-	Rect2(const Vec2& pos_, const Vec2& size_) : pos(pos_), size(size_) {}
+	SGE_INLINE Rect2() = default;
+	SGE_INLINE Rect2(const T& x_, const T& y_, const T& w_, const T& h_) : x(x_), y(y_), w(w_), h(h_) {}
+	SGE_INLINE Rect2(const Vec2& pos_, const Vec2& size_) : pos(pos_), size(size_) {}
 };
 
 using Rect2i = Rect2<int>;

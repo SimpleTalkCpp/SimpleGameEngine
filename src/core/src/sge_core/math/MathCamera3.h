@@ -4,10 +4,10 @@
 #include "Ray3.h"
 
 namespace sge {
+namespace Math {
 
 template<class T>
-class MathCamera3 {
-public:
+struct Camera3 {
 	using Vec2  = Vec2<T>;
 	using Vec3  = Vec3<T>;
 	using Vec4  = Vec4<T>;
@@ -54,8 +54,8 @@ private:
 	Vec3 _up  {0,1,0};
 };
 
-using MathCamera3f = MathCamera3<float>;
-using MathCamera3d = MathCamera3<double>;
+using Camera3f = Camera3<float>;
+using Camera3d = Camera3<double>;
 
-
-}
+} // namespace Math
+} // namespace sge

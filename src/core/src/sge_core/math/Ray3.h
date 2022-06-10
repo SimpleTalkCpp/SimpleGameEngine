@@ -13,7 +13,7 @@ private:
 	using Vec4		= sge::Vec4<T>;
 	using Mat4		= sge::Mat4<T>;
 	using Rect2		= sge::Rect2<T>;
-	using MathLine3	= MathLine3<T>;
+	using Line3		= sge::Math::Line3<T>;
 public:
 
 	Vec3 origin, dir;
@@ -34,7 +34,7 @@ public:
 	};
 
 	bool getClosestPoint(Vec3& outPoint, const Vec3& inPoint) const;
-	bool getClosestPoint(Vec3& outPoint, const MathLine3& line, T minOnLine = 0, T maxOnLine = 1) const;
+	bool getClosestPoint(Vec3& outPoint, const Line3& line, T minOnLine = 0, T maxOnLine = 1) const;
 };
 
 using Ray3f = Ray3<float>;

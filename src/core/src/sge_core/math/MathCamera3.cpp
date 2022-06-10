@@ -1,9 +1,10 @@
 #include "MathCamera3.h"
 
 namespace sge {
+namespace Math {
 
 template<class T>
-void MathCamera3<T>::pan(T x, T y) {
+void Camera3<T>::pan(T x, T y) {
 	auto v = _aim - _pos;
 	auto right = _up.cross(v.normalize());
 
@@ -14,7 +15,7 @@ void MathCamera3<T>::pan(T x, T y) {
 }
 
 template<class T>
-void MathCamera3<T>::orbit(T x, T y) {
+void Camera3<T>::orbit(T x, T y) {
 	auto v = _pos - _aim;
 	auto right = _up.cross(v.normalize());
 
@@ -25,7 +26,7 @@ void MathCamera3<T>::orbit(T x, T y) {
 }
 
 template<class T>
-void MathCamera3<T>::move(T x, T y, T z) {
+void Camera3<T>::move(T x, T y, T z) {
 	auto v = _aim - _pos;
 	auto dir = v.normalize();
 	auto right = _up.cross(dir);
@@ -36,7 +37,7 @@ void MathCamera3<T>::move(T x, T y, T z) {
 }
 
 template<class T>
-void MathCamera3<T>::dolly(T z) {
+void Camera3<T>::dolly(T z) {
 	auto v = _pos - _aim;
 	auto dir = v.normalize();
 	auto d = v.length();
@@ -47,22 +48,23 @@ void MathCamera3<T>::dolly(T z) {
 }
 
 template<class T>
-Ray3<T> MathCamera3<T>::getRay(const Vec2& screenPos) const {
+Ray3<T> Camera3<T>::getRay(const Vec2& screenPos) const {
 	return Ray3::s_unprojectFromInvMatrix(screenPos, viewProjMatrix().inverse(), _viewport);
 }
 
 template<class T>
-Mat4<T> MathCamera3<T>::viewMatrix() const {
+Mat4<T> Camera3<T>::viewMatrix() const {
 	return Mat4::s_lookAt(_pos, _aim, _up);
 }
 
 template<class T>
-Mat4<T> MathCamera3<T>::projMatrix() const {
+Mat4<T> Camera3<T>::projMatrix() const {
 	T aspect = _viewport.h != 0 ? _viewport.w / _viewport.h : T(0);
 	return Mat4::s_perspective(Math::radians(_fov), aspect, _nearClip, _farClip);
 }
 
-template class MathCamera3<float>;
-template class MathCamera3<double>;
+template struct Camera3<float>;
+template struct Camera3<double>;
 
-}
+} // namespace Math
+} // namespace sge

@@ -74,6 +74,9 @@ public:
 
 	Vec3 toVec3	() const { return (*this / w).xyz(); };
 
+	Tuple4<T> toTuple() const { return Tuple4<T>(x,y,z,w); }
+	operator Tuple4<T>() const { return toTuple(); }
+
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {}, {}, {})", x, y, z, w);
 	}

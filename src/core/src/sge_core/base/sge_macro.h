@@ -90,7 +90,7 @@
 		using E = T; \
 		switch (v) { \
 			T##_ENUM_LIST(SGE_ENUM_STR__CASE) \
-			default: return nullptr; \
+			default: SGE_ASSERT(false); return ""; \
 		} \
 	} \
 //----
