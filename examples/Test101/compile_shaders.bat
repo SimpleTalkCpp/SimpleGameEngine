@@ -7,4 +7,4 @@ set comp=..\..\build\SimpleGameEngine-x64-windows\src\render\shader_compiler\Deb
 
 %comp%
 
-@pause
+@rem pause

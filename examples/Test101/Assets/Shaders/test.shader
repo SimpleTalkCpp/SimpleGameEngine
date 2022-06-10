@@ -57,7 +57,8 @@ PixelIn vs_main(VertexIn i) {
 	o.positionHCS = mul(sge_matrix_mvp,   i.positionOS);
 	o.positionHCS.y += test_float;
 	
-	o.color	= i.color;
+	o.color	 = i.color;
+	o.normal = i.normal;
 	return o;
 }
 
@@ -105,25 +106,23 @@ float3 lighting_blinn_phong(Surface s) {
 	float3 outSpecular = s.specular * specularPower * outLightColor;
 
 	float3 outColor = (outAmbient + outDiffuse + outSpecular) * s.color;
-
-	outColor = Color_Linear_to_sRGB(outColor);
 	return outColor;
 }
 
 float4 ps_main(PixelIn i) : SV_TARGET
 {
-//	return float4(1,0,0,1);
+//	return float4(i.normal, 1);
 //	return i.color * test_color;
 
 	Surface s;
 	s.positionWS = i.positionWS;
 	s.normal     = i.normal;
 	s.color	     = test_color;
-	s.specular   = float3(0.5, 0.5, 0.5);
-	s.ambient    = float3(0.5, 0.5, 0.5);
+	s.specular   = float3(0.8, 0.8, 0.8);
+	s.ambient    = float3(0.2, 0.2, 0.2);
 	s.diffuse	 = float3(1, 1, 1);
 	s.shininess	 = 1;
 	
-	float3 color = lighting_blinn_phong(s);	
-	return float4(color, 1);
+	float3 color = lighting_blinn_phong(s);
+	return float4(Color_Linear_to_sRGB(color), 1);
 }

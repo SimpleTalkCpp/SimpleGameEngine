@@ -27,7 +27,7 @@ public:
 			_renderContext = renderer->createContext(renderContextDesc);
 		}
 
-		_camera.setPos(0,2,2);
+		_camera.setPos(0,5,5);
 		_camera.setAim(0,0,0);
 
 		auto shader = renderer->createShader("Assets/Shaders/test.shader");
@@ -110,7 +110,7 @@ public:
 
 			_material->setParam("sge_light_pos",	Vec3f(10, 10,   0));
 			_material->setParam("sge_light_dir",	Vec3f(-5, -10, -2));
-			_material->setParam("sge_light_power",	1.0f);
+			_material->setParam("sge_light_power",	4.0f);
 			_material->setParam("sge_light_color",	Vec3f(1,1,1));
 		}
 
@@ -120,7 +120,7 @@ public:
 		auto s = 1.0f;
 
 		_material->setParam("test_float", s * 0.5f);
-		_material->setParam("test_color", Color4f(s, 0, 0, 1));
+		_material->setParam("test_color", Color4f(s, s, s, 1));
 //------
 
 		_renderContext->setFrameBufferSize(clientRect().size);
@@ -159,6 +159,24 @@ public:
 			auto* proj = ProjectSettings::instance();
 			proj->setProjectRoot(path);
 		}
+
+	#if 1 // for quick testing
+		{
+			SHELLEXECUTEINFO ShExecInfo = {0};
+			ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+			ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+			ShExecInfo.hwnd = NULL;
+			ShExecInfo.lpVerb = L"open";
+			ShExecInfo.lpFile = L"compile_shaders.bat";
+			ShExecInfo.lpParameters = L"";
+			ShExecInfo.lpDirectory = NULL;
+			ShExecInfo.nShow = SW_SHOW;
+			ShExecInfo.hInstApp = NULL; 
+			ShellExecuteEx(&ShExecInfo);
+			WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
+			CloseHandle(ShExecInfo.hProcess);
+		}
+	#endif
 
 		Base::onCreate(desc);
 

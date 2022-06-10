@@ -45,6 +45,8 @@ protected:
 
 	void _setTestShaders(const VertexLayout* vertexLayout);
 
+	void _setTestDefaultRenderState();
+
 	virtual void onCommit(RenderCommandBuffer& cmdBuf);
 };
 

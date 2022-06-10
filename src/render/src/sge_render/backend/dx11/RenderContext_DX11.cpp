@@ -63,6 +63,8 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 
 	auto* ctx = _renderer->d3dDeviceContext();
 
+	_setTestDefaultRenderState();
+
 	if (cmd.materialPass) {
 		cmd.materialPass->bind(this, cmd.vertexLayout);
 	} else {
@@ -197,6 +199,19 @@ void RenderContext_DX11::_setTestShaders(const VertexLayout* vertexLayout) {
 		Util::throwIfError(hr);
 	}
 
+	ctx->VSSetShader(_testVertexShader, 0, 0);
+	ctx->PSSetShader(_testPixelShader,  0, 0);
+
+	auto* inputLayout = _getTestInputLayout(vertexLayout);
+	if (!inputLayout) { SGE_ASSERT(false); return; }
+	ctx->IASetInputLayout(inputLayout);
+}
+
+void RenderContext_DX11::_setTestDefaultRenderState() {
+	auto* dev = _renderer->d3dDevice();
+	auto* ctx = _renderer->d3dDeviceContext();
+
+	HRESULT hr;
 	if (!_testRasterizerState) {
 		D3D11_RASTERIZER_DESC rasterDesc = {};
 		rasterDesc.AntialiasedLineEnable = true;
@@ -205,7 +220,7 @@ void RenderContext_DX11::_setTestShaders(const VertexLayout* vertexLayout) {
 		rasterDesc.DepthBiasClamp = 0.0f;
 		rasterDesc.DepthClipEnable = true;
 
-		bool wireframe = true;
+		bool wireframe = false;
 		rasterDesc.FillMode = wireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
 
 		rasterDesc.FrontCounterClockwise = true;
@@ -219,7 +234,8 @@ void RenderContext_DX11::_setTestShaders(const VertexLayout* vertexLayout) {
 
 	if (!_testDepthStencilState) {
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
-		bool depthTest = false;
+
+		bool depthTest = true;
 		if (depthTest) {
 			depthStencilDesc.DepthEnable	= true;
 			depthStencilDesc.DepthFunc		= D3D11_COMPARISON_LESS;
@@ -265,13 +281,6 @@ void RenderContext_DX11::_setTestShaders(const VertexLayout* vertexLayout) {
 	
 	Color4f blendColor(1,1,1,1);
 	ctx->OMSetBlendState(_testBlendState, blendColor.data, 0xffffffff);
-
-	ctx->VSSetShader(_testVertexShader, 0, 0);
-	ctx->PSSetShader(_testPixelShader,  0, 0);
-
-	auto* inputLayout = _getTestInputLayout(vertexLayout);
-	if (!inputLayout) { SGE_ASSERT(false); return; }
-	ctx->IASetInputLayout(inputLayout);
 }
 
 void RenderContext_DX11::onCommit(RenderCommandBuffer& cmdBuf) {

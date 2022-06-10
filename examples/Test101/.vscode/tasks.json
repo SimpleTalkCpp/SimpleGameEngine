@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{ 
+			"label": "compile_shader",
+			"type": "shell",
+			"windows": {
+//				"cwd": "",
+				"command": "${workspaceFolder}/compile_shaders.bat",
+				"args": []
+			},
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
