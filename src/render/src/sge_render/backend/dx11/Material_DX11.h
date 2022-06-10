@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sge_render/shader/Material.h>
 #include "Shader_DX11.h"
 #include "RenderGpuBuffer_DX11.h"

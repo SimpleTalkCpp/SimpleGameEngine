@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.18)
 
 set(CMAKE_TOOLCHAIN_FILE "./externals/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 set(CMAKE_CXX_STANDARD 14)
@@ -37,6 +37,14 @@ function(sge_set_target_warning_level target_name)
 	endif()
 endfunction()
 
+function(sge_set_target_unity_build_mode target_name)
+	set_target_properties(${target_name} PROPERTIES
+							UNITY_BUILD ON
+							UNITY_BUILD_MODE BATCH
+							UNITY_BUILD_BATCH_SIZE 32
+							)	
+endfunction()
+
 function(sge_add_library target_name src_path)
 	file(GLOB_RECURSE src_files
 		"${src_path}/src/*.*"
@@ -47,6 +55,7 @@ function(sge_add_library target_name src_path)
 	target_precompile_headers(${target_name} PUBLIC src/${target_name}-pch.h)
 	target_include_directories(${target_name} PUBLIC src)
 	sge_set_target_warning_level(${target_name})
+	sge_set_target_unity_build_mode(${target_name})
 endfunction()
 
 function(sge_add_executable target_name src_path)
@@ -57,7 +66,8 @@ function(sge_add_executable target_name src_path)
 	
 	add_executable(${target_name} ${src_files})	
 	target_precompile_headers(${target_name} PUBLIC src/${target_name}-pch.h)
-	sge_set_target_warning_level(${target_name})
+	sge_set_target_warning_level(${target_name})	
+	sge_set_target_unity_build_mode(${target_name})
 endfunction()
 
 #-- core ---

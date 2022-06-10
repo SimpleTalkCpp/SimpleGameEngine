@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.16)
-
 set(PROJECT_NAME sge_core)
 message("==== ${PROJECT_NAME} ====")
 project(${PROJECT_NAME})
