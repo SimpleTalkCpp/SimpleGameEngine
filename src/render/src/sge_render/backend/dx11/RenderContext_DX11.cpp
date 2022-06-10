@@ -138,6 +138,7 @@ void RenderContext_DX11::_createRenderTarget() {
 
 void RenderContext_DX11::onSetFrameBufferSize(Vec2f newSize) {
 	_renderTargetView.reset(nullptr); // release buffer and render target view before resize
+	_depthStencilView.reset(nullptr);
 
 	auto hr = _swapChain->ResizeBuffers(0
 								, static_cast<UINT>(Math::max(0.0f, newSize.x))
@@ -154,8 +155,7 @@ void RenderContext_DX11::onBeginRender() {
 	}
 
 	DX11_ID3DRenderTargetView* rt[] = { _renderTargetView };
-//	ctx->OMSetRenderTargets(1, rt, _depthStencilView);
-	ctx->OMSetRenderTargets(1, rt, nullptr);
+	ctx->OMSetRenderTargets(1, rt, _depthStencilView);
 
 	D3D11_VIEWPORT viewport = {};
 	viewport.TopLeftX	 = 0;
@@ -215,7 +215,7 @@ void RenderContext_DX11::_setTestDefaultRenderState() {
 	if (!_testRasterizerState) {
 		D3D11_RASTERIZER_DESC rasterDesc = {};
 		rasterDesc.AntialiasedLineEnable = true;
-		rasterDesc.CullMode = D3D11_CULL_NONE;
+		rasterDesc.CullMode = D3D11_CULL_BACK;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
 		rasterDesc.DepthClipEnable = true;
@@ -238,12 +238,14 @@ void RenderContext_DX11::_setTestDefaultRenderState() {
 		bool depthTest = true;
 		if (depthTest) {
 			depthStencilDesc.DepthEnable	= true;
-			depthStencilDesc.DepthFunc		= D3D11_COMPARISON_LESS;
+			depthStencilDesc.DepthFunc		= D3D11_COMPARISON_LESS_EQUAL;
+			depthStencilDesc.DepthWriteMask	= D3D11_DEPTH_WRITE_MASK_ALL;
 		} else {
 			depthStencilDesc.DepthEnable	= false;
+			depthStencilDesc.DepthFunc		= D3D11_COMPARISON_ALWAYS;
+			depthStencilDesc.DepthWriteMask	= D3D11_DEPTH_WRITE_MASK_ZERO;
 		}
 
-		depthStencilDesc.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ALL;
 		depthStencilDesc.StencilEnable		= false;
 		depthStencilDesc.StencilReadMask	= 0xFF;
 		depthStencilDesc.StencilWriteMask	= 0xFF;

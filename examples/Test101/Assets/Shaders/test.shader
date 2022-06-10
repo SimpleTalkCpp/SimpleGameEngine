@@ -111,6 +111,7 @@ float3 lighting_blinn_phong(Surface s) {
 
 float4 ps_main(PixelIn i) : SV_TARGET
 {
+//	return float4(i.positionHCS.w * 0.05, 0, 0, 1);
 //	return float4(i.normal, 1);
 //	return i.color * test_color;
 
