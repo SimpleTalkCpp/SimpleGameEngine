@@ -86,7 +86,7 @@ public:
 	SGE_NODISCARD SGE_INLINE T		sqrLength		() const	{ return sqrMagnitude(); }
 
 	SGE_NODISCARD SGE_INLINE T		distance		(const Vec3 &r) const	{ return (*this - r).length();    }
-	SGE_NODISCARD SGE_INLINE T		distanceSq		(const Vec3 &r) const	{ return (*this - r).sqrLength(); }
+	SGE_NODISCARD SGE_INLINE T		sqrDistance		(const Vec3 &r) const	{ return (*this - r).sqrLength(); }
 
 	SGE_NODISCARD Vec3 normalize() const { T m = magnitude(); return Math::equals0(m) ? s_zero() : (*this / m); }
 

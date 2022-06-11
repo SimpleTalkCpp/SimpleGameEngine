@@ -244,7 +244,7 @@ struct VertexLayout : public NonCopyable {
 	Vector_<Element, 16>	elements;
 
 	template<class VERTEX, class ATTR>
-	void addElement(Semantic semantic, ATTR VERTEX::*attr, size_t index = 0) {
+	void addElement(Semantic semantic, ATTR VERTEX::*attr) {
 		if (std::is_array<ATTR>()) {
 			size_t n = std::extent<ATTR>();
 			for (size_t i = 0; i < n; i++) {
@@ -317,7 +317,7 @@ struct VertexT_Color : public BASE
 	static const VertexType kType = VertexTypeUtil::addColor(BASE::kType, kColorType, kColorCount);
 
 	static const VertexLayout* layout() {
-		static const VertexLayout* s = VertexLayoutManager::current()->getLayout(kType);
+		static const VertexLayout* s = VertexLayoutManager::instance()->getLayout(kType);
 		return s;
 	}
 

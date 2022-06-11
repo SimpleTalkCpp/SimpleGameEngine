@@ -7,7 +7,7 @@
 namespace sge {
 
 #ifndef SGE_MATH_USE_SSE
-	#error
+	#error "Please include sge_core-config.h"
 #elif SGE_MATH_USE_SSE
 	template<class T> using Vec3 = Vec3_SSE<T>;
 #else

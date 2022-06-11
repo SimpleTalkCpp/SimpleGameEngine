@@ -174,7 +174,7 @@ void ShaderCompiler_DX11::_reflect_constBuffers(ShaderStageInfo& outInfo, ID3D11
 					case D3D_SVT_BOOL:	dataType.append("Bool");	break;
 					case D3D_SVT_INT:	dataType.append("Int32");	break;
 					case D3D_SVT_UINT:	dataType.append("UInt32");	break;
-					case D3D_SVT_UINT8:	dataType.append("Uint8");	break;
+					case D3D_SVT_UINT8:	dataType.append("UInt8");	break;
 					case D3D_SVT_FLOAT: dataType.append("Float32");	break;
 					case D3D_SVT_DOUBLE:dataType.append("Float64");	break;
 					default: throw SGE_ERROR("unsupported type {}", varType.Type);

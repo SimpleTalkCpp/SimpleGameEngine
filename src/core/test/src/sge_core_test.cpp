@@ -13,9 +13,9 @@ namespace sge {
 
 void run_temp_test() {
 	//RUN_TEST(test_Vec2);
-	//RUN_TEST(test_Vec3);
+	RUN_TEST(test_Vec3);
 	//RUN_TEST(test_Vec4);
-	RUN_TEST(test_Mat4);
+	//RUN_TEST(test_Mat4);
 }
 
 void run_all_test() {

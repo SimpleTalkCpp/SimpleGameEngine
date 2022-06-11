@@ -45,12 +45,12 @@ struct Mat4_Basic : public DATA {
 	static SGE_INLINE const Mat4&	s_identity();
 	
 	static SGE_INLINE		Mat4	s_translate	(const Vec3 & t);
-	static SGE_INLINE		Mat4	s_rotate		(const Vec3 & r);
-	static SGE_INLINE		Mat4	s_rotateX		(const T & rad);
-	static SGE_INLINE		Mat4	s_rotateY		(const T & rad);
-	static SGE_INLINE		Mat4	s_rotateZ		(const T & rad);
-	static SGE_INLINE		Mat4	s_scale			(const Vec3 & s);
-	static SGE_INLINE		Mat4	s_shear			(const Vec3 & v);
+	static SGE_INLINE		Mat4	s_rotate	(const Vec3 & r);
+	static SGE_INLINE		Mat4	s_rotateX	(const T & rad);
+	static SGE_INLINE		Mat4	s_rotateY	(const T & rad);
+	static SGE_INLINE		Mat4	s_rotateZ	(const T & rad);
+	static SGE_INLINE		Mat4	s_scale		(const Vec3 & s);
+	static SGE_INLINE		Mat4	s_shear		(const Vec3 & v);
 
 	static SGE_INLINE		Mat4	s_TRS(const Vec3 & translate, const Vec3 & rotate, const Vec3 & scale);
 	static SGE_INLINE		Mat4	s_TS (const Vec3 & translate, const Vec3 & scale);

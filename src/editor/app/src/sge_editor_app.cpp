@@ -60,7 +60,7 @@ public:
 
 		_renderMesh.create(editMesh);
 
-		VertexLayoutManager::instance()->getLayout(Vertex_Pos::kType);
+		// VertexLayoutManager::instance()->getLayout(Vertex_Pos::kType);
 	}
 
 	virtual void onCloseButton() override {
@@ -99,7 +99,7 @@ public:
 			auto model	= Mat4f::s_identity();
 			auto view	= _camera.viewMatrix();
 			auto proj	= _camera.projMatrix();
-			auto mvp	= proj * view;
+			auto mvp	= proj * view * model;
 
 			_material->setParam("sge_matrix_model", model);
 			_material->setParam("sge_matrix_view",  view);
