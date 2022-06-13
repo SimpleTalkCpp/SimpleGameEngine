@@ -64,7 +64,7 @@ public:
 	}
 
 	virtual void onCloseButton() override {
-		NativeUIApp::current()->quit(0);
+		NativeUIApp::instance()->quit(0);
 	}
 
 	virtual void onUIMouseEvent(UIMouseEvent& ev) override {

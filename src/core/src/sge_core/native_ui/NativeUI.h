@@ -23,11 +23,11 @@ class NativeUIWindow : public NativeUIWindow_Impl {
 
 class NativeUIApp : public NativeUIApp_Impl {
 public:
-	static NativeUIApp* current() { return _current; }
-	NativeUIApp() { _current = this; }
+	static NativeUIApp* instance() { return _instance; }
+	NativeUIApp() { _instance = this; }
 
 private:
-	static NativeUIApp* _current;
+	static NativeUIApp* _instance;
 };
 
 }
