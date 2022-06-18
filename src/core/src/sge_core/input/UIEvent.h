@@ -29,7 +29,7 @@ enum class UIEventModifier {
 	Ctrl	= 1 << 1,
 	Atl		= 1 << 2,
 	Cmd		= 1 << 3,
-	Fn		= 2 << 4,
+	Fn		= 1 << 4,
 };
 SGE_ENUM_ALL_OPERATOR(UIEventModifier)
 

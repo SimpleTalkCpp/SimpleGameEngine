@@ -293,8 +293,8 @@ struct VertexT_Pos : public VertexBase
 	using PosType = POS_TYPE;
 	POS_TYPE pos;
 
-	static const RenderDataType	kPosType    = RenderDataTypeUtil::get<POS_TYPE>();
-	static const VertexType kType = VertexTypeUtil::addPos(VertexType::None, kPosType);
+	static const RenderDataType	kPosType	= RenderDataTypeUtil::get<POS_TYPE>();
+	static const VertexType		kType		= VertexTypeUtil::addPos(VertexType::None, kPosType);
 
 	static const VertexLayout* layout() {
 		static const VertexLayout* s = VertexLayoutManager::instance()->getLayout(kType);
