@@ -24,8 +24,6 @@ public:
 	}
 
 private:
-
-	static VertexLayoutManager* s_instance;
 	Map<VertexType, VertexLayout>	_table;
 };
 
