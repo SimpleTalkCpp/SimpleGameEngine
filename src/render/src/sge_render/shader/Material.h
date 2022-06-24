@@ -21,7 +21,7 @@ friend class MaterialPass;
 protected:
 	struct ConstBuffer {
 		using DataType	= ShaderStageInfo::DataType;
-		using Info	=	 ShaderStageInfo::ConstBuffer;
+		using Info		= ShaderStageInfo::ConstBuffer;
 		using VarInfo	= ShaderStageInfo::Variable;
 
 		Vector<u8>				cpuBuffer;

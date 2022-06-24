@@ -182,9 +182,17 @@ void ShaderCompiler_DX11::_reflect_constBuffers(ShaderStageInfo& outInfo, ID3D11
 
 				switch (varType.Class) {
 					case D3D_SVC_SCALAR: break;
-					case D3D_SVC_VECTOR:			FmtTo(dataType, "x{}",		varType.Columns); break;
-					case D3D_SVC_MATRIX_COLUMNS:	FmtTo(dataType, "_{}x{}",	varType.Rows, varType.Columns); break;
-					case D3D_SVC_MATRIX_ROWS:		FmtTo(dataType, "_{}x{}",	varType.Rows, varType.Columns); break;
+					case D3D_SVC_VECTOR:
+						FmtTo(dataType, "x{}",	varType.Columns);
+						break;
+					case D3D_SVC_MATRIX_COLUMNS:
+						FmtTo(dataType, "_{}x{}", varType.Rows, varType.Columns); 
+						outVar.rowMajor = false;
+						break;
+					case D3D_SVC_MATRIX_ROWS:
+						FmtTo(dataType, "_{}x{}", varType.Rows, varType.Columns); 
+						outVar.rowMajor = true;
+						break;
 					default: throw SGE_ERROR("unsupported Class {}", varType.Class);
 				}
 
