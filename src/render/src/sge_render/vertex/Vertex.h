@@ -255,6 +255,13 @@ struct VertexLayout : public NonCopyable {
 		}
 	}
 
+	const Element* find(Semantic semantic) const {
+		for (auto& e : elements) {
+			if (e.semantic == semantic) return &e;
+		}
+		return nullptr;
+	}
+
 private:
 	template<class VERTEX, class ATTR>
 	void _addElement(Semantic semantic, ATTR VERTEX::*attr, size_t index) {

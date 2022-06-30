@@ -53,14 +53,20 @@ void Material_DX11::MyVertexStage::bindInputLayout(RenderContext_DX11* ctx, cons
 	} else {
 		Vector_<D3D11_INPUT_ELEMENT_DESC, 32> inputDesc;
 
-		for (auto& e : vertexLayout->elements) {
+		auto* vsInfo = info();
+		for (auto& input : vsInfo->inputs) {
+			auto* e = vertexLayout->find(input.semantic);
+			if (!e) {
+				throw SGE_ERROR("vertex sematic {} not found", input.semantic);
+			}
+
 			auto& dst = inputDesc.emplace_back();
-			auto semanticType			= VertexSemanticUtil::getType(e.semantic);
+			auto semanticType			= VertexSemanticUtil::getType(e->semantic);
 			dst.SemanticName			= Util::getDxSemanticName(semanticType);
-			dst.SemanticIndex			= VertexSemanticUtil::getIndex(e.semantic);
-			dst.Format					= Util::getDxFormat(e.dataType);
+			dst.SemanticIndex			= VertexSemanticUtil::getIndex(e->semantic);
+			dst.Format					= Util::getDxFormat(e->dataType);
 			dst.InputSlot				= 0;
-			dst.AlignedByteOffset		= e.offset;
+			dst.AlignedByteOffset		= e->offset;
 			dst.InputSlotClass			= D3D11_INPUT_PER_VERTEX_DATA;
 			dst.InstanceDataStepRate	= 0;
 		}
