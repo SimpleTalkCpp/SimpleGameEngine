@@ -65,8 +65,8 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 
 	_setTestDefaultRenderState();
 
-	if (cmd.materialPass) {
-		cmd.materialPass->bind(this, cmd.vertexLayout);
+	if (auto* pass = cmd.getMaterialPass()) {
+		pass->bind(this, cmd.vertexLayout);
 	} else {
 		_setTestShaders(cmd.vertexLayout);
 	}

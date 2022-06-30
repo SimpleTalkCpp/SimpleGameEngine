@@ -12,19 +12,24 @@ void RenderCommandBuffer::drawMesh(const SrcLoc& debugLoc, const RenderMesh& mes
 void RenderCommandBuffer::drawSubMesh(const SrcLoc& debugLoc, const RenderSubMesh& subMesh, Material* material) {
 	if (!material) { SGE_ASSERT(false); return; }
 
-	for (auto& pass : material->passes()) {
+	auto passes = material->passes();
+
+	for (size_t i = 0; i < passes.size(); i++) {
 		auto* cmd = newCommand<RenderCommand_DrawCall>();
 		#if _DEBUG
 			cmd->debugLoc = debugLoc;
 		#endif
-		cmd->materialPass	= pass.ptr();
-		cmd->primitive		= subMesh.primitive();
-		cmd->vertexLayout	= subMesh.vertexLayout();
-		cmd->vertexBuffer	= subMesh.vertexBuffer();
-		cmd->vertexCount	= subMesh.vertexCount();
-		cmd->indexBuffer	= subMesh.indexBuffer();
-		cmd->indexType		= subMesh.indexType();
-		cmd->indexCount		= subMesh.indexCount();
+
+		cmd->material			= material;
+		cmd->materialPassIndex	= i;
+
+		cmd->primitive			= subMesh.primitive();
+		cmd->vertexLayout		= subMesh.vertexLayout();
+		cmd->vertexBuffer		= subMesh.vertexBuffer();
+		cmd->vertexCount		= subMesh.vertexCount();
+		cmd->indexBuffer		= subMesh.indexBuffer();
+		cmd->indexType			= subMesh.indexType();
+		cmd->indexCount			= subMesh.indexCount();
 	}
 }
 
