@@ -82,6 +82,8 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 	DX11_ID3DBuffer* ppVertexBuffers[] = { vertexBuffer->d3dBuf() };
 	ctx->IASetVertexBuffers(0, 1, ppVertexBuffers, &stride, &offset);
 
+//	_renderer->validateContext();
+
 	if (indexCount > 0) {
 		auto indexType = Util::getDxFormat(cmd.indexType);
 		ctx->IASetIndexBuffer(indexBuffer->d3dBuf(), indexType, 0);
@@ -158,10 +160,12 @@ void RenderContext_DX11::onBeginRender() {
 	ctx->OMSetRenderTargets(1, rt, _depthStencilView);
 
 	D3D11_VIEWPORT viewport = {};
-	viewport.TopLeftX	 = 0;
-	viewport.TopLeftY	 = 0;
-	viewport.Width		 = _frameBufferSize.x;
-	viewport.Height		 = _frameBufferSize.y;
+	viewport.TopLeftX	= 0;
+	viewport.TopLeftY	= 0;
+	viewport.Width		= _frameBufferSize.x;
+	viewport.Height		= _frameBufferSize.y;
+	viewport.MinDepth	= 0;
+	viewport.MaxDepth	= 1;
 
 	ctx->RSSetViewports(1, &viewport);
 }

@@ -23,6 +23,8 @@ public:
 	DX11_ID3DDeviceContext* d3dDeviceContext()	{ return _d3dDeviceContext; }
 	DX11_ID3DDebug*			d3dDebug()			{ return _d3dDebug; }
 
+	void validateContext();
+
 protected:
 	virtual SPtr<RenderContext>		onCreateContext		(RenderContext_CreateDesc&   desc) override;
 	virtual SPtr<RenderGpuBuffer>	onCreateGpuBuffer	(RenderGpuBuffer_CreateDesc& desc) override;

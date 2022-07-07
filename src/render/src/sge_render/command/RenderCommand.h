@@ -46,7 +46,7 @@ public:
 	This& dontClearDepth() { depth.reset(); return *this; }
 
 	Opt<Color4f> color = Color4f(1,1,1,1);
-	Opt<float>   depth = 0;
+	Opt<float>   depth = 1;
 };
 
 class RenderCommand_SwapBuffers : public RenderCommand {

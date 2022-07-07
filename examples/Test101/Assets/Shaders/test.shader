@@ -12,6 +12,8 @@ Shader {
 		// Queue	"Transparent"
 //		Cull		None
 
+		DepthTest	LessEqual
+
 //		DepthTest	Always
 //		DepthWrite	false
 
