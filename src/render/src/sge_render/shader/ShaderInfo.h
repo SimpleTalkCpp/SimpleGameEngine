@@ -3,6 +3,7 @@
 #include <sge_render/RenderDataType.h>
 #include <sge_render/vertex/Vertex.h>
 #include <sge_core/serializer/json/JsonUtil.h>
+#include "RenderState.h"
 
 namespace sge {
 
@@ -89,12 +90,14 @@ struct ShaderInfo {
 		String name;
 		String vsFunc;
 		String psFunc;
+		RenderState	renderState;
 
 		template<class SE>
 		void onJson(SE & se) {
 			SGE_NAMED_IO(se, name);
 			SGE_NAMED_IO(se, vsFunc);
 			SGE_NAMED_IO(se, psFunc);
+			SGE_NAMED_IO(se, renderState);
 		}
 	};
 

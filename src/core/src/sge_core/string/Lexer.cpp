@@ -97,7 +97,7 @@ void Lexer::_error(StrView msg) {
 		tmp += "^^^\n";
 	}
 
-	FmtTo(tmp, "  token={}\n  file={}:{}:{}\n", _filename, _line, _col);
+	FmtTo(tmp, "  token={}\n  file={}:{}:{}\n", _token, _filename, _line, _col);
 	throw SGE_ERROR("{}", tmp);
 }
 
@@ -264,6 +264,17 @@ void Lexer::readString(String& s) {
 void Lexer::readIdentifier(String& s) {
 	if (!_token.isIdentifier()) errorUnexpectedToken();
 	s = _token.str;
+	nextToken();
+}
+
+void Lexer::readBool(bool& v) {
+	if (!_token.isIdentifier()) errorUnexpectedToken();
+	if (_token.str == "true")
+		v = true;
+	else if (_token.str == "false")
+		v = false;
+	else
+		errorUnexpectedToken();
 	nextToken();
 }
 

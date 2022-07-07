@@ -13,6 +13,8 @@ public:
 		_stack.emplace_back(&_json);
 	}
 
+	void io(bool& v) { toValue(v); }
+
 	void io(u8&  v) { toValue(v); }
 	void io(u16& v) { toValue(v); }
 	void io(u32& v) { toValue(v); }

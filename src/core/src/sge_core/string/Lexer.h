@@ -71,6 +71,10 @@ public:
 	void readString(String& s);
 	void readIdentifier(String& s);
 
+	void readBool(bool& v);
+
+	template<class E> void readEnum(E& v);
+
 	StrView getLastFewLines(size_t lineCount);
 
 	const char* cur() const { return _cur; }
@@ -120,5 +124,21 @@ const char* enumStr(Lexer::TokenType v) {
 
 SGE_FORMATTER_ENUM(Lexer::TokenType)
 SGE_FORMATTER(Lexer::Token);
+
+
+template<class E> inline
+void Lexer::readEnum(E& v) {
+	if (!token().isIdentifier()) {
+		errorUnexpectedToken();
+		return;
+	}
+
+	if (!enumTryParse(v, _token.str)) {
+		error("read enum [{}]", _token.str);
+		return;
+	}
+	nextToken();
+}
+
 
 }

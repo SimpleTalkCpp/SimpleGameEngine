@@ -54,8 +54,14 @@ private:
 
 		virtual void onBind(RenderContext* ctx, const VertexLayout* vertexLayout) override;
 
+		void _bindRenderState(RenderContext_DX11* ctx);
+
 		MyVertexStage _myVertexStage;
 		MyPixelStage  _myPixelStage;
+
+		ComPtr<DX11_ID3DRasterizerState>	_rasterizerState;
+		ComPtr<DX11_ID3DDepthStencilState>	_depthStencilState;
+		ComPtr<DX11_ID3DBlendState>			_blendState;
 	};
 
 	virtual Pass* onCreatePass(Material* material, ShaderPass* shaderPass) override {
