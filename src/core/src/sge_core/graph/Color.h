@@ -4,6 +4,26 @@
 
 namespace sge {
 
+#define ColorType_ENUM_LIST(E) \
+	E(None,) \
+	E(Rf,) \
+	E(Rb,) \
+	E(RGf,) \
+	E(RGb,) \
+	E(RGBf,) \
+	E(RGBb,) \
+	E(RGBAf,) \
+	E(RGBAb,) \
+	E(BC1,) \
+	E(BC2,) \
+	E(BC3,) \
+	E(BC4,) \
+	E(BC5,) \
+	E(BC6h,) \
+	E(BC7,) \
+//----
+SGE_ENUM_CLASS(ColorType, u16)
+
 template<class T>
 struct ColorR {
 	using ElementType = T;
@@ -56,6 +76,8 @@ struct ColorRGBA {
 	using ElementType = T;
 	static const size_t kElementCount = 4;
 
+	static constexpr ColorType kColorType();
+
 	union {
 		struct { T r, g, b, a; };
 		T data[kElementCount];
@@ -91,5 +113,9 @@ using ColorRGBAb = ColorRGBA<u8>;
 
 using Color4f = ColorRGBAf;
 using Color4b = ColorRGBAb;
+
+
+template<> constexpr ColorType ColorRGBA<float>::kColorType() { return ColorType::RGBAf; }
+template<> constexpr ColorType ColorRGBA<u8   >::kColorType() { return ColorType::RGBAb; }
 
 }

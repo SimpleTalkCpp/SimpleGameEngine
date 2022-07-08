@@ -6,7 +6,6 @@
 #include <sge_render/vertex/Vertex.h>
 #include <sge_render/vertex/VertexLayoutManager.h>
 
-
 namespace sge {
 
 class MainWin : public NativeUIWindow {
@@ -30,9 +29,35 @@ public:
 		_camera.setPos(0,5,5);
 		_camera.setAim(0,0,0);
 
+		{
+			int w = 256;
+			int h = 256;
+			Texture2D_CreateDesc texDesc;
+			texDesc.colorType = ColorType::RGBAb;
+			texDesc.mipmapCount = 1;
+			texDesc.size.set(w, h);
+
+			auto& image = texDesc.imageToUpload;
+			image.create(Color4b::kColorType(), w, h);
+
+			for (int y = 0; y < w; y++) {
+				auto span = image.row<Color4b>(y);
+				for (int x = 0; x < h; x++) {
+					span[x] = Color4b(	static_cast<u8>(x),
+										static_cast<u8>(y), 
+										0, 
+										255);
+				}
+			}
+
+			_testTexture = renderer->createTexture2D(texDesc);
+		}
+
 		auto shader = renderer->createShader("Assets/Shaders/test.shader");
 		_material = renderer->createMaterial();
 		_material->setShader(shader);
+
+		_material->setParam("mainTex", _testTexture);
 
 		EditMesh editMesh;
 
@@ -132,6 +157,7 @@ public:
 	}
 
 	SPtr<Material> _material;
+	SPtr<Texture2D>	_testTexture;
 
 	SPtr<RenderContext>	_renderContext;
 	RenderCommandBuffer _cmdBuf;

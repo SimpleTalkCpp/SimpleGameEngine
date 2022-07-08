@@ -26,6 +26,25 @@ void Material_DX11::_bindStageHelper(RenderContext_DX11* ctx, STAGE* stage) {
 
 		stage->_dxSetConstBuffer(dc, bindPoint, d3dBuf);
 	}
+
+	for (auto& texParam : stage->texParams()) {
+		auto* tex = texParam.getUpdatedTexture();
+
+		int bindPoint = texParam.bindPoint();
+
+		switch (texParam.dataType()) {
+			case RenderDataType::Texture2D: {
+				auto* tex2d = static_cast<Texture2D_DX11*>(tex);
+				auto* rv = tex2d->resourceView();
+				auto* ss = tex2d->samplerState();
+
+				stage->_dxSetShaderResource(dc, bindPoint, rv);
+				stage->_dxSetSampler(dc, bindPoint, ss);
+			} break;
+			
+			default: throw SGE_ERROR("bind unsupported texture type");
+		}
+	}
 }
 
 void Material_DX11::MyPixelStage::bind(RenderContext_DX11* ctx, const VertexLayout* vertexLayout) {
@@ -34,7 +53,6 @@ void Material_DX11::MyPixelStage::bind(RenderContext_DX11* ctx, const VertexLayo
 
 void Material_DX11::MyVertexStage::bind(RenderContext_DX11* ctx, const VertexLayout* vertexLayout) {
 	_bindStageHelper(ctx, this);
-
 	bindInputLayout(ctx, vertexLayout);
 }
 

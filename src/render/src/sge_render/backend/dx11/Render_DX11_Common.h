@@ -33,6 +33,9 @@ using DX11_ID3DTexture1D			= ID3D11Texture1D;
 using DX11_ID3DTexture2D			= ID3D11Texture2D;
 using DX11_ID3DTexture3D			= ID3D11Texture3D;
 
+using DX11_ID3DSamplerState			= ID3D11SamplerState;
+using DX11_ID3DShaderResourceView	= ID3D11ShaderResourceView;
+
 using DX11_ID3DRenderTargetView		= ID3D11RenderTargetView;
 using DX11_ID3DDepthStencilView		= ID3D11DepthStencilView;
 
@@ -63,11 +66,15 @@ struct DX11Util {
 
 	static D3D11_PRIMITIVE_TOPOLOGY	getDxPrimitiveTopology	(RenderPrimitiveType t);
 	static DXGI_FORMAT				getDxFormat				(RenderDataType v);
+	static DXGI_FORMAT				getDxColorType			(ColorType v);
 
 	static D3D11_CULL_MODE			getDxCullMode			(RenderState_Cull v);
 	static D3D11_COMPARISON_FUNC	getDxDepthTestOp		(RenderState_DepthTestOp v);
 	static D3D11_BLEND_OP			getDxBlendOp			(RenderState_BlendOp v);
 	static D3D11_BLEND				getDxBlendFactor		(RenderState_BlendFactor v);
+
+	static D3D11_FILTER					getDxTextureFilter	(TextureFilter v);
+	static D3D11_TEXTURE_ADDRESS_MODE	getDxTextureWrap	(TextureWrap v);
 
 	static const char* getDxSemanticName(VertexSemanticType t);
 	static VertexSemanticType		parseDxSemanticName		(StrView s);
@@ -220,6 +227,35 @@ DXGI_FORMAT DX11Util::getDxFormat(RenderDataType v) {
 }
 
 inline
+DXGI_FORMAT DX11Util::getDxColorType(ColorType v) {
+	using SRC = ColorType;
+	switch (v) {
+		case SRC::Rb:		return DXGI_FORMAT_R8_UNORM;
+		case SRC::Rf:		return DXGI_FORMAT_R32_FLOAT;
+
+		case SRC::RGb:		return DXGI_FORMAT_R8G8_UNORM;
+		case SRC::RGf:		return DXGI_FORMAT_R32G32_FLOAT;
+
+		//case SRC::RGBb:	return DXGI_FORMAT_R8G8B8_UNORM;		// DX Not Support
+		//case SRC::RGBf:	return DXGI_FORMAT_R32G32B32_FLOAT;		// DX Not Support
+
+		case SRC::RGBAb:	return DXGI_FORMAT_R8G8B8A8_UNORM;
+		case SRC::RGBAf:	return DXGI_FORMAT_R32G32B32A32_FLOAT;
+//
+		case SRC::BC1:		return DXGI_FORMAT_BC1_UNORM;
+		case SRC::BC2:		return DXGI_FORMAT_BC2_UNORM;
+		case SRC::BC3:		return DXGI_FORMAT_BC3_UNORM;
+		case SRC::BC4:		return DXGI_FORMAT_BC4_UNORM;
+		case SRC::BC5:		return DXGI_FORMAT_BC5_UNORM;
+		case SRC::BC6h:		return DXGI_FORMAT_BC6H_UF16;
+		case SRC::BC7:		return DXGI_FORMAT_BC7_UNORM;
+
+		default: throw SGE_ERROR("unsupported ColorType");
+	}
+}
+
+
+inline
 D3D11_CULL_MODE DX11Util::getDxCullMode(RenderState_Cull v) {
 	using SRC = RenderState_Cull;
 	switch (v) {
@@ -279,6 +315,31 @@ D3D11_BLEND DX11Util::getDxBlendFactor(RenderState_BlendFactor v) {
 //		case SRC::OneMinusConstAlpha:	return 
 		case SRC::SrcAlphaSaturate:		return D3D11_BLEND_SRC_ALPHA_SAT;
 		default: throw SGE_ERROR("unsupported BlendFactor");
+	}
+}
+
+inline D3D11_FILTER DX11Util::getDxTextureFilter(TextureFilter v) {
+	using SRC = TextureFilter;
+	switch (v) {
+		case SRC::Point:		return D3D11_FILTER_MIN_MAG_MIP_POINT;
+		case SRC::Linear:		return D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
+		case SRC::Bilinear:		return D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+		case SRC::Trilinear:	return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		case SRC::Anisotropic:	return D3D11_FILTER_ANISOTROPIC;
+	//---
+		default: throw SGE_ERROR("unsupported TextureFilter");
+	}
+}
+
+inline D3D11_TEXTURE_ADDRESS_MODE DX11Util::getDxTextureWrap(TextureWrap v) {
+	using SRC = TextureWrap;
+	switch (v) {
+		case SRC::Repeat:		return D3D11_TEXTURE_ADDRESS_WRAP;
+		case SRC::Clamp:		return D3D11_TEXTURE_ADDRESS_CLAMP;
+		case SRC::Mirror:		return D3D11_TEXTURE_ADDRESS_MIRROR;
+		case SRC::MirrorOnce:	return D3D11_TEXTURE_ADDRESS_MIRROR_ONCE;
+	//---
+		default: throw SGE_ERROR("unsupported TextureWrap");
 	}
 }
 

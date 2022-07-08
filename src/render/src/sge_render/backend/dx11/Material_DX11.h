@@ -28,7 +28,17 @@ private:
 			dc->VSSetConstantBuffers(bindPoint, 1, &d3dBuf);
 		}
 
-		Span<ConstBuffer> constBuffers() { return _constBuffers; }
+		void _dxSetShaderResource(DX11_ID3DDeviceContext* dc, UINT bindPoint, DX11_ID3DShaderResourceView* rv) {
+			dc->VSSetShaderResources(bindPoint, 1, &rv);
+		}
+
+		void _dxSetSampler(DX11_ID3DDeviceContext* dc, UINT bindPoint, DX11_ID3DSamplerState* ss) {
+			dc->VSSetSamplers(bindPoint, 1, &ss);
+		}
+
+		Span<ConstBuffer>	constBuffers()	{ return _constBuffers; }
+		Span<TexParam>		texParams()		{ return _texParams; }
+
 		Shader_DX11::MyVertexStage*	shaderStage() { return static_cast<Shader_DX11::MyVertexStage*>(_shaderStage); }
 
 		VectorMap<const VertexLayout*, ComPtr<DX11_ID3DInputLayout>> _inputLayoutsMap;
@@ -45,7 +55,17 @@ private:
 			dc->PSSetConstantBuffers(bindPoint, 1, &d3dBuf);
 		}
 
+		void _dxSetShaderResource(DX11_ID3DDeviceContext* dc, UINT bindPoint, DX11_ID3DShaderResourceView* rv) {
+			dc->PSSetShaderResources(bindPoint, 1, &rv);
+		}
+
+		void _dxSetSampler(DX11_ID3DDeviceContext* dc, UINT bindPoint, DX11_ID3DSamplerState* ss) {
+			dc->PSSetSamplers(bindPoint, 1, &ss);
+		}
+
 		Span<ConstBuffer> constBuffers() { return _constBuffers; }
+		Span<TexParam>		texParams()		{ return _texParams; }
+
 		Shader_DX11::MyPixelStage*	shaderStage() { return static_cast<Shader_DX11::MyPixelStage*>(_shaderStage); }
 	};
 
