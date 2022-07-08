@@ -11,13 +11,9 @@ struct UtfUtil {
 
 	template<size_t N>	static void append(String_<N>&  dst, StrView  view) { _append(dst, view); }
 	template<size_t N>	static void append(String_<N>&  dst, StrViewW view) { _append(dst, view); }
-						static void append(String&      dst, StrView  view) { _append(dst, view); }
-						static void append(String&      dst, StrViewW view) { _append(dst, view); }
 
 	template<size_t N>	static void append(StringW_<N>& dst, StrView  view) { _append(dst, view); }
 	template<size_t N>	static void append(StringW_<N>& dst, StrViewW view) { _append(dst, view); }
-						static void append(StringW&     dst, StrView  view) { _append(dst, view); }
-						static void append(StringW&     dst, StrViewW view) { _append(dst, view); }
 
 	template<class SRC>	static String  toString	(SRC& src) { String  o; convert(o, src); return o; }
 	template<class SRC>	static StringW toStringW(SRC& src) { StringW o; convert(o, src); return o; }

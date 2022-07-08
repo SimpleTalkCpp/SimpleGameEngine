@@ -225,7 +225,7 @@ protected:
 	Vector_<UPtr<Pass>, 2>	_passes;
 	SPtr<Shader> _shader;
 	virtual void onSetShader() {}
-	virtual Pass* onCreatePass(Material* material, ShaderPass* shaderPass) = 0;
+	virtual UPtr<Pass> onCreatePass(ShaderPass* shaderPass) = 0;
 };
 
 }
