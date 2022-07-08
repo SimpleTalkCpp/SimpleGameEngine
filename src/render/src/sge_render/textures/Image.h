@@ -39,8 +39,8 @@ public:
 	SGE_INLINE	int				height			() const { return _info.size.y; }
 	SGE_INLINE	ColorType		colorType		() const { return _info.colorType; }
 
-	template<class COLOR> SGE_INLINE	Span<      COLOR>	row(int y)			{ _checkType(COLOR::kColorType()); return row_noCheck<COLOR>(y); }
-	template<class COLOR> SGE_INLINE	Span<const COLOR>	row(int y) const	{ _checkType(COLOR::kColorType()); return row_noCheck<COLOR>(y); }
+	template<class COLOR> SGE_INLINE	Span<      COLOR>	row(int y)			{ _checkType(COLOR::kColorType); return row_noCheck<COLOR>(y); }
+	template<class COLOR> SGE_INLINE	Span<const COLOR>	row(int y) const	{ _checkType(COLOR::kColorType); return row_noCheck<COLOR>(y); }
 
 	template<class COLOR> SGE_INLINE	const COLOR&		pixel(int x, int y) const	{ return row<COLOR>(y)[x]; }
 	template<class COLOR> SGE_INLINE		  COLOR&		pixel(int x, int y)			{ return row<COLOR>(y)[x]; }

@@ -4,16 +4,38 @@
 
 namespace sge {
 
-#define ColorType_ENUM_LIST(E) \
+#define ColorModel_ENUM_LIST(E) \
 	E(None,) \
-	E(Rf,) \
-	E(Rb,) \
-	E(RGf,) \
-	E(RGb,) \
-	E(RGBf,) \
-	E(RGBb,) \
-	E(RGBAf,) \
-	E(RGBAb,) \
+	E(R,) \
+	E(RG,) \
+	E(RGB,) \
+	E(RGBA,) \
+	E(L,)  /* Luminance */ \
+	E(LA,) /* Luminance Alpha */ \
+	E(HSV,) \
+	E(BlockCompression,) \
+//----
+SGE_ENUM_CLASS(ColorModel, u8)
+
+#define ColorElementType_ENUM_LIST(E) \
+	E(None,) \
+	E(UNorm8,) \
+	E(UNorm16,) \
+	E(Float16,) \
+	E(Float32,) \
+	E(Float64,) \
+//-------
+SGE_ENUM_CLASS(ColorElementType, u8);
+
+template<class T> constexpr ColorElementType ColorElementType_get();
+template<> constexpr ColorElementType ColorElementType_get<u8 >() { return ColorElementType::UNorm8; }
+template<> constexpr ColorElementType ColorElementType_get<u16>() { return ColorElementType::UNorm16; }
+//template<> constexpr ColorElementType ColorElementType_get<f16>() { return ColorElementType::Float16; }
+template<> constexpr ColorElementType ColorElementType_get<f32>() { return ColorElementType::Float32; }
+template<> constexpr ColorElementType ColorElementType_get<f64>() { return ColorElementType::Float64; }
+
+#define ColorCompressType_ENUM_LIST(E) \
+	E(None,) \
 	E(BC1,) \
 	E(BC2,) \
 	E(BC3,) \
@@ -21,6 +43,65 @@ namespace sge {
 	E(BC5,) \
 	E(BC6h,) \
 	E(BC7,) \
+//-------
+SGE_ENUM_CLASS(ColorCompressType, u8);
+
+
+enum class ColorType : u16;
+
+constexpr ColorType ColorType_make(ColorModel model, ColorElementType elem) {
+	return static_cast<ColorType>(
+			  (static_cast<u32>(model) << 8)
+			| (static_cast<u32>(elem))
+			);
+}
+
+constexpr ColorType ColorType_make(ColorModel model, ColorCompressType compress) {
+	return static_cast<ColorType>(
+			  (static_cast<u32>(model) << 8)
+			| (static_cast<u32>(compress))
+			);
+}
+
+#define ColorType_ENUM_LIST(E) \
+	E(None,) \
+	E(Rb,		= ColorType_make(ColorModel::R,		ColorElementType::UNorm8 )) \
+	E(Rs,		= ColorType_make(ColorModel::R,		ColorElementType::UNorm16)) \
+	E(Rh,		= ColorType_make(ColorModel::R,		ColorElementType::Float16)) \
+	E(Rf,		= ColorType_make(ColorModel::R,		ColorElementType::Float32)) \
+	\
+	E(Lb,		= ColorType_make(ColorModel::L,		ColorElementType::UNorm8 )) \
+	E(Ls,		= ColorType_make(ColorModel::L,		ColorElementType::UNorm16)) \
+	E(Lh,		= ColorType_make(ColorModel::L,		ColorElementType::Float16)) \
+	E(Lf,		= ColorType_make(ColorModel::L,		ColorElementType::Float32)) \
+	\
+	E(LAb,		= ColorType_make(ColorModel::LA,	ColorElementType::UNorm8 )) \
+	E(LAs,		= ColorType_make(ColorModel::LA,	ColorElementType::UNorm16)) \
+	E(LAh,		= ColorType_make(ColorModel::LA,	ColorElementType::Float16)) \
+	E(LAf,		= ColorType_make(ColorModel::LA,	ColorElementType::Float32)) \
+	\
+	E(RGb,		= ColorType_make(ColorModel::RG,	ColorElementType::UNorm8 )) \
+	E(RGs,		= ColorType_make(ColorModel::RG,	ColorElementType::UNorm16)) \
+	E(RGh,		= ColorType_make(ColorModel::RG,	ColorElementType::Float16)) \
+	E(RGf,		= ColorType_make(ColorModel::RG,	ColorElementType::Float32)) \
+	\
+	E(RGBb,		= ColorType_make(ColorModel::RGB,	ColorElementType::UNorm8 )) \
+	E(RGBs,		= ColorType_make(ColorModel::RGB,	ColorElementType::UNorm16)) \
+	E(RGBh,		= ColorType_make(ColorModel::RGB,	ColorElementType::Float16)) \
+	E(RGBf,		= ColorType_make(ColorModel::RGB,	ColorElementType::Float32)) \
+	\
+	E(RGBAb,	= ColorType_make(ColorModel::RGBA,	ColorElementType::UNorm8 )) \
+	E(RGBAs,	= ColorType_make(ColorModel::RGBA,	ColorElementType::UNorm16)) \
+	E(RGBAh,	= ColorType_make(ColorModel::RGBA,	ColorElementType::Float16)) \
+	E(RGBAf,	= ColorType_make(ColorModel::RGBA,	ColorElementType::Float32)) \
+	\
+	E(BC1,		= ColorType_make(ColorModel::BlockCompression, ColorCompressType::BC1 )) \
+	E(BC2,		= ColorType_make(ColorModel::BlockCompression, ColorCompressType::BC2 )) \
+	E(BC3,		= ColorType_make(ColorModel::BlockCompression, ColorCompressType::BC3 )) \
+	E(BC4,		= ColorType_make(ColorModel::BlockCompression, ColorCompressType::BC4 )) \
+	E(BC5,		= ColorType_make(ColorModel::BlockCompression, ColorCompressType::BC5 )) \
+	E(BC6h,		= ColorType_make(ColorModel::BlockCompression, ColorCompressType::BC6h)) \
+	E(BC7,		= ColorType_make(ColorModel::BlockCompression, ColorCompressType::BC7 )) \
 //----
 SGE_ENUM_CLASS(ColorType, u16)
 
@@ -28,6 +109,8 @@ template<class T>
 struct ColorR {
 	using ElementType = T;
 	static const size_t kElementCount = 1;
+	static constexpr bool hasAlpha = false;
+	static constexpr ColorType kColorType = ColorType_make(ColorModel::R, ColorElementType_get<T>());
 
 	union {
 		struct { T r; };
@@ -43,6 +126,8 @@ template<class T>
 struct ColorRG {
 	using ElementType = T;
 	static const size_t kElementCount = 2;
+	static constexpr bool hasAlpha = false;
+	static constexpr ColorType kColorType = ColorType_make(ColorModel::RG, ColorElementType_get<T>());
 
 	union {
 		struct { T r, g; };
@@ -59,6 +144,8 @@ template<class T>
 struct ColorRGB {
 	using ElementType = T;
 	static const size_t kElementCount = 3;
+	static constexpr bool hasAlpha = false;
+	static constexpr ColorType kColorType = ColorType_make(ColorModel::RGB, ColorElementType_get<T>());
 
 	union {
 		struct { T r, g, b; };
@@ -75,8 +162,8 @@ template<class T>
 struct ColorRGBA {
 	using ElementType = T;
 	static const size_t kElementCount = 4;
-
-	static constexpr ColorType kColorType();
+	static constexpr bool hasAlpha = true;
+	static constexpr ColorType kColorType = ColorType_make(ColorModel::RGBA, ColorElementType_get<T>());
 
 	union {
 		struct { T r, g, b, a; };
@@ -110,12 +197,9 @@ struct ColorRGBA {
 
 using ColorRGBAf = ColorRGBA<float>;
 using ColorRGBAb = ColorRGBA<u8>;
+using ColorRGBAs = ColorRGBA<u16>;
 
 using Color4f = ColorRGBAf;
 using Color4b = ColorRGBAb;
-
-
-template<> constexpr ColorType ColorRGBA<float>::kColorType() { return ColorType::RGBAf; }
-template<> constexpr ColorType ColorRGBA<u8   >::kColorType() { return ColorType::RGBAb; }
 
 }

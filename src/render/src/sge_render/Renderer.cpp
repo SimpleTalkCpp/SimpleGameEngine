@@ -57,7 +57,7 @@ SPtr<Texture2D> Renderer::createSolidColorTexture2D(const Color4b& color) {
 	texDesc.size.set(w, h);
 
 	auto& image = texDesc.imageToUpload;
-	image.create(Color4b::kColorType(), w, h);
+	image.create(Color4b::kColorType, w, h);
 
 	for (int y = 0; y < w; y++) {
 		auto span = image.row<Color4b>(y);

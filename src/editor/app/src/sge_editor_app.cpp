@@ -30,25 +30,34 @@ public:
 		_camera.setAim(0,0,0);
 
 		{
-			int w = 256;
-			int h = 256;
 			Texture2D_CreateDesc texDesc;
-			texDesc.colorType = ColorType::RGBAb;
-			texDesc.mipmapCount = 1;
-			texDesc.size.set(w, h);
-
 			auto& image = texDesc.imageToUpload;
-			image.create(Color4b::kColorType(), w, h);
 
-			for (int y = 0; y < w; y++) {
-				auto span = image.row<Color4b>(y);
-				for (int x = 0; x < h; x++) {
-					span[x] = Color4b(	static_cast<u8>(x),
-										static_cast<u8>(y), 
-										0, 
-										255);
+			#if 1
+				image.loadFile("Assets/Textures/uvChecker.png");
+
+				texDesc.size = image.size();
+				texDesc.colorType = image.colorType();
+
+			#else
+				int w = 256;
+				int h = 256;
+
+				texDesc.size.set(w, h);
+				texDesc.colorType = ColorType::RGBAb;
+
+				image.create(Color4b::kColorType(), w, h);
+
+				for (int y = 0; y < w; y++) {
+					auto span = image.row<Color4b>(y);
+					for (int x = 0; x < h; x++) {
+						span[x] = Color4b(	static_cast<u8>(x),
+											static_cast<u8>(y), 
+											0, 
+											255);
+					}
 				}
-			}
+			#endif
 
 			_testTexture = renderer->createTexture2D(texDesc);
 		}

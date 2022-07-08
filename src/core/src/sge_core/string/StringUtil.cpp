@@ -79,7 +79,7 @@ const char* StringUtil::findCharFromEnd(StrView view, StrView charList, bool ign
 	if (ignoreCase) {
 		for ( ; p >= start; p-- ) {
 			for(auto& ch : charList) {
-				if (ignoreCaseCompare(*p, ch)) {
+				if (ignoreCaseCompare(*p, ch) == 0) {
 					return p;
 				}
 			}
@@ -138,6 +138,16 @@ struct StringUtil_ParseHelper {
 	}
 };
 
+int StringUtil::ignoreCaseCompare(StrView a, StrView b) {
+	size_t n = Math::min(a.size(), b.size());
+	for (size_t i = 0; i < n; i++) {
+		int c = ignoreCaseCompare(a[i], b[i]);
+		if (c != 0) return c;
+	}
+	if (a.size() < b.size()) return -1;
+	if (a.size() > b.size()) return 1;
+	return 0;
+}
 
 bool StringUtil::tryParse(StrView view, i8&  outValue) { return StringUtil_ParseHelper::tryParseInt(view, outValue); }
 bool StringUtil::tryParse(StrView view, i16& outValue) { return StringUtil_ParseHelper::tryParseInt(view, outValue); }
