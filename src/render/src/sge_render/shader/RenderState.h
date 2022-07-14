@@ -3,9 +3,9 @@
 namespace sge {
 
 #define RenderState_Cull_ENUM_LIST(E) \
+	E(None,) \
 	E(Back,) \
 	E(Front,) \
-	E(None,) \
 //----
 SGE_ENUM_CLASS(RenderState_Cull, u8)
 

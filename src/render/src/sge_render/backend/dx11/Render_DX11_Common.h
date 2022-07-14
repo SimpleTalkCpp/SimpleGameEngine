@@ -259,9 +259,9 @@ inline
 D3D11_CULL_MODE DX11Util::getDxCullMode(RenderState_Cull v) {
 	using SRC = RenderState_Cull;
 	switch (v) {
+		case SRC::None:		return D3D11_CULL_NONE;
 		case SRC::Back:		return D3D11_CULL_BACK;
 		case SRC::Front:	return D3D11_CULL_FRONT;
-		case SRC::None:		return D3D11_CULL_NONE;
 		default: throw SGE_ERROR("unsupported CullMode");
 	}
 }

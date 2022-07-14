@@ -46,7 +46,7 @@ public:
 				texDesc.size.set(w, h);
 				texDesc.colorType = ColorType::RGBAb;
 
-				image.create(Color4b::kColorType(), w, h);
+				image.create(Color4b::kColorType, w, h);
 
 				for (int y = 0; y < w; y++) {
 					auto span = image.row<Color4b>(y);
