@@ -8,6 +8,7 @@ struct ColorUtil {
 	ColorUtil() = delete;
 
 	static constexpr int pixelSizeInBytes(ColorType t);
+	static constexpr int bytesPerPixelBlock(ColorType type);
 
 	static constexpr ColorElementType	elementType(ColorType t) { return static_cast<ColorElementType>(enumInt(t) & 0xff); }
 	static constexpr ColorModel			colorModel( ColorType t) { return static_cast<ColorModel>((enumInt(t) >> 8) & 0xff); }
@@ -29,6 +30,23 @@ constexpr int ColorUtil::pixelSizeInBytes(ColorType t) {
 	}
 
 	SGE_ASSERT(false);
+	return 0;
+}
+
+constexpr int ColorUtil::bytesPerPixelBlock(ColorType type) {
+	switch (type) {
+		#define E(T, ...) \
+			case ColorType::T: return Color##T::kBytesPerPixelBlock;
+		//----------
+			E(BC1)
+			E(BC2)
+			E(BC3)
+			E(BC4)
+			E(BC5)
+			E(BC6h)
+			E(BC7)
+		#undef E
+	}
 	return 0;
 }
 

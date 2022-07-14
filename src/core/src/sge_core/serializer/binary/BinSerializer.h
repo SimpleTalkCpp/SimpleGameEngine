@@ -59,7 +59,7 @@ public:
 
 	SGE_INLINE void io_vary(char& value)	{ _io_vary_unsigned(reinterpret_cast<u8&>(value)); }
 
-	SGE_INLINE u8* _advance(size_t n);
+	SGE_INLINE u8* advance(size_t n);
 
 	void io_raw(const u8* data, size_t dataSize) {
 		_buf->reserve(_buf->size() + dataSize);
@@ -76,7 +76,7 @@ private:
 };
 
 SGE_INLINE
-u8* BinSerializer::_advance(size_t n) {
+u8* BinSerializer::advance(size_t n) {
 	size_t oldSize = _buf->size();
 	_buf->resize(oldSize + n);
 	return _buf->data() + oldSize;
@@ -84,7 +84,7 @@ u8* BinSerializer::_advance(size_t n) {
 
 template<class T> SGE_INLINE
 void BinSerializer::_io_fixed(T& value) {
-	auto* p = _advance(sizeof(value));
+	auto* p = advance(sizeof(value));
 	*reinterpret_cast<T*>(p) = LittleEndian::FromHost::get(value);
 }
 

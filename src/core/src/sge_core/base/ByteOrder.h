@@ -75,5 +75,25 @@ public:
 #endif
 };
 
+#if SGE_CPU_ENDIAN_LITTLE
+	constexpr char32_t FourCC(char a, char b, char c, char d ) {
+		return static_cast<char32_t>(a)
+		     | static_cast<char32_t>(b) << 8
+		     | static_cast<char32_t>(c) << 16
+		     | static_cast<char32_t>(d) << 24;
+	}
+#elif SGE_CPU_ENDIAN_BIG
+	constexpr char32_t FourCC(char a, char b, char c, char d ) {
+		return static_cast<char32_t>(a) >> 24
+			 | static_cast<char32_t>(b) << 16
+			 | static_cast<char32_t>(c) << 8
+			 | static_cast<char32_t>(d);
+	}
+#else
+	#error "Unknown Host Endian"
+#endif
+
+constexpr char32_t FourCC(const char (&sz)[5]) { return FourCC(sz[0], sz[1], sz[2], sz[3]); }
+
 
 } // namespace

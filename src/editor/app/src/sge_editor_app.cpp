@@ -34,7 +34,11 @@ public:
 			auto& image = texDesc.imageToUpload;
 
 			#if 1
-				image.loadFile("Assets/Textures/uvChecker.png");
+				// image.loadFile("Assets/Textures/uvChecker.png");
+				// image.loadFile("Assets/Textures/uvChecker_BC1.dds");
+				// image.loadFile("Assets/Textures/uvChecker_BC2.dds");
+				// image.loadFile("Assets/Textures/uvChecker_BC3.dds");
+				image.loadFile("Assets/Textures/uvChecker_BC7.dds");
 
 				texDesc.size = image.size();
 				texDesc.colorType = image.colorType();

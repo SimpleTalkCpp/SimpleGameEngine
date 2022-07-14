@@ -109,7 +109,7 @@ template<class T>
 struct ColorR {
 	using ElementType = T;
 	static const size_t kElementCount = 1;
-	static constexpr bool hasAlpha = false;
+	static constexpr int kAlphaBits	= 0;
 	static constexpr ColorType kColorType = ColorType_make(ColorModel::R, ColorElementType_get<T>());
 
 	union {
@@ -126,7 +126,7 @@ template<class T>
 struct ColorRG {
 	using ElementType = T;
 	static const size_t kElementCount = 2;
-	static constexpr bool hasAlpha = false;
+	static constexpr int kAlphaBits	= 0;
 	static constexpr ColorType kColorType = ColorType_make(ColorModel::RG, ColorElementType_get<T>());
 
 	union {
@@ -144,7 +144,7 @@ template<class T>
 struct ColorRGB {
 	using ElementType = T;
 	static const size_t kElementCount = 3;
-	static constexpr bool hasAlpha = false;
+	static constexpr int kAlphaBits	= 0;
 	static constexpr ColorType kColorType = ColorType_make(ColorModel::RGB, ColorElementType_get<T>());
 
 	union {
@@ -162,7 +162,7 @@ template<class T>
 struct ColorRGBA {
 	using ElementType = T;
 	static const size_t kElementCount = 4;
-	static constexpr bool hasAlpha = true;
+	static constexpr int kAlphaBits	= sizeof(T) * 8;
 	static constexpr ColorType kColorType = ColorType_make(ColorModel::RGBA, ColorElementType_get<T>());
 
 	union {
@@ -201,5 +201,66 @@ using ColorRGBAs = ColorRGBA<u16>;
 
 using Color4f = ColorRGBAf;
 using Color4b = ColorRGBAb;
+
+
+struct ColorBC1 {
+	using Element = void;
+	static constexpr ColorType kColorType = ColorType::BC1;
+	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
+	static constexpr int kAlphaBits	= 1;
+	static constexpr int kBytesPerPixelBlock = 8;
+};
+
+struct ColorBC2 {
+	using Element = void;
+	static constexpr ColorType kColorType = ColorType::BC2;
+	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
+	static constexpr int kAlphaBits	= 4;
+	static constexpr int kBytesPerPixelBlock = 16;
+};
+
+struct ColorBC3 {
+	using Element = void;
+	static constexpr ColorType kColorType = ColorType::BC3;
+	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
+	static constexpr int kAlphaBits	= 8;
+	static constexpr int kBytesPerPixelBlock = 16;
+};
+
+struct ColorBC4 {
+	using Element = void;
+	static constexpr ColorType kColorType = ColorType::BC4;
+	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
+	static constexpr int kAlphaBits	= 0;
+	static constexpr int kBytesPerPixelBlock = 8;
+};
+
+class ColorBC5 {
+public:
+	using Element = void;
+	static constexpr ColorType kColorType = ColorType::BC5;
+	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
+	static constexpr int kAlphaBits	= 0;
+	static constexpr int kBytesPerPixelBlock = 16;
+};
+
+class ColorBC6h {
+public:
+	using Element = void;
+	static constexpr ColorType kColorType = ColorType::BC6h;
+	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
+	static constexpr int kAlphaBits	= 0;
+	static constexpr int kBytesPerPixelBlock = 16;
+};
+
+class ColorBC7 {
+public:
+	using Element = void;
+	static constexpr ColorType kColorType = ColorType::BC7;
+	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
+	static constexpr int kAlphaBits	= 8;
+	static constexpr int kBytesPerPixelBlock = 16;
+};
+
 
 }
