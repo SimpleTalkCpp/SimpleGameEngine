@@ -84,7 +84,7 @@ public:
 	}
 #elif SGE_CPU_ENDIAN_BIG
 	constexpr char32_t FourCC(char a, char b, char c, char d ) {
-		return static_cast<char32_t>(a) >> 24
+		return static_cast<char32_t>(a) << 24
 			 | static_cast<char32_t>(b) << 16
 			 | static_cast<char32_t>(c) << 8
 			 | static_cast<char32_t>(d);

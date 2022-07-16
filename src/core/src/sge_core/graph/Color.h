@@ -25,7 +25,7 @@ SGE_ENUM_CLASS(ColorModel, u8)
 	E(Float32,) \
 	E(Float64,) \
 //-------
-SGE_ENUM_CLASS(ColorElementType, u8);
+SGE_ENUM_CLASS(ColorElementType, u8)
 
 template<class T> constexpr ColorElementType ColorElementType_get();
 template<> constexpr ColorElementType ColorElementType_get<u8 >() { return ColorElementType::UNorm8; }
