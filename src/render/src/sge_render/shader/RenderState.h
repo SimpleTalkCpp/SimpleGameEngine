@@ -6,6 +6,7 @@ namespace sge {
 	E(None,) \
 	E(Back,) \
 	E(Front,) \
+	E(_END,) \
 //----
 SGE_ENUM_CLASS(RenderState_Cull, u8)
 

@@ -164,6 +164,7 @@ struct ColorRGBA {
 	static const size_t kElementCount = 4;
 	static constexpr int kAlphaBits	= sizeof(T) * 8;
 	static constexpr ColorType kColorType = ColorType_make(ColorModel::RGBA, ColorElementType_get<T>());
+	static constexpr ColorModel kColorModel = ColorModel::RGBA;
 
 	union {
 		struct { T r, g, b, a; };
@@ -204,7 +205,7 @@ using Color4b = ColorRGBAb;
 
 
 struct ColorBC1 {
-	using Element = void;
+	using ElementType = void;
 	static constexpr ColorType kColorType = ColorType::BC1;
 	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
 	static constexpr int kAlphaBits	= 1;
@@ -212,7 +213,7 @@ struct ColorBC1 {
 };
 
 struct ColorBC2 {
-	using Element = void;
+	using ElementType = void;
 	static constexpr ColorType kColorType = ColorType::BC2;
 	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
 	static constexpr int kAlphaBits	= 4;
@@ -220,7 +221,7 @@ struct ColorBC2 {
 };
 
 struct ColorBC3 {
-	using Element = void;
+	using ElementType = void;
 	static constexpr ColorType kColorType = ColorType::BC3;
 	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
 	static constexpr int kAlphaBits	= 8;
@@ -228,7 +229,7 @@ struct ColorBC3 {
 };
 
 struct ColorBC4 {
-	using Element = void;
+	using ElementType = void;
 	static constexpr ColorType kColorType = ColorType::BC4;
 	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
 	static constexpr int kAlphaBits	= 0;
@@ -237,7 +238,7 @@ struct ColorBC4 {
 
 class ColorBC5 {
 public:
-	using Element = void;
+	using ElementType = void;
 	static constexpr ColorType kColorType = ColorType::BC5;
 	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
 	static constexpr int kAlphaBits	= 0;
@@ -246,7 +247,7 @@ public:
 
 class ColorBC6h {
 public:
-	using Element = void;
+	using ElementType = void;
 	static constexpr ColorType kColorType = ColorType::BC6h;
 	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
 	static constexpr int kAlphaBits	= 0;
@@ -255,7 +256,7 @@ public:
 
 class ColorBC7 {
 public:
-	using Element = void;
+	using ElementType = void;
 	static constexpr ColorType kColorType = ColorType::BC7;
 	static constexpr ColorModel kColorModel = ColorModel::BlockCompression;
 	static constexpr int kAlphaBits	= 8;

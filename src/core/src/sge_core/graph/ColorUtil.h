@@ -27,6 +27,7 @@ constexpr bool ColorUtil::hasAlpha(ColorType t) {
 constexpr int ColorUtil::pixelSizeInBytes(ColorType t) {
 	switch (t) {
 		case ColorType::RGBAb: return sizeof(ColorRGBAb);
+		case ColorType::RGBAf: return sizeof(ColorRGBAf);
 	}
 
 	SGE_ASSERT(false);
@@ -35,7 +36,7 @@ constexpr int ColorUtil::pixelSizeInBytes(ColorType t) {
 
 constexpr int ColorUtil::bytesPerPixelBlock(ColorType type) {
 	switch (type) {
-		#define E(T, ...) \
+		#define E(T) \
 			case ColorType::T: return Color##T::kBytesPerPixelBlock;
 		//----------
 			E(BC1)

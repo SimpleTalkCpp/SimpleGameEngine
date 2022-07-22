@@ -18,24 +18,26 @@ public:
 };
 
 template<class T> constexpr
-int BitUtil::lowest(T value) {
+int BitUtil::highest(T value) {
 	int result = -1;
 	int n = sizeof(T) * 8;
 	T m = T(1 << (n - 1));
-	for (int i = n - 1; i > 0; i--) {
-		if (hasAny(value, m)) result = i;
+	for (int i = n - 1; i >= 0; i--) {
+		if (hasAny(value, m))
+			return i;
 		m >>= 1;
 	}
 	return result;
 }
 
 template<class T> constexpr
-int BitUtil::highest(T value) {
+int BitUtil::lowest(T value) {
 	int result = -1;
 	int n = sizeof(T) * 8;
 	T m = T(1);
 	for (int i = 0; i < n; i++) {
-		if (hasAny(value, m)) result = i;
+		if (hasAny(value, m))
+			return i;
 		m <<= 1;
 	}
 	return result;
