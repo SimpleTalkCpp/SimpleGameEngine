@@ -199,7 +199,7 @@ void BinSerializer_io(BinDeserializer& se, Vector<T>& v) {
 }
 
 template<class T, size_t N, bool bEnableOverflow> inline
-void BinSerializer_io(BinDeserializer& se, Vector_<T, N, bEnableOverflow>& v) {
+void BinSerializer_io(BinDeserializer& se, Vector<T, N, bEnableOverflow>& v) {
 	size_t len = 0;
 	se.io(len);
 	v.resize(len);

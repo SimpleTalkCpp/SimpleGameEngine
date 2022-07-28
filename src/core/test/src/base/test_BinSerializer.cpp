@@ -88,7 +88,7 @@ public:
 		String_<128> str128;
 
 		Vector<int> vec;
-		Vector_<int, 128> vec128;
+		Vector<int, 128> vec128;
 
 		template<class SE>
 		void io(SE& se) {

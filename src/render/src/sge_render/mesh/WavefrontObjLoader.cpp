@@ -99,9 +99,9 @@ void WavefrontObjLoader::_parseLine_vn() {
 }
 
 void WavefrontObjLoader::_parseLine_f() {
-	Vector_<int, 64>	face_vi;
-	Vector_<int, 64>	face_vt;
-	Vector_<int, 64>	face_vn;
+	Vector<int, 64>	face_vi;
+	Vector<int, 64>	face_vt;
+	Vector<int, 64>	face_vn;
 
 	while (_lineRemain.size() > 0) {
 		_nextToken();

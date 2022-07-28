@@ -36,7 +36,7 @@ struct File {
 	static char writeFile(StrView filename, StrView  data, bool createDir, bool logResult = true);
 
 						static void readFile (StrView filename, Vector<u8>&		outData) { _readFile(filename, outData); }
-	template<size_t N>	static void readFile (StrView filename, Vector_<u8, N>&	outData) { _readFile(filename, outData); }
+	template<size_t N>	static void readFile (StrView filename, Vector<u8, N>&	outData) { _readFile(filename, outData); }
 	template<size_t N>	static void readFile (StrView filename, String_<N>&		outData) { _readFile(filename, outData); }
 
 	static char writeFileIfChanged(	StrView filename, 

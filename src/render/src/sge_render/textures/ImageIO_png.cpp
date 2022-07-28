@@ -131,7 +131,7 @@ void ImageIO_png::Reader::load(Image& img, ByteSpan data, ColorType expectType) 
 
 	img.create(out_color_type, width, height);
 
-	Vector_<png_bytep, 2048> rows;
+	Vector<png_bytep, 2048> rows;
 	rows.resize(height);
 	for (int y = 0; y < height; y++) {
 		rows[y] = (png_bytep)img.rowBytes(y).data();

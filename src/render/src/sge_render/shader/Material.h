@@ -122,8 +122,8 @@ protected:
 
 	Pass*	_pass = nullptr;
 	ShaderStage* _shaderStage = nullptr;
-	Vector_<ConstBuffer, 4>	_constBuffers;
-	Vector_<TexParam, 4>	_texParams;
+	Vector<ConstBuffer, 4>	_constBuffers;
+	Vector<TexParam, 4>	_texParams;
 };
 
 struct MaterialPass_VertexStage : public MaterialPass_Stage {
@@ -222,7 +222,7 @@ protected:
 		}
 	}
 
-	Vector_<UPtr<Pass>, 2>	_passes;
+	Vector<UPtr<Pass>, 2>	_passes;
 	SPtr<Shader> _shader;
 	virtual void onSetShader() {}
 	virtual UPtr<Pass> onCreatePass(ShaderPass* shaderPass) = 0;

@@ -301,7 +301,7 @@ DX11_ID3DInputLayout* RenderContext_DX11::_getTestInputLayout(const VertexLayout
 		return it->second;
 	}
 
-	Vector_<D3D11_INPUT_ELEMENT_DESC, 32> inputDesc;
+	Vector<D3D11_INPUT_ELEMENT_DESC, 32> inputDesc;
 
 	for (auto& e : src->elements) {
 		auto& dst = inputDesc.emplace_back();

@@ -52,7 +52,7 @@ public:
 private:
 	RenderPrimitiveType _primitive = RenderPrimitiveType::Triangles;
 	const VertexLayout*	_vertexLayout = nullptr;
-	Vector_<SubMesh, 1>	_subMeshes;
+	Vector<SubMesh, 1>	_subMeshes;
 };
 
 SGE_INLINE RenderPrimitiveType RenderSubMesh::primitive() const {
