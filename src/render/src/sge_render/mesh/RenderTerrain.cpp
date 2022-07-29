@@ -332,7 +332,7 @@ bool RenderTerrain::Patch::_adjacentPatchHasHigherLod(int x, int y) const {
 
 void RenderTerrain::Patch::setDisplayLevelByViewPos(const Vec3f& viewPos) {
 	auto distance = (worldCenterPos() - viewPos).length();
-	auto d = _terrain->patchSize().x * 2;;
+	auto d = _terrain->patchSize().x * 5;
 	_displayLevel = static_cast<int>(distance / d);
 }
 

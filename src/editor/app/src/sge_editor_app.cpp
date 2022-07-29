@@ -96,7 +96,7 @@ public:
 			float pos  = size / -2;
 			float y    = -100;
 			float height = 200;
-			int maxLod = 7;
+			int maxLod = 6;
 			_terrain.createFromHeightMapFile(
 				Vec3f(pos, y, pos),
 				Vec2f(size, size),
