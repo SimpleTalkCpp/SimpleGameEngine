@@ -58,7 +58,7 @@ bool Directory::exists(StrView path) {
 #endif
 
 Directory::_create(StrView path) {
-	TempStringW pathA;
+	TempStringA pathA;
 	UtfUtil::convert(pathA, path);
 	auto ret = ::mkdir(pathA.c_str(), 0755);
 	if (ret != 0) throw SGE_ERROR("create directory {}", pathA);
