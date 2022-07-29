@@ -26,6 +26,7 @@ struct Tuple2 {
 	SGE_INLINE bool setAll(const T& v) { set(v,v); }
 };
 
+using Tuple2i = Tuple2<i32>;
 using Tuple2f = Tuple2<float>;
 using Tuple2d = Tuple2<double>;
 

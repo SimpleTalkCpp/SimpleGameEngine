@@ -82,6 +82,8 @@ template<class T> inline bool constexpr enumHas(const T& a, const T& b) { return
 template<class T> SGE_INLINE T* constCast(const T* v) { return const_cast<T*>(v); }
 template<class T> SGE_INLINE T& constCast(const T& v) { return const_cast<T&>(v); }
 
+template<class T> SGE_INLINE void swap(T& a, T& b) { T tmp = a; a = b; b = tmp; }
+
 using u8  = uint8_t;
 using u16 = uint16_t;
 using u32 = uint32_t;
@@ -131,7 +133,20 @@ class Vector : public Vector_Base<T, N, bEnableOverflow>::Type {
 public:
 	using Base::begin;
 	using Base::end;
-	operator Span<T>() { return Span<T>(begin(), end()); }
+
+	void appendRange(const Span<T>& r) { Base::insert(end(), r.begin(), r.end()); }
+
+	Span<      T> span()			{ return Span<      T>(begin(), end()); }
+	Span<const T> span() const		{ return Span<const T>(begin(), end()); }
+
+	operator Span<      T>()		{ return span(); }
+	operator Span<const T>() const	{ return span(); }
+
+	Span<      T> subspan(size_t offset, size_t count)			{ return Span<      T>(begin() + offset, count); }
+	Span<const T> subspan(size_t offset, size_t count) const	{ return Span<const T>(begin() + offset, count); }
+
+	Span<      T> subspan(size_t offset)		{ return subspan(offset, size() - offset); }
+	Span<const T> subspan(size_t offset) const	{ return subspan(offset, size() - offset); }
 };
 
 template<class KEY, class VALUE> using Map = eastl::map<KEY, VALUE>;

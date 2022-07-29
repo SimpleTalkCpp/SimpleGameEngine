@@ -196,6 +196,40 @@ struct ColorRGBA {
 	}
 };
 
+template<class T>
+struct ColorL {
+	using ElementType = T;
+	static const size_t kElementCount = 1;
+	static constexpr int kAlphaBits	= 0;
+	static constexpr ColorType kColorType = ColorType_make(ColorModel::L, ColorElementType_get<T>());
+
+	union {
+		struct { T l; };
+		T data[kElementCount];
+	};
+
+	ColorL() = default;
+	ColorL(const T& l_)
+		: l(l_) {}
+};
+
+template<class T>
+struct ColorLA {
+	using ElementType = T;
+	static const size_t kElementCount = 2;
+	static constexpr int kAlphaBits	= sizeof(T) * 8;
+	static constexpr ColorType kColorType = ColorType_make(ColorModel::LA, ColorElementType_get<T>());
+
+	union {
+		struct { T l, a; };
+		T data[kElementCount];
+	};
+
+	ColorLA() = default;
+	ColorLA(const T& l_, const T& a_)
+		: l(l_), a(a_) {}
+};
+
 using ColorRGBAf = ColorRGBA<float>;
 using ColorRGBAb = ColorRGBA<u8>;
 using ColorRGBAs = ColorRGBA<u16>;
@@ -203,6 +237,13 @@ using ColorRGBAs = ColorRGBA<u16>;
 using Color4f = ColorRGBAf;
 using Color4b = ColorRGBAb;
 
+using ColorLf = ColorL<float>;
+using ColorLb = ColorL<u8>;
+using ColorLs = ColorL<u16>;
+
+using ColorLAf = ColorLA<float>;
+using ColorLAb = ColorLA<u8>;
+using ColorLAs = ColorLA<u16>;
 
 struct ColorBC1 {
 	using ElementType = void;

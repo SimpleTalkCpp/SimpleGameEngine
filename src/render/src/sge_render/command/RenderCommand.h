@@ -8,6 +8,7 @@ namespace sge {
 
 class RenderMesh;
 class RenderSubMesh;
+class RenderTerrain;
 
 enum class RenderCommandType {
 	None,
@@ -78,17 +79,6 @@ public:
 
 class RenderCommandBuffer : public NonCopyable {
 public:
-	RenderCommand_ClearFrameBuffers* clearFrameBuffers() {
-		return newCommand<RenderCommand_ClearFrameBuffers>();
-	}
-
-	RenderCommand_SwapBuffers* swapBuffers() {
-		return newCommand<RenderCommand_SwapBuffers>();
-	}
-
-	void drawMesh	(const SrcLoc& debugLoc, const RenderMesh&    mesh,	   Material* material);
-	void drawSubMesh(const SrcLoc& debugLoc, const RenderSubMesh& subMesh, Material* material);
-
 	void reset();
 
 	Span<RenderCommand*>	commands() { return _commands; }

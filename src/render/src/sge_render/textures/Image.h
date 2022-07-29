@@ -61,6 +61,11 @@ public:
 
 	void copyToPixelData(ByteSpan src) { _pixelData.assign(src.begin(), src.end()); }
 
+	void copy(const Image& src) {
+		_info = src._info;
+		_pixelData = src._pixelData;
+	}
+
 private:
 	void _create(ColorType colorType, int width, int height, int strideInBytes, int mipmapCount, size_t dataSizeInBytes);
 	void _checkType(ColorType colorType) const {

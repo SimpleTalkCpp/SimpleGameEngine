@@ -16,14 +16,17 @@ protected:
 
 			auto* proj = ProjectSettings::instance();
 			proj->setProjectRoot(path);
-		}		
+		}
 
-		ShaderInfo info;
+		compile("Assets/Shaders/test.shader");
+		compile("Assets/Shaders/terrain.shader");
+	}
 
-		StrView shaderFilename = "Assets/Shaders/test.shader";
-
+	void compile(StrView shaderFilename) {
 		String outputPath = Fmt("LocalTemp/Imported/{}", shaderFilename);
 		Directory::create(outputPath);
+
+		ShaderInfo info;
 
 		{
 			ShaderParser parser;
@@ -54,10 +57,6 @@ protected:
 
 		SGE_LOG("---- end ----");
 	}
-
-	void compile(StrView filename) {
-	}
-
 };
 
 }

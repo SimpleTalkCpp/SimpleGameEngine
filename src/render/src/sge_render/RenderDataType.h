@@ -64,12 +64,15 @@ struct RenderDataTypeUtil {
 	template<> static constexpr Type get<f32>() { return Type::Float32; }
 	template<> static constexpr Type get<f64>() { return Type::Float64; }
 
+	template<> static constexpr Type get<Tuple2i>() { return Type::Int32x2; }
 	template<> static constexpr Type get<Tuple2f>() { return Type::Float32x2; }
 	template<> static constexpr Type get<Tuple2d>() { return Type::Float64x2; }
 
+	template<> static constexpr Type get<Tuple3i>() { return Type::Int32x3; }
 	template<> static constexpr Type get<Tuple3f>() { return Type::Float32x3; }
 	template<> static constexpr Type get<Tuple3d>() { return Type::Float64x3; }
 
+	template<> static constexpr Type get<Tuple4i>() { return Type::Int32x4; }
 	template<> static constexpr Type get<Tuple4f>() { return Type::Float32x4; }
 	template<> static constexpr Type get<Tuple4d>() { return Type::Float64x4; }
 

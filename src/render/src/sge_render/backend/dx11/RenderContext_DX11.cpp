@@ -50,9 +50,9 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 	if (!cmd.vertexLayout) { SGE_ASSERT(false); return; }
 
 	auto* vertexBuffer = static_cast<RenderGpuBuffer_DX11*>(cmd.vertexBuffer.ptr());
-	if (!vertexBuffer) { SGE_ASSERT(false); return; }
+//	if (!vertexBuffer) { SGE_ASSERT(false); return; }
 
-	if (cmd.vertexCount <= 0) { SGE_ASSERT(false); return; }
+//	if (cmd.vertexCount <= 0) { SGE_ASSERT(false); return; }
 	if (cmd.primitive == RenderPrimitiveType::None) { SGE_ASSERT(false); return; }
 
 	RenderGpuBuffer_DX11* indexBuffer = nullptr;
@@ -79,7 +79,7 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 	UINT vertexCount = static_cast<UINT>(cmd.vertexCount);
 	UINT indexCount  = static_cast<UINT>(cmd.indexCount);
 
-	DX11_ID3DBuffer* ppVertexBuffers[] = { vertexBuffer->d3dBuf() };
+	DX11_ID3DBuffer* ppVertexBuffers[] = { vertexBuffer ? vertexBuffer->d3dBuf() : nullptr };
 	ctx->IASetVertexBuffers(0, 1, ppVertexBuffers, &stride, &offset);
 
 //	_renderer->validateContext();

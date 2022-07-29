@@ -99,6 +99,9 @@ public:
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {}, {})", x, y, z);
 	}
+
+	template<class R>
+	static Vec3 s_cast(const Vec3_Basic<R>& r) { return Vec3(static_cast<T>(r.x), static_cast<T>(r.y), static_cast<T>(r.z)); }
 };
 
 using Vec3f_Basic = Vec3_Basic<float>;

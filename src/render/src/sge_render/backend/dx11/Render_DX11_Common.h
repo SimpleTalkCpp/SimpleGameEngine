@@ -14,6 +14,7 @@
 #include <sge_render/Render_Common.h>
 #include <sge_render/vertex/Vertex.h>
 #include <sge_render/shader/Shader.h>
+#include <sge_render/textures/Texture.h>
 
 namespace sge {
 
@@ -230,16 +231,23 @@ inline
 DXGI_FORMAT DX11Util::getDxColorType(ColorType v) {
 	using SRC = ColorType;
 	switch (v) {
+		case SRC::Lb:		return DXGI_FORMAT_R8_UNORM;
+		case SRC::Ls:		return DXGI_FORMAT_R16_UNORM;
+		case SRC::Lf:		return DXGI_FORMAT_R32_FLOAT;
+
 		case SRC::Rb:		return DXGI_FORMAT_R8_UNORM;
+		case SRC::Rs:		return DXGI_FORMAT_R16_UNORM;
 		case SRC::Rf:		return DXGI_FORMAT_R32_FLOAT;
 
 		case SRC::RGb:		return DXGI_FORMAT_R8G8_UNORM;
+		case SRC::RGs:		return DXGI_FORMAT_R16G16_UNORM;
 		case SRC::RGf:		return DXGI_FORMAT_R32G32_FLOAT;
 
 		//case SRC::RGBb:	return DXGI_FORMAT_R8G8B8_UNORM;		// DX Not Support
 		//case SRC::RGBf:	return DXGI_FORMAT_R32G32B32_FLOAT;		// DX Not Support
 
 		case SRC::RGBAb:	return DXGI_FORMAT_R8G8B8A8_UNORM;
+		case SRC::RGBAs:	return DXGI_FORMAT_R16G16B16A16_UNORM;
 		case SRC::RGBAf:	return DXGI_FORMAT_R32G32B32A32_FLOAT;
 //
 		case SRC::BC1:		return DXGI_FORMAT_BC1_UNORM;

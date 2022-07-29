@@ -42,7 +42,7 @@ function(sge_set_target_unity_build_mode target_name)
 	set_target_properties(${target_name} PROPERTIES
 							UNITY_BUILD ON
 							UNITY_BUILD_MODE BATCH
-							UNITY_BUILD_BATCH_SIZE 32
+							UNITY_BUILD_BATCH_SIZE 16
 							)	
 endfunction()
 

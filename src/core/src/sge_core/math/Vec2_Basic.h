@@ -57,12 +57,26 @@ struct Vec2_Basic : public DATA {
 	bool operator==(const Vec2& r) const { return x == r.x && y == r.y; }
 	bool operator!=(const Vec2& r) const { return x != r.x || y != r.y; }
 
+	SGE_NODISCARD SGE_INLINE T		magnitude		() const	{ return Math::sqrt (sqrMagnitude()); }
+	SGE_NODISCARD SGE_INLINE T		sqrMagnitude	() const	{ return x*x + y*y; }
+
+	SGE_NODISCARD SGE_INLINE T		length			() const	{ return magnitude(); }
+	SGE_NODISCARD SGE_INLINE T		sqrLength		() const	{ return sqrMagnitude(); }
+
+	SGE_NODISCARD SGE_INLINE T		distance		(const Vec2 &r) const	{ return (*this - r).length();    }
+	SGE_NODISCARD SGE_INLINE T		sqrDistance		(const Vec2 &r) const	{ return (*this - r).sqrLength(); }
+
+	SGE_INLINE	Vec2	yx() const { return Vec2(y,x); }
+
 	Tuple2<T> toTuple() const { return Tuple2<T>(x,y); }
 	operator Tuple2<T>() const { return toTuple(); }
 
 	void onFormat(fmt::format_context& ctx) const {
 		fmt::format_to(ctx.out(), "({}, {})", x, y);
 	}
+
+	template<class R>
+	static Vec2 s_cast(const Vec2_Basic<R>& r) { return Vec2(static_cast<T>(r.x), static_cast<T>(r.y)); }
 };
 
 using Vec2f_Basic = Vec2_Basic<float>;

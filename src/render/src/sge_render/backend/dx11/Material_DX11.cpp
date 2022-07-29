@@ -132,6 +132,7 @@ void Material_DX11::MyPass::_bindRenderState(RenderContext_DX11* ctx) {
 		rasterDesc.DepthClipEnable = true;
 
 		rasterDesc.FillMode = rs.wireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
+		rasterDesc.FillMode = D3D11_FILL_WIREFRAME; // Test
 
 		rasterDesc.FrontCounterClockwise = true;
 		rasterDesc.MultisampleEnable = false;

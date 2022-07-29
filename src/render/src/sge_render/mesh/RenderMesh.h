@@ -23,6 +23,8 @@ public:
 	RenderPrimitiveType primitive() const;
 	const VertexLayout* vertexLayout() const;
 
+	void setIndexData(Span<const u16> indexData);
+
 friend class RenderMesh;
 protected:
 	RenderMesh*	_mesh = nullptr;
@@ -38,6 +40,7 @@ protected:
 class RenderMesh {
 public:
 	using SubMesh = RenderSubMesh;
+
 	void create(const EditMesh& src);
 	void clear();
 
@@ -47,6 +50,8 @@ public:
 	Span<      SubMesh>	subMeshes()				{ return _subMeshes; }
 	Span<const SubMesh>	subMeshes() const		{ return _subMeshes; }
 
+	void setPrimitiveType(RenderPrimitiveType t)	{ _primitive = t; }
+	void setVertexLayout(const VertexLayout* v)		{ _vertexLayout = v; }
 	void setSubMeshCount(size_t newSize);
 
 private:

@@ -164,6 +164,22 @@ void RenderSubMesh::clear() {
 	_indexCount = 0;
 }
 
+void RenderSubMesh::setIndexData(Span<const u16> indexData) {
+	auto* renderer = Renderer::instance();
+
+	auto byteSpan = spanCast<const u8>(indexData);
+
+	RenderGpuBuffer::CreateDesc desc;
+	desc.type = RenderGpuBufferType::Index;
+	desc.bufferSize = byteSpan.size();
+
+	_indexType = RenderDataType::UInt16;
+	_indexCount = indexData.size();
+
+	_indexBuffer = renderer->createGpuBuffer(desc);
+	_indexBuffer->uploadToGpu(byteSpan);
+}
+
 void RenderMesh::setSubMeshCount(size_t newSize) {
 	size_t oldSize = _subMeshes.size();
 	_subMeshes.resize(newSize);
