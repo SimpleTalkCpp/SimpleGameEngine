@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RenderCommand.h"
+#include <sge_render/mesh/RenderMesh.h>
 
 namespace sge {
 

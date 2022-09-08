@@ -14,7 +14,7 @@ namespace sge {
 // normalCount      : 2 bit (from 42)
 // tangentCount     : 2 bit (from 44)
 // binormalCount    : 2 bit (from 46)
-// vertexId         : 1 bit (from 47)
+// vertexId         : 1 bit (from 48)
 enum class VertexType : u64 { None };
 
 struct VertexTypeUtil {
@@ -52,7 +52,7 @@ struct VertexTypeUtil {
 
 	static constexpr VertexType addVertexId(VertexType t) {
 		return static_cast<VertexType>(static_cast<u64>(t) 
-				| (static_cast<u64>(1) << 47));
+				| (static_cast<u64>(1) << 48));
 	}
 
 	static constexpr VertexType make(
