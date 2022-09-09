@@ -15,6 +15,7 @@ find_package(EABase CONFIG REQUIRED)
 find_package(EASTL CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(libpng CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 function(sge_source_group src_path src_files)
 	foreach(FILE ${src_files}) 

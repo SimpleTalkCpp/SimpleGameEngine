@@ -30,6 +30,10 @@ constexpr int ColorUtil::pixelSizeInBytes(ColorType t) {
 		case ColorType::RGBAs: return sizeof(ColorRGBAs);
 		case ColorType::RGBAf: return sizeof(ColorRGBAf);
 
+		case ColorType::Rb: return sizeof(ColorRb);
+		case ColorType::Rs: return sizeof(ColorRs);
+		case ColorType::Rf: return sizeof(ColorRf);
+
 		case ColorType::Lb: return sizeof(ColorLb);
 		case ColorType::Ls: return sizeof(ColorLs);
 		case ColorType::Lf: return sizeof(ColorLf);

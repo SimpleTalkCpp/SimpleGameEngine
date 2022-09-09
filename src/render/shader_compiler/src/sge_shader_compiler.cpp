@@ -20,6 +20,7 @@ protected:
 
 		compile("Assets/Shaders/test.shader");
 		compile("Assets/Shaders/terrain.shader");
+		compile("Assets/Shaders/imgui.shader");
 	}
 
 	void compile(StrView shaderFilename) {

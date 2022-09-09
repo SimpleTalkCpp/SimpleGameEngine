@@ -111,6 +111,8 @@ public:
 	}
 
 	virtual void onUIMouseEvent(UIMouseEvent& ev) override {
+		_renderContext->onUIMouseEvent(ev);
+
 		if (ev.isDragging()) {
 			using Button = UIMouseEventButton;
 			switch (ev.pressedButtons) {
@@ -159,7 +161,9 @@ public:
 //------
 		_renderRequest.drawMesh(SGE_LOC, _renderMesh, _material);
 
-		_terrain.render(_renderRequest);
+//		_terrain.render(_renderRequest);
+
+		_renderContext->drawUI(_renderRequest);
 
 		_renderRequest.swapBuffers();
 
@@ -195,7 +199,7 @@ public:
 			proj->setProjectRoot(path);
 		}
 
-	#if 1 // for quick testing
+	#if 1 // compile shaders for quick testing
 		{
 			SHELLEXECUTEINFO ShExecInfo = {0};
 			ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);

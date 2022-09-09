@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sge_render/RenderDataType.h>
+
 namespace sge {
 
 struct ImageInfo {

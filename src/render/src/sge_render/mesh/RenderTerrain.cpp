@@ -1,4 +1,5 @@
 #include "RenderTerrain.h"
+#include <sge_render/Renderer.h>
 
 namespace sge {
 
@@ -325,7 +326,7 @@ void RenderTerrain::Patch::render(RenderRequest& req) {
 		cmd->vertexLayout		= _terrain->vertexLayout();
 		cmd->vertexBuffer		= _terrain->vertexBuffer();
 		cmd->vertexCount		= _terrain->vertexCount();
-		cmd->indexBuffer		= pi->indexBuffer();;
+		cmd->indexBuffer		= pi->indexBuffer();
 		cmd->indexType			= pi->indexType();
 		cmd->indexCount			= pi->indexCount();
 	}

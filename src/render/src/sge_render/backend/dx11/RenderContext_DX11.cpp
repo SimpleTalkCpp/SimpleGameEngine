@@ -75,18 +75,20 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 	ctx->IASetPrimitiveTopology(primitive);
 
 	UINT stride = static_cast<UINT>(cmd.vertexLayout->stride);
-	UINT offset = 0;
+	UINT vertexOffset = static_cast<UINT>(cmd.vertexOffset);
+	UINT indexOffset  = static_cast<UINT>(cmd.indexOffset);
+
 	UINT vertexCount = static_cast<UINT>(cmd.vertexCount);
 	UINT indexCount  = static_cast<UINT>(cmd.indexCount);
 
 	DX11_ID3DBuffer* ppVertexBuffers[] = { vertexBuffer ? vertexBuffer->d3dBuf() : nullptr };
-	ctx->IASetVertexBuffers(0, 1, ppVertexBuffers, &stride, &offset);
+	ctx->IASetVertexBuffers(0, 1, ppVertexBuffers, &stride, &vertexOffset);
 
 //	_renderer->validateContext();
 
 	if (indexCount > 0) {
 		auto indexType = Util::getDxFormat(cmd.indexType);
-		ctx->IASetIndexBuffer(indexBuffer->d3dBuf(), indexType, 0);
+		ctx->IASetIndexBuffer(indexBuffer->d3dBuf(), indexType, indexOffset);
 		ctx->DrawIndexed(indexCount, 0, 0);
 	} else {
 		ctx->Draw(vertexCount, 0);

@@ -29,7 +29,7 @@ public:
 		};
 
 		Type		type = Type::NormalWindow;
-		Rect2f		rect {10, 10, 640, 480};
+		Rect2f		rect {10, 10, 800, 600};
 
 		bool		titleBar		: 1;
 		bool		isMainWindow	: 1;

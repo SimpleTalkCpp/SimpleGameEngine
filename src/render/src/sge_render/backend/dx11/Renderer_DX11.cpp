@@ -98,7 +98,9 @@ Renderer_DX11::Renderer_DX11(CreateDesc& desc) {
 }
 
 SPtr<RenderContext> Renderer_DX11::onCreateContext(RenderContext_CreateDesc& desc) {
-	return new RenderContext_DX11(desc);
+	SPtr<RenderContext> p = new RenderContext_DX11(desc);
+	p->onPostCreate();
+	return p;
 }
 
 SPtr<RenderGpuBuffer> Renderer_DX11::onCreateGpuBuffer(RenderGpuBuffer_CreateDesc& desc) {

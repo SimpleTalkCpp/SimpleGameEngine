@@ -237,6 +237,10 @@ using ColorRGBAs = ColorRGBA<u16>;
 using Color4f = ColorRGBAf;
 using Color4b = ColorRGBAb;
 
+using ColorRf = ColorR<float>;
+using ColorRb = ColorR<u8>;
+using ColorRs = ColorR<u16>;
+
 using ColorLf = ColorL<float>;
 using ColorLb = ColorL<u8>;
 using ColorLs = ColorL<u16>;
