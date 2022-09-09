@@ -39,7 +39,7 @@ public:
 	bool vsync() const		{ return _vsync; }
 
 
-	SPtr<RenderContext>		createContext	(RenderContext_CreateDesc&		desc) { return onCreateContext(desc); }
+	SPtr<RenderContext>		createContext	(RenderContext_CreateDesc&		desc);
 	SPtr<RenderGpuBuffer>	createGpuBuffer	(RenderGpuBuffer_CreateDesc&	desc) { return onCreateGpuBuffer(desc); }
 	SPtr<Texture2D>			createTexture2D	(Texture2D_CreateDesc&			desc) { return onCreateTexture2D(desc); }
 	SPtr<Shader>			createShader	(StrView filename);

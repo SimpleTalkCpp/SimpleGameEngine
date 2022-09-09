@@ -48,6 +48,12 @@ Renderer::~Renderer() {
 	s_instance = nullptr;
 }
 
+SPtr<RenderContext> Renderer::createContext(RenderContext_CreateDesc& desc) {
+	SPtr<RenderContext> p = onCreateContext(desc);
+	p->onPostCreate();
+	return p;
+}
+
 SPtr<Texture2D> Renderer::createSolidColorTexture2D(const Color4b& color) {
 	int w = 4;
 	int h = 4;
