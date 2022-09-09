@@ -6,6 +6,7 @@
 
 namespace sge {
 
+class RenderContext;
 class RenderRequest;
 
 class ImGui_SGE : public NonCopyable {
