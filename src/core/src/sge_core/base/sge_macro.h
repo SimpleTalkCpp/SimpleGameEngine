@@ -83,11 +83,11 @@
 	SGE_ENUM_ARITHMETIC_OPERATOR_INT(T) \
 //-------
 
-#define SGE_ENUM_STR__CASE(V, ...) case E::V: return #V;
+#define SGE_ENUM_STR__CASE(V, ...) case SGE_T::V: return #V;
 
 #define SGE_ENUM_STR(T) \
 	inline const char* enumStr(const T& v) { \
-		using E = T; \
+		using SGE_T = T; \
 		switch (v) { \
 			T##_ENUM_LIST(SGE_ENUM_STR__CASE) \
 			default: SGE_ASSERT(false); return ""; \
@@ -95,11 +95,11 @@
 	} \
 //----
 
-#define SGE_ENUM_TRY_PARSE__CASE(V, ...) if (str == #V) { outValue = E::V; return true; }
+#define SGE_ENUM_TRY_PARSE__CASE(V, ...) if (str == #V) { outValue = SGE_T::V; return true; }
 
 #define SGE_ENUM_TRY_PARSE(T) \
 	inline bool enumTryParse(T& outValue, StrView str) { \
-		using E = T; \
+		using SGE_T = T; \
 		T##_ENUM_LIST(SGE_ENUM_TRY_PARSE__CASE) \
 		return false; \
 	} \

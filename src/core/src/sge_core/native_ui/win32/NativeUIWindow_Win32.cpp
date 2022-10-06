@@ -221,7 +221,7 @@ UIEventModifier NativeUIWindow_Win32::_getWin32Modifier() {
 	auto o = UIEventModifier::None;
 	if (::GetAsyncKeyState(VK_CONTROL)) o |= UIEventModifier::Ctrl;
 	if (::GetAsyncKeyState(VK_SHIFT  )) o |= UIEventModifier::Shift;
-	if (::GetAsyncKeyState(VK_MENU   )) o |= UIEventModifier::Atl;
+	if (::GetAsyncKeyState(VK_MENU   )) o |= UIEventModifier::Alt;
 	if (::GetAsyncKeyState(VK_LWIN) || ::GetAsyncKeyState(VK_RWIN)) {
 		o |= UIEventModifier::Cmd;
 	}

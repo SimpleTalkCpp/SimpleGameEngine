@@ -27,7 +27,7 @@ enum class UIEventModifier {
 	None,
 	Shift	= 1 << 0,
 	Ctrl	= 1 << 1,
-	Atl		= 1 << 2,
+	Alt		= 1 << 2,
 	Cmd		= 1 << 3,
 	Fn		= 1 << 4,
 };
