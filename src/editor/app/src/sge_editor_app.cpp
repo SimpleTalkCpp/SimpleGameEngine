@@ -104,6 +104,17 @@ public:
 				maxLod, 
 				"Assets/Terrain/TerrainTest/TerrainHeight_Small.png");
 		}
+
+		{ // ECS
+			for (int i = 0; i < 10; i++) {
+				auto* e = _scene.addEntity("Object 1");
+				auto* t = e->addComponent<CTransform>();
+				t->position.y = static_cast<float>(i);
+
+				_scene.addEntity("Object 2");
+				_scene.addEntity("Object 3");
+			}
+		}
 	}
 
 	virtual void onCloseButton() override {
@@ -143,7 +154,7 @@ public:
 		_renderContext->setFrameBufferSize(clientRect().size);
 		_renderContext->beginRender();
 
-		_renderRequest.reset();
+		_renderRequest.reset(_renderContext);
 		_renderRequest.matrix_model = Mat4f::s_identity();
 		_renderRequest.matrix_view  = _camera.viewMatrix();
 		_renderRequest.matrix_proj  = _camera.projMatrix();
@@ -163,27 +174,34 @@ public:
 
 //		_terrain.render(_renderRequest);
 
+		_hierarchyWindow.draw(_scene, _renderRequest);
+		_inspectorWindow.draw(_scene, _renderRequest);
+
+//		ImGui::ShowDemoWindow(nullptr);
+
 		_renderContext->drawUI(_renderRequest);
-
 		_renderRequest.swapBuffers();
-
 		_renderContext->commit(_renderRequest.commandBuffer);
 
 		_renderContext->endRender();
 		drawNeeded();
 	}
 
-	SPtr<Material> _material;
-	SPtr<Texture2D>	_testTexture;
+	SPtr<Material>		_material;
+	SPtr<Texture2D>		_testTexture;
 
 	SPtr<RenderContext>	_renderContext;
-	RenderMesh	_renderMesh;
+	RenderMesh			_renderMesh;
 
-	RenderTerrain	_terrain;
+	RenderTerrain		_terrain;
 
-	Math::Camera3f	_camera;
+	Math::Camera3f		_camera;
+	Scene				_scene;
 
-	RenderRequest	_renderRequest;
+	RenderRequest		_renderRequest;
+
+	EditorHierarchyWindow		_hierarchyWindow;
+	EditorInspectorWindow		_inspectorWindow;
 };
 
 class EditorApp : public NativeUIApp {
@@ -223,12 +241,19 @@ public:
 		//renderDesc.apiType = OpenGL;
 		Renderer::create(renderDesc);
 
+		EditorContext::createContext();
+
 	//---
 		NativeUIWindow::CreateDesc winDesc;
 		winDesc.isMainWindow = true;
 		_mainWin.create(winDesc);
 		_mainWin.setWindowTitle("SGE Editor");
 
+	}
+
+	virtual void onQuit() {
+		EditorContext::destroyContext();
+		Base::onQuit();
 	}
 
 private:

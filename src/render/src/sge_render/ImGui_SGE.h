@@ -43,4 +43,7 @@ private:
 	ImGuiContext*	_ctx = nullptr;
 };
 
+inline Vec2f Vec2f_make(const ImVec2& v) { return Vec2f(v.x, v.y); }
+inline Vec4f Vec4f_make(const ImVec4& v) { return Vec4f(v.x, v.y, v.z, v.w); }
+
 }

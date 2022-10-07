@@ -1,5 +1,6 @@
 #include "StringUtil.h"
 #include "UtfUtil.h"
+#include "../math/Math.h"
 
 namespace sge {
 

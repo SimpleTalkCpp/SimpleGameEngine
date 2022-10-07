@@ -95,6 +95,17 @@ void RenderContext_DX11::onCmd_DrawCall(RenderCommand_DrawCall& cmd) {
 	}
 }
 
+void RenderContext_DX11::onCmd_SetScissorRect(RenderCommand_SetScissorRect& cmd) {
+	auto* ctx = _renderer->d3dDeviceContext();
+	auto s = cmd.rect;
+	D3D11_RECT d;
+	d.left   = static_cast<LONG>(s.x);
+	d.top    = static_cast<LONG>(s.y);
+	d.right  = static_cast<LONG>(s.xMax());
+	d.bottom = static_cast<LONG>(s.yMax());
+	ctx->RSSetScissorRects(1, &d);
+}
+
 void RenderContext_DX11::onCmd_SwapBuffers(RenderCommand_SwapBuffers& cmd) {
 	auto hr = _swapChain->Present(_renderer->vsync() ? 1 : 0, 0);
 	Util::throwIfError(hr);
@@ -169,7 +180,14 @@ void RenderContext_DX11::onBeginRender() {
 	viewport.MinDepth	= 0;
 	viewport.MaxDepth	= 1;
 
+	D3D11_RECT scissorRect = {};
+	scissorRect.left	= 0;
+	scissorRect.top		= 0;
+	scissorRect.right	= static_cast<LONG>(_frameBufferSize.x);
+	scissorRect.bottom	= static_cast<LONG>(_frameBufferSize.y);
+
 	ctx->RSSetViewports(1, &viewport);
+	ctx->RSSetScissorRects(1, &scissorRect);
 }
 
 void RenderContext_DX11::onEndRender() {

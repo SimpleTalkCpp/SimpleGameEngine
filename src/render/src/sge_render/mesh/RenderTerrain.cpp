@@ -314,7 +314,7 @@ void RenderTerrain::Patch::render(RenderRequest& req) {
 	auto passes = _material->passes();
 
 	for (size_t i = 0; i < passes.size(); i++) {
-		auto* cmd = req.commandBuffer.newCommand<RenderCommand_DrawCall>();
+		auto* cmd = req.commandBuffer.addDrawCall();
 		#if _DEBUG
 			cmd->debugLoc = SGE_LOC;
 		#endif

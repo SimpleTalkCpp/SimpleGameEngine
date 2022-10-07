@@ -3,6 +3,6 @@
 [SearchableFiles.include]
 /src/
 # /externals/vcpkg/buildtrees/nlohmann-json
-# /externals/vcpkg/buildtrees/imgui
+/externals/vcpkg/buildtrees/imgui
 
 [SourceExplorer.ignore]

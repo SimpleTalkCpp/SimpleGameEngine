@@ -15,6 +15,7 @@ enum class RenderCommandType {
 	ClearFrameBuffers,
 	SwapBuffers,
 	DrawCall,
+	SetScissorRect,
 };
 
 class RenderCommand : NonCopyable {
@@ -56,6 +57,13 @@ public:
 	RenderCommand_SwapBuffers() : Base(Type::SwapBuffers) {}
 };
 
+class RenderCommand_SetScissorRect : public RenderCommand {
+	using Base = RenderCommand;
+public:
+	RenderCommand_SetScissorRect() : Base(Type::SetScissorRect) {}
+	Rect2f rect;
+};
+
 class RenderCommand_DrawCall : public RenderCommand {
 	using Base = RenderCommand;
 public:
@@ -81,9 +89,23 @@ public:
 
 class RenderCommandBuffer : public NonCopyable {
 public:
-	void reset();
+	void reset(RenderContext* ctx);
 
 	Span<RenderCommand*>	commands() { return _commands; }
+
+	const Rect2f& scissorRect() const { return _scissorRect; }
+
+	void setScissorRect(const Rect2f& rect) {
+		_scissorRect = rect;
+		auto* cmd = newCommand<RenderCommand_SetScissorRect>();
+		cmd->rect = rect;
+	}
+
+	RenderCommand_ClearFrameBuffers*	clearFrameBuffers() { return newCommand<RenderCommand_ClearFrameBuffers>(); }
+	RenderCommand_SwapBuffers*			swapBuffers()		{ return newCommand<RenderCommand_SwapBuffers>(); }
+	RenderCommand_DrawCall*				addDrawCall()		{ return newCommand<RenderCommand_DrawCall>(); }
+
+private:
 
 	template<class CMD>
 	CMD* newCommand() {
@@ -93,10 +115,40 @@ public:
 		return cmd;
 	}
 
-private:
 	Vector<RenderCommand*, 64>	_commands;
-
 	LinearAllocator _allocator;
+	RenderContext*	_renderContext = nullptr;
+	Rect2f _scissorRect;
+};
+
+class RenderScissorRectScope : public NonCopyable {
+public:
+	RenderScissorRectScope() = default;
+
+	RenderScissorRectScope(RenderScissorRectScope && r) {
+		_cmdBuf = r._cmdBuf;
+		_rect = r._rect;
+		r._cmdBuf = nullptr;
+	}
+
+	RenderScissorRectScope(RenderCommandBuffer* cmdBuf) {
+		if (!cmdBuf) return;
+		_rect = cmdBuf->scissorRect();
+		_cmdBuf = cmdBuf;
+		cmdBuf->setScissorRect(_rect);
+	}
+
+	~RenderScissorRectScope() { detach(); }
+
+	void detach() {
+		if (!_cmdBuf) return;
+		_cmdBuf->setScissorRect(_rect); 
+		_cmdBuf = nullptr;
+	}
+
+private:
+	RenderCommandBuffer* _cmdBuf = nullptr;
+	Rect2f	_rect;
 };
 
 }

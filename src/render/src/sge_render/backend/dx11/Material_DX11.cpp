@@ -136,7 +136,7 @@ void Material_DX11::MyPass::_bindRenderState(RenderContext_DX11* ctx) {
 
 		rasterDesc.FrontCounterClockwise = true;
 		rasterDesc.MultisampleEnable = false;
-		rasterDesc.ScissorEnable = false;
+		rasterDesc.ScissorEnable = true;
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 		hr = dev->CreateRasterizerState(&rasterDesc, _rasterizerState.ptrForInit());

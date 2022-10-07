@@ -43,6 +43,8 @@
 #include <EASTL/vector_map.h>
 #include <EASTL/string_map.h>
 
+#include <EASTL/set.h>
+
 #include <EASTL/unique_ptr.h>
 #include <EASTL/shared_ptr.h>
 #include <EASTL/weak_ptr.h>
@@ -153,6 +155,8 @@ template<class KEY, class VALUE> using Map = eastl::map<KEY, VALUE>;
 template<class KEY, class VALUE> using VectorMap = eastl::vector_map<KEY, VALUE>;
 template<class VALUE> using StringMap = eastl::string_map<VALUE>;
 
+template<class KEY> using Set = eastl::set<KEY>;
+
 template<class T> using Opt = eastl::optional<T>;
 
 template<class T> using StrViewT = eastl::basic_string_view<T>;
@@ -256,11 +260,6 @@ private:
 class RefCountBase : public NonCopyable {
 public:
 	std::atomic_int	_refCount = 0;
-};
-
-class Object : public RefCountBase {
-public:
-	virtual ~Object() = default;
 };
 
 template<class T> inline void sge_delete(T* p) noexcept { delete p; }

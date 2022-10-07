@@ -9,6 +9,7 @@ public:
 
 	SPtr(T* p) noexcept			{ reset(p); }
 	SPtr(SPtr && r) noexcept	{ _p = r._p; r._p = nullptr; }
+	SPtr(const SPtr& r) noexcept		{ reset(r._p); }
 
 	void operator=(T* p) noexcept		{ reset(p); }
 	void operator=(SPtr &  r) noexcept	{ reset(r.ptr()); }

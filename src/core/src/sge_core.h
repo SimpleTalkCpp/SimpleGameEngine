@@ -4,6 +4,8 @@
 #include <sge_core/base/sge_macro.h>
 #include <sge_core/base/BitUtil.h>
 
+#include <sge_core/base/Object.h>
+
 #include <sge_core/base/UnitTest.h>
 
 #include <sge_core/serializer/binary/BinDeserializer.h>
