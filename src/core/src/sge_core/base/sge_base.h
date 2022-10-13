@@ -264,4 +264,34 @@ public:
 
 template<class T> inline void sge_delete(T* p) noexcept { delete p; }
 
+template<class T>
+class ScopedValue : public NonCopyable {
+public:
+	ScopedValue() = default;
+	ScopedValue(T* p) : _p(p) { _oldValue = p; }
+	ScopedValue(T* p, const T& newValue) : ScopedValue(p) { *p = newValue; }
+
+	ScopedValue(ScopedValue && r) {
+		_p = r._p;
+		_oldValue = r._oldValue;
+		r._p = nullptr;
+	}
+
+	~ScopedValue() { detach(); }
+
+	void detach() {
+		if (_p) {
+			*_p = _oldValue;
+			_p = nullptr;
+		}
+	}
+
+private:
+	T* _p = nullptr;
+	T _oldValue;
+};
+
+template<class T> ScopedValue<T> makeScopedValue(T* p) { return ScopedValue<T>(p); }
+template<class T> ScopedValue<T> makeScopedValue(T* p, const T& newValue) { return ScopedValue<T>(p, newValue); }
+
 } // namespace

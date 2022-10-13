@@ -7,7 +7,7 @@ namespace sge {
 class EditorHierarchyWindow : public EditorWindow {
 public:
 
-	void draw(Scene& scene, RenderRequest& req);
+	void draw(RenderRequest& req, Scene& scene);
 
 private:
 	bool _active = true;

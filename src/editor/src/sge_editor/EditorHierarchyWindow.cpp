@@ -2,7 +2,7 @@
 
 namespace sge {
 
-void EditorHierarchyWindow::draw(Scene& scene, RenderRequest& req) {
+void EditorHierarchyWindow::draw(RenderRequest& req, Scene& scene) {
 	EditorUI::Window win("Hierarchy", &_active, ImGuiWindowFlags_MenuBar);
 
 	auto* ed = EditorContext::instance();
@@ -19,7 +19,7 @@ void EditorHierarchyWindow::draw(Scene& scene, RenderRequest& req) {
 			flags |= ImGuiTreeNodeFlags_Selected;
 		}
 
-		EditorUI::TreeNode node(tmp, flags);
+		EditorUI::TreeNode node(tmp.c_str(), flags);
 
 		if (EditorUI::IsItemClicked()) {
 			if (EditorUI::IsKeyCtrl()) {

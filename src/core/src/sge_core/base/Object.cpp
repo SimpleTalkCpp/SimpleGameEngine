@@ -2,7 +2,7 @@
 
 namespace sge {
 
-template<> const TypeInfo* TypeInfo_get<Object>() {
+template<> const TypeInfo* TypeOf<Object>() {
 	class TI : public TypeInfo {
 	public:
 		TI() {

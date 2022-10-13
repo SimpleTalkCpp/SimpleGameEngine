@@ -188,4 +188,7 @@ Quat4<T> Quat4<T>::s_angleAxis(T rad, const Vec3& axis) {
 using Quat4f = Quat4<float>;
 using Quat4d = Quat4<double>;
 
+template<> const TypeInfo* TypeOf<Quat4f>();
+template<> const TypeInfo* TypeOf<Quat4d>();
+
 }

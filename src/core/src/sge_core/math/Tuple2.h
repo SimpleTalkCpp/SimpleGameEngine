@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sge_core/base/Reflection.h>
+
 namespace sge {
 
 template<class T>

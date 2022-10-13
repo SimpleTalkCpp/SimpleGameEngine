@@ -125,3 +125,6 @@
 //----
 
 #define SGE_NAMED_IO(SE, V)	SE.named_io(#V, V)
+
+
+#define SGE_UNUSED(v) (void)(v);

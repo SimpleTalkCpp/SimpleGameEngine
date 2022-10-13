@@ -14,6 +14,7 @@ public:
 
 		Base::onCreate(desc);
 		auto* renderer = Renderer::instance();
+		auto* editor = EditorContext::instance();
 
 		{
 			RenderContext::CreateDesc renderContextDesc;
@@ -109,11 +110,11 @@ public:
 			for (int i = 0; i < 10; i++) {
 				auto* e = _scene.addEntity("Object 1");
 				auto* t = e->addComponent<CTransform>();
-				t->position.y = static_cast<float>(i);
-
-				_scene.addEntity("Object 2");
-				_scene.addEntity("Object 3");
+				t->position.set(static_cast<float>(i), 5, 10);
 			}
+
+			editor->entitySelection.add(EntityId(1));
+			editor->entitySelection.add(EntityId(3));
 		}
 	}
 
@@ -174,8 +175,8 @@ public:
 
 //		_terrain.render(_renderRequest);
 
-		_hierarchyWindow.draw(_scene, _renderRequest);
-		_inspectorWindow.draw(_scene, _renderRequest);
+		_hierarchyWindow.draw(_renderRequest, _scene);
+		_inspectorWindow.draw(_renderRequest, _scene);
 
 //		ImGui::ShowDemoWindow(nullptr);
 

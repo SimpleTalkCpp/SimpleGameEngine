@@ -2,12 +2,39 @@
 
 #include "sge_base.h"
 
+#define SGE_STRUCT_TYPE(T, BASE) \
+private: \
+	using This = T; \
+	using Base = BASE; \
+	class TI_Base : public TypeInfoInit<T, BASE> { \
+	public: \
+		TI_Base() : TypeInfoInit<T, BASE>(#T) {} \
+	}; \
+public: \
+	static const TypeInfo* s_getType(); \
+//----
+
+#define SGE_OBJECT_TYPE(T, BASE) \
+private: \
+	using This = T; \
+	using Base = BASE; \
+	class TI_Base : public TypeInfoInit<T, BASE> { \
+	public: \
+		TI_Base() : TypeInfoInit<T, BASE>(#T) {} \
+	}; \
+public: \
+	static const TypeInfo* s_getType(); \
+	virtual const TypeInfo* getType() const override { return s_getType(); } \
+private: \
+//-----
+
 namespace sge {
 
 class Object;
 class TypeInfo;
 
-template<class T> const TypeInfo* TypeInfo_get();
+template<class T> inline const TypeInfo* TypeOf() { return T::s_getType(); }
+template<class T> inline const TypeInfo* TypeOf(const T& v) { return TypeOf<T>(); }
 
 class FieldInfo {
 public:
@@ -15,47 +42,29 @@ public:
 	template<class OBJ, class FIELD>
 	FieldInfo(const char* name_, FIELD OBJ::*ptr)
 		: name(name_)
-		, fieldType(TypeInfo_get<FIELD>())
-		, offset(TypeInfo_get(ptr))
+		, fieldType(TypeOf<FIELD>())
+		, offset(memberOffset(ptr))
 	{
+	}
+
+	      void* getValuePtr(      void* obj) const { return reinterpret_cast<      u8*>(obj) + offset; }
+	const void* getValuePtr(const void* obj) const { return reinterpret_cast<const u8*>(obj) + offset; }
+
+	template<class T>
+	const T& getValue(const void* obj) const {
+		SGE_ASSERT(TypeOf<T>() == fieldType);
+		return *reinterpret_cast<const T*>(getValuePtr(obj));
+	}
+
+	template<class T>
+	void setValue(void* obj, const T& value) const {
+		SGE_ASSERT(TypeOf<T>() == fieldType);
+		*reinterpret_cast<T*>(getValuePtr(obj)) = value;
 	}
 
 	const char* name = "";
 	const TypeInfo* fieldType = nullptr;
 	intptr_t offset = 0;
-};
-
-class FieldsEnumerator {
-public:
-	FieldsEnumerator(const TypeInfo* typeInfo_) 
-		: typeInfo(typeInfo_) 
-	{}
-
-	class Iterator {
-	public:
-		Iterator(const TypeInfo* typeInfo_, size_t fieldIndex_)
-			: typeInfo(typeInfo_)
-			, fieldIndex(fieldIndex_)
-		{
-		}
-
-		bool operator!=(const Iterator& r) const {
-			return typeInfo != r.typeInfo || fieldIndex != r.fieldIndex;
-		}
-
-		void operator++();
-
-		const FieldInfo& operator*();
-
-	private:
-		const TypeInfo* typeInfo = nullptr;
-		size_t fieldIndex = 0;
-	};
-
-	Iterator begin()	{ return Iterator(typeInfo, 0); }
-	Iterator end()		{ return Iterator(nullptr, 0); }
-
-	const TypeInfo* typeInfo = nullptr;
 };
 
 class TypeInfo {
@@ -65,10 +74,7 @@ public:
 
 	size_t dataSize = 0;
 
-	const FieldInfo* fieldsArray = nullptr;
-	size_t fieldCount = 0;
-
-	FieldsEnumerator fields() const { return FieldsEnumerator(this); }
+	Span<const FieldInfo> fields() const { return _fields; }
 
 	using Creator = Object* (*)();
 
@@ -93,8 +99,72 @@ public:
 
 	template<class R>
 	bool isKindOf() const {
-		return isKindOf(TypeInfo_get<R>());
+		return isKindOf(TypeOf<R>());
+	}
+
+protected:
+	Span<const FieldInfo>	_fields;
+};
+
+template<class T>
+class TypeInfoInitNoBase : public TypeInfo {
+public:
+	TypeInfoInitNoBase(const char* name_) {
+		name = name_;
+		dataSize = sizeof(T);
+	};
+
+	template<size_t N>
+	void setFields(const FieldInfo (&fi)[N]) {
+		_fields = fi;
 	}
 };
+
+template<class T> inline
+static Object* TypeCreator() {
+	return new T();
+}
+
+template<class T, class Base>
+class TypeInfoInit : public TypeInfoInitNoBase<T> {
+public:
+	TypeInfoInit(const char* name_)
+		: TypeInfoInitNoBase<T>(name_)
+	{
+		static_assert(std::is_base_of<Base, T>::value, "invalid base class");
+		this->base = TypeOf<Base>();
+
+		this->creator = &TypeCreator<T>;
+	};
+};
+
+#define SGE_TYPEOF_SIMPLE(T) \
+	template<> const TypeInfo* TypeOf<T>();
+//----
+
+#define SGE_TYPEOF_SIMPLE_IMP(T, NAME) \
+	template<> const TypeInfo* TypeOf<T>() { \
+		static TypeInfoInitNoBase<T> ti(NAME); \
+		return &ti; \
+	} \
+//----
+
+SGE_TYPEOF_SIMPLE(float)
+SGE_TYPEOF_SIMPLE(double)
+
+SGE_TYPEOF_SIMPLE(int8_t)
+SGE_TYPEOF_SIMPLE(int16_t)
+SGE_TYPEOF_SIMPLE(int32_t)
+SGE_TYPEOF_SIMPLE(int64_t)
+
+SGE_TYPEOF_SIMPLE(uint8_t)
+SGE_TYPEOF_SIMPLE(uint16_t)
+SGE_TYPEOF_SIMPLE(uint32_t)
+SGE_TYPEOF_SIMPLE(uint64_t)
+
+SGE_TYPEOF_SIMPLE(char8_t) // c++20
+SGE_TYPEOF_SIMPLE(char16_t)
+SGE_TYPEOF_SIMPLE(char32_t)
+SGE_TYPEOF_SIMPLE(wchar_t)
 
 }
