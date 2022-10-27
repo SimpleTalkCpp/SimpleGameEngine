@@ -39,6 +39,18 @@
 	namespace sge { \
 //-----
 
+#define SGE_FORMATTER_ENUM_AS_INT(T) \
+	} /* namespace sge */ \
+	template<> \
+	struct fmt::formatter<sge::T> { \
+		auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); } \
+		auto format(const sge::T& v, fmt::format_context& ctx) { \
+			return fmt::format_to(ctx.out(), "{}", sge::enumInt(v)); \
+		} \
+	}; \
+	namespace sge { \
+//-----
+
 namespace sge {
 
 template<class STR, class... ARGS> inline

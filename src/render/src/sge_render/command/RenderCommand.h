@@ -10,13 +10,14 @@ class RenderMesh;
 class RenderSubMesh;
 class RenderTerrain;
 
-enum class RenderCommandType {
-	None,
-	ClearFrameBuffers,
-	SwapBuffers,
-	DrawCall,
-	SetScissorRect,
-};
+#define RenderCommandType_ENUM_LIST(E) \
+	E(None,) \
+	E(ClearFrameBuffers,) \
+	E(SwapBuffers,) \
+	E(DrawCall,) \
+	E(SetScissorRect,) \
+//----
+SGE_ENUM_CLASS(RenderCommandType, u32)
 
 class RenderCommand : NonCopyable {
 public:
@@ -135,14 +136,13 @@ public:
 		if (!cmdBuf) return;
 		_rect = cmdBuf->scissorRect();
 		_cmdBuf = cmdBuf;
-		cmdBuf->setScissorRect(_rect);
 	}
 
 	~RenderScissorRectScope() { detach(); }
 
 	void detach() {
 		if (!_cmdBuf) return;
-		_cmdBuf->setScissorRect(_rect); 
+		_cmdBuf->setScissorRect(_rect);
 		_cmdBuf = nullptr;
 	}
 

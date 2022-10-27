@@ -4,7 +4,8 @@
 
 namespace sge {
 
-enum EntityId : u64 { None = 0 };
+enum class EntityId : u64 { None };
+SGE_FORMATTER_ENUM_AS_INT(EntityId)
 
 class Entity : public Object {
 	SGE_OBJECT_TYPE(Entity, Object)

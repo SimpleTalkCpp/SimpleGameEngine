@@ -12,7 +12,7 @@ struct EditorPropertyDrawRequest {
 
 	template<class T>
 	bool isMixedValue() {
-		if (objects.size() <= 0)
+		if (objects.size() <= 1)
 			return false;
 
 		auto& v = field->getValue<T>(objects[0]);

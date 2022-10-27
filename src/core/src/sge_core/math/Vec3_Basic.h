@@ -128,4 +128,15 @@ bool Vec3_Basic<T, DATA>::equals0(const T& epsilon) const {
 		&& Math::equals0(z, epsilon);
 }
 
+namespace Math {
+
+template<class T, class DATA> SGE_INLINE
+void sincos(const Vec3_Basic<T, DATA>& th, Vec3_Basic<T, DATA>& outSin, Vec3_Basic<T, DATA>& outCos) {
+	Math::sincos(th, outSin.x, outCos.x);
+	Math::sincos(th, outSin.y, outCos.y);
+	Math::sincos(th, outSin.z, outCos.z);
+}
+
+}
+
 }

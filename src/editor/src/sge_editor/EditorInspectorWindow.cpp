@@ -52,17 +52,17 @@ void EditorInspectorWindow::drawComponent(RenderRequest& req, ObjectList& list) 
 
 	EditorPropertyDrawRequest drawReq;
 
+	drawReq.objectType = type;
+	drawReq.objects.clear();
+	drawReq.objects.reserve(list.size());
+	for (auto& o : list ) {
+		drawReq.objects.emplace_back(o);
+	}
+
 	for (auto& f : type->fields()) {
 		if (!f.fieldType) continue;
 
-		drawReq.objectType = type;
 		drawReq.field = &f;
-
-		drawReq.objects.clear();
-		drawReq.objects.reserve(list.size());
-		for (auto& o : list ) {
-			drawReq.objects.emplace_back(o);
-		}
 
 		if (auto* drawer = ed->getPropertyDrawer(f.fieldType)) {
 			drawer->draw(drawReq);
