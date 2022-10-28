@@ -26,6 +26,7 @@ EditorContext::EditorContext() {
 	} \
 //---
 	E(float)
+	E(Vec3f)
 #undef E
 }
 

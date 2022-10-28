@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "Scene.h"
 
 namespace sge {
 
@@ -13,6 +14,10 @@ const TypeInfo* Entity::s_getType() {
 	};
 	static TI ti;
 	return &ti;
+}
+
+Entity::Entity() {
+	_transform = addComponent<CTransform>();
 }
 
 }

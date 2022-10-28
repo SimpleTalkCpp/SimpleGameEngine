@@ -29,6 +29,15 @@ struct EditorPropertyDrawRequest {
 			field->setValue<T>(o, v);
 		}
 	}
+
+	void createChildRequest(EditorPropertyDrawRequest& cr) {
+		cr.objectType = field->fieldType;
+		cr.objects.clear();
+		cr.objects.reserve(objects.size());
+		for (auto& o : objects) {
+			cr.objects.emplace_back(field->getValuePtr(o));
+		}
+	}
 };
 
 class EditorPropertyDrawer : public NonCopyable {
@@ -46,5 +55,11 @@ class EditorPropertyDrawer_float : public EditorPropertyDrawer {
 public:
 	virtual void draw(DrawRequest& req) override;
 };
+
+class EditorPropertyDrawer_Vec3f : public EditorPropertyDrawer {
+public:
+	virtual void draw(DrawRequest& req) override;
+};
+
 
 }

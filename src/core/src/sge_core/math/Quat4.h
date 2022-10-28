@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mat4.h"
+#include "Vec4.h"
 
 namespace sge {
 
@@ -13,7 +13,6 @@ public:
 
 	using Vec3 = sge::Vec3<T>;
 	using Vec4 = sge::Vec4<T>;
-	using Mat4 = sge::Mat4<T>;
 
 	union {
 		struct{T x, y, z, w;};

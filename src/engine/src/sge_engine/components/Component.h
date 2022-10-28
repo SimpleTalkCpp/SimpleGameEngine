@@ -8,7 +8,9 @@ class Component : public Object {
 	SGE_OBJECT_TYPE(Component, Object)
 public:
 
-	void internal_setEntity(Entity* e) { _entity = e; }
+	void _internalSetEntity(Entity* e) { _entity = e; }
+
+	Entity*	entity() { return _entity; }
 
 private:
 	Entity*	_entity = nullptr;

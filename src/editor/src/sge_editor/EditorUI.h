@@ -44,7 +44,9 @@ namespace EditorUI {
 			_isOpen = ImGui::TreeNodeEx(label, flags);
 		}
 
-		~TreeNode() { ImGui::TreePop(); }
+		~TreeNode() { 
+			if (_isOpen) ImGui::TreePop();
+		}
 
 		bool isOpen() const { return _isOpen; }
 
@@ -64,7 +66,8 @@ namespace EditorUI {
 
 	class PushID : public NonCopyable {
 	public:
-		PushID(const void* id) { ImGui::PushID(id); }
+		PushID(const void* id)	{ ImGui::PushID(id); }
+		PushID(int id)			{ ImGui::PushID(id); }
 		~PushID() { ImGui::PopID(); }
 	};
 

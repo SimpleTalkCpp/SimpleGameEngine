@@ -149,6 +149,8 @@ public:
 
 	Span<      T> subspan(size_t offset)		{ return subspan(offset, size() - offset); }
 	Span<const T> subspan(size_t offset) const	{ return subspan(offset, size() - offset); }
+
+	void remove(const T& value) { eastl::remove(begin(), end(), value); }
 };
 
 template<class KEY, class VALUE> using Map = eastl::map<KEY, VALUE>;
