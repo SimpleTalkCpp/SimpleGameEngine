@@ -4,8 +4,6 @@
 
 namespace sge {
 
-class CTransform;
-
 class CTransform : public Component {
 	SGE_OBJECT_TYPE(CTransform, Component)
 public:

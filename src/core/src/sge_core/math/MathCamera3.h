@@ -45,9 +45,9 @@ struct Camera3 {
 	Mat4	viewProjMatrix() const { return projMatrix() * viewMatrix(); }
 
 private:	
-	float _fov = 50.0f;
-	float _nearClip = 0.1f;
-	float _farClip = 10000.0f;
+	T _fov = T(50.0);
+	T _nearClip = T(0.1);
+	T _farClip = T(10000.0);
 	Rect2 _viewport;
 	Vec3 _pos {150, 150, 200};
 	Vec3 _aim {0,0,0};

@@ -261,6 +261,7 @@ public:
 
 	virtual void onQuit() {
 		EditorContext::destroyContext();
+		EngineContext::destroy();
 		Base::onQuit();
 	}
 
