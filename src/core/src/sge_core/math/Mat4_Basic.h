@@ -169,8 +169,6 @@ Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_rotate(const Vec3& rad) {
 
 template<class T, class DATA> SGE_INLINE
 Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_quat(const Quat4& q) {
-	Mat4_Basic<T, DATA> m;
-
 	T qxx(q.x * q.x);
 	T qyy(q.y * q.y);
 	T qzz(q.z * q.z);
@@ -181,18 +179,10 @@ Mat4_Basic<T, DATA> Mat4_Basic<T, DATA>::s_quat(const Quat4& q) {
 	T qwy(q.w * q.y);
 	T qwz(q.w * q.z);
 
-	m[0][0] = T(1) - T(2) * (qyy +  qzz);
-	m[0][1] = T(2) * (qxy + qwz);
-	m[0][2] = T(2) * (qxz - qwy);
-
-	m[1][0] = T(2) * (qxy - qwz);
-	m[1][1] = T(1) - T(2) * (qxx +  qzz);
-	m[1][2] = T(2) * (qyz + qwx);
-
-	m[2][0] = T(2) * (qxz + qwy);
-	m[2][1] = T(2) * (qyz - qwx);
-	m[2][2] = T(1) - T(2) * (qxx +  qyy);
-	return m;
+	return Mat4({T(1)-T(2)*(qyy+qzz), T(2)*(qxy+qwz),      T(2)*(qxz-qwy),      T(0)},
+				{T(2)*(qxy-qwz),      T(1)-T(2)*(qxx+qzz), T(2)*(qyz+qwx),      T(0)},
+				{T(2)*(qxz+qwy),      T(2)*(qyz-qwx),      T(1)-T(2)*(qxx+qyy), T(0)},
+				{T(0),                T(0),                T(0),                T(1)});
 }
 
 
