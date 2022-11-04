@@ -7,6 +7,7 @@ namespace sge {
 class CTransform : public Component {
 	SGE_OBJECT_TYPE(CTransform, Component)
 public:
+	CTransform();
 
 	void setLocalPos	(float x, float y, float z) { setLocalPos(Vec3f(x,y,z)); }
 	void setLocalPos	(const Vec3f&  v) { _localPos = v;		_setLocalMatrixDirty(); }
@@ -26,6 +27,7 @@ public:
 	const Mat4f& localMatrix();
 	const Mat4f& worldMatrix();
 
+	void _setIsRoot(bool b) { _isRoot = b; }
 private:
 
 	void _computeLocalMatrix();
@@ -46,6 +48,8 @@ private:
 		bool	localMatrix : 1;
 		bool	worldMatrix : 1;
 	};
+
+	bool _isRoot : 1;
 
 	Dirty		_dirty;
 	CTransform*	_parent = nullptr;

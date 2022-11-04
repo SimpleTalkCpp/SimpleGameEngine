@@ -27,11 +27,16 @@ const TypeInfo* CTransform::s_getType() {
 
 }
 
+CTransform::CTransform() {
+	_isRoot = false;
+}
+
 void CTransform::addChild(CTransform* c) {
 	if (c->_parent) {
 		c->_parent->removeChild(c);
 	}
-	c->_parent = this;
+
+	c->_parent = _isRoot ? nullptr : this;
 	_children.emplace_back(c);
 }
 

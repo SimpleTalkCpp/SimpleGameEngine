@@ -4,6 +4,7 @@ namespace sge {
 
 Scene::Scene() {
 	_rootEntity = addEntity();
+	_rootEntity->transform()->_setIsRoot(true);
 }
 
 Scene::~Scene() {

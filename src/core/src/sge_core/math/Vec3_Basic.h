@@ -132,9 +132,9 @@ namespace Math {
 
 template<class T, class DATA> SGE_INLINE
 void sincos(const Vec3_Basic<T, DATA>& th, Vec3_Basic<T, DATA>& outSin, Vec3_Basic<T, DATA>& outCos) {
-	Math::sincos(th, outSin.x, outCos.x);
-	Math::sincos(th, outSin.y, outCos.y);
-	Math::sincos(th, outSin.z, outCos.z);
+	Math::sincos(th.x, outSin.x, outCos.x);
+	Math::sincos(th.y, outSin.y, outCos.y);
+	Math::sincos(th.z, outSin.z, outCos.z);
 }
 
 template<class T, class DATA> SGE_INLINE
