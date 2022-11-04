@@ -29,7 +29,7 @@ public:
 
 	void onPostCreate();
 	void drawUI(RenderRequest& req);
-	void onUIMouseEvent(UIMouseEvent& ev);
+	bool onUIMouseEvent(UIMouseEvent& ev);
 
 protected:
 

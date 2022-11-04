@@ -4,10 +4,19 @@
 
 namespace sge {
 
+class CRendererSystem;
+
 class CRenderer : public Component {
-//	SGE_TYPEINFO(CRenderer, Component)
+	SGE_ABSTRACT_OBJECT_TYPE(CRenderer, Component)
 public:
 
+	CRenderer();
+	~CRenderer();
+
+friend class CRendererSystem;
+protected:
+	void _render(RenderRequest& req) { onRender(req); }
+	virtual void onRender(RenderRequest& req) = 0;
 };
 
 }

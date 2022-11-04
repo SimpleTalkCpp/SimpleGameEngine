@@ -20,9 +20,10 @@ public:
 	void onEndRender(RenderContext* renderContext);
 
 	void onDrawUI(RenderRequest& req);
-	void onUIMouseEvent(UIMouseEvent& ev);
+	bool onUIMouseEvent(UIMouseEvent& ev);
 
 	using Vertex = Vertex_ImGui;
+
 
 private:
 	void _createFontTexture();

@@ -23,6 +23,8 @@ public:
 	RenderPrimitiveType primitive() const;
 	const VertexLayout* vertexLayout() const;
 
+	const BBox3f& boundingBox() const { return _boundingBox; }
+
 	void setIndexData(Span<const u16> indexData);
 
 friend class RenderMesh;
@@ -35,6 +37,8 @@ protected:
 
 	size_t _vertexCount = 0;
 	size_t _indexCount = 0;
+
+	BBox3f _boundingBox;
 };
 
 class RenderMesh {

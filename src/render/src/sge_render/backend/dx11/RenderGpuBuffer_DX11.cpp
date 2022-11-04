@@ -3,9 +3,7 @@
 
 namespace sge {
 
-RenderGpuBuffer_DX11::RenderGpuBuffer_DX11(CreateDesc& desc) 
-	: Base(desc)
-{
+void RenderGpuBuffer_DX11::onCreate(CreateDesc& desc) {
 	if (desc.bufferSize <= 0) throw SGE_ERROR("buffer size = 0");
 	if (desc.stride <= 0) throw SGE_ERROR("stride == 0");
 

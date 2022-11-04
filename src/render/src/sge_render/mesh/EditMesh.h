@@ -19,6 +19,8 @@ public:
 	Vector<Tuple3f>	tangent;
 	Vector<Tuple3f>	binormal;
 
+	void addColors(const Color4b& c);
+
 	void clear();
 };
 

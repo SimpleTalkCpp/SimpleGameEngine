@@ -34,6 +34,16 @@ namespace Math {
 	template < class T > constexpr bool	isInf	( const T& v )	{ return std::numeric_limits<T>::has_infinity && v == inf<T>(); }
 
 //--------
+	constexpr u64 nextPow2(u64 x) {
+		x -= 1;
+		x |= (x >> 1);
+		x |= (x >> 2);
+		x |= (x >> 4);
+		x |= (x >> 8);
+		x |= (x >> 16);
+		x |= (x >> 32);
+		return x + 1;
+	}
 
 	//Splits a floating-point value into fractional and integer parts
 	SGE_INLINE float	modf	( float  v, float  *i ) { return std::modf( v, i ); }

@@ -23,7 +23,7 @@ public:
 	using Type = RenderGpuBufferType;
 	using CreateDesc = RenderGpuBuffer_CreateDesc;
 
-	RenderGpuBuffer(CreateDesc& desc);
+	void create(CreateDesc& desc);
 
 	void uploadToGpu(ByteSpan data, size_t offset = 0);
 	size_t bufferSize() const { return _desc.bufferSize; }
@@ -31,6 +31,7 @@ public:
 	const CreateDesc& desc() const { return _desc; }
 
 protected:
+	virtual void onCreate(CreateDesc& desc) = 0;
 	virtual void onUploadToGpu(ByteSpan data, size_t offset) = 0;
 	CreateDesc _desc;
 };

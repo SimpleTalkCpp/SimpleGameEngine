@@ -137,6 +137,20 @@ void sincos(const Vec3_Basic<T, DATA>& th, Vec3_Basic<T, DATA>& outSin, Vec3_Bas
 	Math::sincos(th, outSin.z, outCos.z);
 }
 
+template<class T, class DATA> SGE_INLINE
+Vec3_Basic<T, DATA> min(const Vec3_Basic<T, DATA>& a, const Vec3_Basic<T, DATA>& b) {
+	return Vec3_Basic<T, DATA>(	Math::min(a.x, b.x),
+								Math::min(a.y, b.y),
+								Math::min(a.z, b.z));
+}
+
+template<class T, class DATA> SGE_INLINE
+Vec3_Basic<T, DATA> max(const Vec3_Basic<T, DATA>& a, const Vec3_Basic<T, DATA>& b) {
+	return Vec3_Basic<T, DATA>(	Math::max(a.x, b.x),
+								Math::max(a.y, b.y),
+								Math::max(a.z, b.z));
+}
+
 }
 
 }

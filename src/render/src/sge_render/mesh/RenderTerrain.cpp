@@ -107,7 +107,7 @@ void RenderTerrain::destroy() {
 
 void RenderTerrain::render(RenderRequest& req) {
 	for (auto& p : _patches) {
-		p.setDisplayLevelByViewPos(req.camera_pos);
+		p.setDisplayLevelByViewPos(req.cameraPos);
 	}
 
 	for (auto& p : _patches) {
@@ -298,7 +298,7 @@ void RenderTerrain::Patch::render(RenderRequest& req) {
 
 	if (!_material) { SGE_ASSERT(false); return; }
 
-	req.setMaterialCommonParams(_material);
+	req.setMaterialCommonParams(_material, Mat4f::s_identity());
 
 	_material->setParam("terrainHeightMap",  _terrain->heightMapTexture());
 

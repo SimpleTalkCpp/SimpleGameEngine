@@ -177,7 +177,7 @@ void ImGui_SGE::onDrawUI(RenderRequest& req) {
 	}
 }
 
-void ImGui_SGE::onUIMouseEvent(UIMouseEvent& ev) {
+bool ImGui_SGE::onUIMouseEvent(UIMouseEvent& ev) {
 	ImGuiIO& io = ImGui::GetIO();
 	
 	using Type = UIMouseEventType;
@@ -198,6 +198,8 @@ void ImGui_SGE::onUIMouseEvent(UIMouseEvent& ev) {
 			io.AddMouseWheelEvent(ev.scroll.x, ev.scroll.y);
 		} break;
 	}
+
+	return io.WantCaptureMouse;
 }
 
 void ImGui_SGE::_createFontTexture() {

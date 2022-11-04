@@ -14,17 +14,30 @@ public: \
 	static const TypeInfo* s_getType(); \
 //----
 
-#define SGE_OBJECT_TYPE(T, BASE) \
+#define SGE_ABSTRACT_OBJECT_TYPE_BASE(T, BASE) \
 private: \
 	using This = T; \
 	using Base = BASE; \
-	class TI_Base : public TypeInfoInit<T, BASE> { \
-	public: \
-		TI_Base() : TypeInfoInit<T, BASE>(#T) {} \
-	}; \
 public: \
 	static const TypeInfo* s_getType(); \
 	virtual const TypeInfo* getType() const override { return s_getType(); } \
+//----
+
+#define SGE_ABSTRACT_OBJECT_TYPE(T, BASE) \
+	SGE_ABSTRACT_OBJECT_TYPE_BASE(T, BASE) \
+	class TI_Base : public TypeInfoInit<T, BASE> { \
+	public: \
+		TI_Base() : TypeInfoInit<T, BASE>(#T, nullptr) {} \
+	}; \
+private: \
+//-----
+
+#define SGE_OBJECT_TYPE(T, BASE) \
+	SGE_ABSTRACT_OBJECT_TYPE_BASE(T, BASE) \
+	class TI_Base : public TypeInfoInit<T, BASE> { \
+	public: \
+		TI_Base() : TypeInfoInit<T, BASE>(#T, &TypeCreator<T>) {} \
+	}; \
 private: \
 //-----
 
@@ -147,13 +160,12 @@ static Object* TypeCreator() {
 template<class T, class Base>
 class TypeInfoInit : public TypeInfoInitNoBase<T> {
 public:
-	TypeInfoInit(const char* name_)
+	TypeInfoInit(const char* name_, Creator creator_)
 		: TypeInfoInitNoBase<T>(name_)
 	{
 		static_assert(std::is_base_of<Base, T>::value, "invalid base class");
 		this->base = TypeOf<Base>();
-
-		this->creator = &TypeCreator<T>;
+		this->creator = creator_;
 	};
 };
 

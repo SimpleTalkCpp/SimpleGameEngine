@@ -9,8 +9,7 @@ class RenderGpuBuffer_DX11 : public RenderGpuBuffer {
 	using Base = RenderGpuBuffer;
 	using Util = DX11Util;
 public:
-	RenderGpuBuffer_DX11(CreateDesc& desc);
-
+	virtual void onCreate(CreateDesc& desc) override;
 	virtual void onUploadToGpu(ByteSpan data, size_t offset) override;
 
 	DX11_ID3DBuffer* d3dBuf() { return _d3dBuf; }

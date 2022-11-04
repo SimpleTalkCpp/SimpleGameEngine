@@ -4,6 +4,7 @@
 #include <sge_render/RenderContext.h>
 
 #include <sge_render/command/RenderCommand.h>
+#include <sge_render/command/RenderRequest.h>
 
 #include <sge_render/mesh/RenderMesh.h>
 #include <sge_render/mesh/RenderTerrain.h>

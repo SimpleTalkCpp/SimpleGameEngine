@@ -8,7 +8,7 @@ namespace sge {
 
 template<class ELEMENT>
 struct Mat4_Basic_Data {
-	using Vec4 = Vec4_Basic<ELEMENT>;
+	using Vec4 = Vec4<ELEMENT>;
 
 	using ElementType = ELEMENT;
 	static const size_t kElementCount = 16;
@@ -34,7 +34,7 @@ struct Mat4_Basic : public DATA {
 
 	using ElementType = T;
 	using Scalar = ElementType;
-	using Vec4   = typename DATA::Vec4;
+	using Vec4   = sge::Vec4<T>;
 	using Vec3   = sge::Vec3<T>;
 	using Rect2  = sge::Rect2<T>;
 	using Quat4  = sge::Quat4<T>;

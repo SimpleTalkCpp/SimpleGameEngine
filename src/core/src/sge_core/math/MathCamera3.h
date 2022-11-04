@@ -2,6 +2,7 @@
 
 #include "Quat4.h"
 #include "Ray3.h"
+#include "Frustum3.h"
 
 namespace sge {
 namespace Math {
@@ -15,6 +16,7 @@ struct Camera3 {
 	using Quat4 = Quat4<T>;
 	using Rect2 = Rect2<T>;
 	using Ray3	= Ray3<T>;
+	using Frustum3 = Frustum3<T>;
 
 	void pan	(T x, T y);
 	void orbit	(T x, T y);
@@ -31,9 +33,12 @@ struct Camera3 {
 	void setAim(const Vec3& aim)	{ _aim = aim; }
 	void setUp (const Vec3& up)		{ _up  = up;  }
 
+	void setFov(const T& fov)		{ _fov = fov; }
+
 	const Vec3& pos() const { return _pos; }
 	const Vec3& aim() const { return _aim; }
 	const Vec3& up () const { return _up;  }
+	const T&	fov() const { return _fov; }
 
 	void setViewport(const Rect2& v) { _viewport = v; }
 	const Rect2& viewport() const { return _viewport; }
@@ -43,6 +48,8 @@ struct Camera3 {
 	Mat4	viewMatrix() const;
 	Mat4	projMatrix() const;
 	Mat4	viewProjMatrix() const { return projMatrix() * viewMatrix(); }
+
+	Frustum3 frustum() const { Frustum3 o; o.setByViewProjMatrix(viewProjMatrix()); return o; };
 
 private:	
 	T _fov = T(50.0);

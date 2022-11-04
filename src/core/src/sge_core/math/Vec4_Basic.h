@@ -106,4 +106,33 @@ bool Vec4_Basic<T, DATA>::equals0(const T& epsilon) const {
 		&& Math::equals0(z, epsilon)
 		&& Math::equals0(w, epsilon);
 }
+
+namespace Math {
+
+template<class T, class DATA> SGE_INLINE
+void sincos(const Vec4_Basic<T, DATA>& th, Vec4_Basic<T, DATA>& outSin, Vec4_Basic<T, DATA>& outCos) {
+	Math::sincos(th, outSin.x, outCos.x);
+	Math::sincos(th, outSin.y, outCos.y);
+	Math::sincos(th, outSin.z, outCos.z);
+	Math::sincos(th, outSin.w, outCos.w);
+}
+
+template<class T, class DATA> SGE_INLINE
+Vec4_Basic<T, DATA> min(const Vec4_Basic<T, DATA>& a, const Vec4_Basic<T, DATA>& b) {
+	return Vec4_Basic<T, DATA>(	Math::min(a.x, b.x),
+								Math::min(a.y, b.y),
+								Math::min(a.z, b.z),
+								Math::min(a.w, b.w));
+}
+
+template<class T, class DATA> SGE_INLINE
+Vec4_Basic<T, DATA> max(const Vec4_Basic<T, DATA>& a, const Vec4_Basic<T, DATA>& b) {
+	return Vec4_Basic<T, DATA>(	Math::max(a.x, b.x),
+								Math::max(a.y, b.y),
+								Math::max(a.z, b.z),
+								Math::max(a.w, b.w));
+}
+
+}
+
 }

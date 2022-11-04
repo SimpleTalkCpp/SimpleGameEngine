@@ -22,7 +22,6 @@ public:
 			_renderContext = renderer->createContext(renderContextDesc);
 		}
 
-//		_camera.setPos(0,5,5);
 		_camera.setPos(0,10,10);
 		_camera.setAim(0,0,0);
 
@@ -64,9 +63,15 @@ public:
 		}
 
 		{
-			auto shader = renderer->createShader("Assets/Shaders/test.shader");
+			auto lineShader = renderer->createShader("Assets/Shaders/line.shader");
+			_lineMaterial = renderer->createMaterial();
+			_lineMaterial->setShader(lineShader);
+		}
+
+		{
+			_shader = renderer->createShader("Assets/Shaders/test.shader");
 			_material = renderer->createMaterial();
-			_material->setShader(shader);
+			_material->setShader(_shader);
 
 			_material->setParam("mainTex", _testTexture);
 
@@ -75,9 +80,7 @@ public:
 		#if 1
 			WavefrontObjLoader::loadFile(editMesh, "Assets/Mesh/test.obj");
 			// the current shader need color
-			for (size_t i = editMesh.color.size(); i < editMesh.pos.size(); i++) {
-				editMesh.color.emplace_back(255, 255, 255, 255);
-			}
+			editMesh.addColors(Color4b(255, 255, 255, 255));
 
 		#else
 			editMesh.pos.emplace_back( 0.0f,  0.5f, 0.0f);
@@ -107,16 +110,42 @@ public:
 		}
 
 		{ // ECS
+			EditMesh editMesh;
+			WavefrontObjLoader::loadFile(editMesh, "Assets/Mesh/box.obj");
+			editMesh.addColors(Color4b(255, 255, 255, 255));
+
+			_meshAsset = new MeshAsset();
+			_meshAsset->mesh.create(editMesh);
+
 			Vector<Entity*> entities;
 
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 25; i++) {
 				auto* e = _scene.addEntity("Entity");
 				auto* t = e->transform();
-				t->setLocalPos(static_cast<float>(i), 5, 10);
+			
 				entities.emplace_back(e);
 
-				if (i > 5) {
-					entities[i / 5]->transform()->addChild(e->transform());
+				auto* mr = e->addComponent<CMeshRenderer>();
+				mr->mesh = _meshAsset;
+
+				auto mtl = renderer->createMaterial();
+				mtl->setShader(_shader);
+				mtl->setParam("test_color", Color4f(1,1,1,1));
+				mtl->setParam("mainTex", _testTexture);
+
+				mr->material = mtl;
+
+				const int col = 5;
+				int x = i % col;
+				int z = i / col;
+
+				if (x == 0) {
+					t->setLocalPos(0, 4, static_cast<float>(z));
+
+				} else {
+					auto* parent = entities[z * col]->transform();
+					parent->addChild(e->transform());
+					t->setLocalPos(static_cast<float>(x), 0, 0);
 				}
 			}
 
@@ -130,7 +159,8 @@ public:
 	}
 
 	virtual void onUIMouseEvent(UIMouseEvent& ev) override {
-		_renderContext->onUIMouseEvent(ev);
+		if (_renderContext->onUIMouseEvent(ev))
+			return;
 
 		if (ev.isDragging()) {
 			using Button = UIMouseEventButton;
@@ -162,11 +192,19 @@ public:
 		_renderContext->setFrameBufferSize(clientRect().size);
 		_renderContext->beginRender();
 
-		_renderRequest.reset(_renderContext);
-		_renderRequest.matrix_model = Mat4f::s_identity();
-		_renderRequest.matrix_view  = _camera.viewMatrix();
-		_renderRequest.matrix_proj  = _camera.projMatrix();
-		_renderRequest.camera_pos   = _camera.pos();
+		_renderRequest.reset(_renderContext, _camera);
+
+		{// debug culling
+			auto fov = _camera.fov();
+			_camera.setFov(fov / 2);
+			_renderRequest.cameraFrustum = _camera.frustum();
+			_camera.setFov(fov);
+		}
+
+		_renderRequest.debug.drawBoundingBox = true;
+
+		_renderRequest.lineMaterial = _lineMaterial;
+//		_renderRequest.matrix_model = Mat4f::s_identity();
 
 		_renderRequest.clearFrameBuffers()->setColor({0, 0, 0.2f, 1});
 
@@ -178,9 +216,13 @@ public:
 		_material->setParam("test_float", s * 0.5f);
 		_material->setParam("test_color", Color4f(s, s, s, 1));
 //------
+		_renderRequest.drawFrustum(_renderRequest.cameraFrustum, Color4b(100, 255, 100, 255));
+
 		_renderRequest.drawMesh(SGE_LOC, _renderMesh, _material);
 
 //		_terrain.render(_renderRequest);
+
+		CRendererSystem::instance()->render(_renderRequest);
 
 		_hierarchyWindow.draw(_renderRequest, _scene);
 		_inspectorWindow.draw(_renderRequest, _scene);
@@ -188,18 +230,25 @@ public:
 //		ImGui::ShowDemoWindow(nullptr);
 
 		_renderContext->drawUI(_renderRequest);
+
 		_renderRequest.swapBuffers();
-		_renderContext->commit(_renderRequest.commandBuffer);
+		_renderRequest.commit();
 
 		_renderContext->endRender();
 		drawNeeded();
 	}
+
+	SPtr<Shader>		_shader;
+
+	SPtr<Material>		_lineMaterial;
 
 	SPtr<Material>		_material;
 	SPtr<Texture2D>		_testTexture;
 
 	SPtr<RenderContext>	_renderContext;
 	RenderMesh			_renderMesh;
+
+	SPtr<MeshAsset>		_meshAsset;
 
 	RenderTerrain		_terrain;
 

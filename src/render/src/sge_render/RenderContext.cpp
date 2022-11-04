@@ -32,8 +32,8 @@ void RenderContext::drawUI(RenderRequest& req) {
 	_imgui.onDrawUI(req);
 }
 
-void RenderContext::onUIMouseEvent(UIMouseEvent& ev) {
-	_imgui.onUIMouseEvent(ev);
+bool RenderContext::onUIMouseEvent(UIMouseEvent& ev) {
+	return _imgui.onUIMouseEvent(ev);
 }
 
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Quat4.h"
+#include "Mat4.h"
 
 namespace sge {
 namespace Math {
@@ -42,10 +43,23 @@ public:
 		, distance(normal_.dot(point_))
 	{}
 
-	Plane3(const Triangle3<T>&  tri) {
-		normal = (tri.v1 - tri.v0).cross(tri.v2 - tri.v0).normal();
-		distance = normal.dot(tri.v0);
+	Plane3(const Triangle3<T>&  tri) { setByTriangle(tri); }
+
+	void set(const Vec3& normal_, T distance_) {
+		normal = normal_;
+		distance = distance_;
 	}
+
+	void setByTriangle(const Triangle3<T>&  tri) {
+		setByTriangle(tri.v0, tri.v1, tri.v2);
+	}
+
+	void setByTriangle(const Vec3& v0, const Vec3& v1, Vec3& v2) {
+		normal = (v1 - v0).cross(v2 - v0).normalize();
+		distance = normal.dot(v0);
+	}
+
+	T dot(const Vec3& point) const { return normal.dot(point) - distance; }
 
 	void onFormat(fmt::format_context& f) const;
 

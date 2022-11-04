@@ -2,6 +2,7 @@
 
 #include <sge_engine/components/CTransform.h>
 #include <sge_engine/components/CMeshRenderer.h>
+#include <sge_engine/components/CRendererSystem.h>
 
 namespace sge {
 
@@ -24,10 +25,16 @@ EngineContext::EngineContext() {
 	registerComponentType<CTransform>();
 //	registerComponentType<CRenderer>();
 //	registerComponentType<CMeshRenderer>();
+
+	registerSystem<CRendererSystem>();
 }
 
 void EngineContext::_registerComponentType(const TypeInfo* type) {
 	_componentTypeMap.insert(type->name, type);
+}
+
+void EngineContext::_registerSystem(CSystemBase* sys) {
+	_systems.emplace_back(sys);
 }
 
 }
