@@ -37,6 +37,7 @@ void CTransform::addChild(CTransform* c) {
 	}
 
 	c->_parent = _isRoot ? nullptr : this;
+	c->_setWorldMatrixDirty();
 	_children.emplace_back(c);
 }
 
@@ -45,6 +46,7 @@ void CTransform::removeChild(CTransform* c) {
 		if (*it == c) {
 			_children.erase(it);
 			c->_parent = nullptr;
+			c->_setWorldMatrixDirty();
 			return;
 		}
 	}

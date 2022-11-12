@@ -53,7 +53,7 @@ private:
 	static bool _outsideOfPlane(const Plane3& p, const Vec3 points[8]);
 };
 
-template<class T>
+template<class T> inline
 bool Frustum3<T>::_outsideOfPlane(const Plane3& p, const Vec3 points[8]) {
 	for (size_t i = 0; i < 8; i++) {
 		if (p.dot(points[i]) < 0)
