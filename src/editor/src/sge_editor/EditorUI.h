@@ -14,12 +14,10 @@ namespace EditorUI {
 			float* v, 
 			float v_speed = 0.1f, 
 			float v_min = std::numeric_limits<float>::lowest(),
-			float v_max = std::numeric_limits<float>::max(),
-			float v_power = 1)
+			float v_max = std::numeric_limits<float>::max())
 	{
 		return ImGui::DragFloat(	label, v, v_speed, v_min, v_max, 
-									showMixedValue ? mixedValueFormat : floatFormat, 
-									v_power);
+									showMixedValue ? mixedValueFormat : floatFormat);
 	}
 
 	inline float InputFloat(const char* label, float* v) {
