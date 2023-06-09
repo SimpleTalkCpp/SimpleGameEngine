@@ -82,8 +82,8 @@ std::ostream& operator<<(std::ostream& s, const sge::StrView& v) {
 
 template<>
 struct fmt::formatter<sge::StrViewA> {
-	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const sge::StrViewA& v, fmt::format_context& ctx) {
+	static auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
+	static auto format(const sge::StrViewA& v, fmt::format_context& ctx) {
 		auto it = *ctx.out();
 		for (const auto& c : v) {
 			it = c;
@@ -95,8 +95,8 @@ struct fmt::formatter<sge::StrViewA> {
 
 template<>
 struct fmt::formatter<sge::StrViewW> {
-	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const sge::StrViewW& v, fmt::format_context& ctx) {
+	static auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
+	static auto format(const sge::StrViewW& v, fmt::format_context& ctx) {
 		sge::TempStringA tmp = sge::UtfUtil::toString(v);
 		return fmt::format_to(ctx.out(), "{}", tmp);
 	}
@@ -104,8 +104,8 @@ struct fmt::formatter<sge::StrViewW> {
 
 template<class T, size_t N, bool bEnableOverflow>
 struct fmt::formatter<sge::StringT<T, N, bEnableOverflow> > {
-	auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
-	auto format(const sge::StringT<T, N, bEnableOverflow>& v, fmt::format_context& ctx) {
+	static auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
+	static auto format(const sge::StringT<T, N, bEnableOverflow>& v, fmt::format_context& ctx) {
 		return fmt::format_to(ctx.out(), "{}", v.view());
 	}
 };
