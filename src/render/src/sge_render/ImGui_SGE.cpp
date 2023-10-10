@@ -179,7 +179,7 @@ void ImGui_SGE::onDrawUI(RenderRequest& req) {
 
 bool ImGui_SGE::onUIMouseEvent(UIMouseEvent& ev) {
 	ImGuiIO& io = ImGui::GetIO();
-	
+    
 	using Type = UIMouseEventType;
 	switch (ev.type) {
 		case Type::Move: {
@@ -187,11 +187,11 @@ bool ImGui_SGE::onUIMouseEvent(UIMouseEvent& ev) {
 		} break;
 
 		case Type::Down: {
-			io.AddMouseButtonEvent(_mouseButton(ev.pressedButtons), true);
+			io.AddMouseButtonEvent(_mouseButton(ev.button), true);
 		} break;
 
 		case Type::Up: {
-			io.AddMouseButtonEvent(_mouseButton(ev.pressedButtons), false);
+			io.AddMouseButtonEvent(_mouseButton(ev.button), false);
 		} break;
 
 		case Type::Scroll: {
@@ -225,11 +225,11 @@ void ImGui_SGE::_createFontTexture() {
 int ImGui_SGE::_mouseButton(UIMouseEventButton v) {
 	using Button = UIMouseEventButton;
 	switch (v) {
-		case Button::Left:		return 0;
-		case Button::Right:		return 1;
-		case Button::Middle:	return 2;
-		case Button::Button4:	return 3;
-		case Button::Button5:	return 4;
+		case Button::Left:    return 0;
+		case Button::Right:     return 1;
+		case Button::Middle:    return 2;
+		case Button::Button4:    return 3;
+		case Button::Button5:    return 4;
 	}
 	return 0;
 }
