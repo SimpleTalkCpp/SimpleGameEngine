@@ -1,6 +1,7 @@
 #include "Vec4_Basic.h"
 
 #include <xmmintrin.h>
+#include <intrin.h>
 
 namespace sge {
 
