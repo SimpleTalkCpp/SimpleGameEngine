@@ -144,14 +144,19 @@ namespace Math {
 	template<class T, class W>
 	SGE_INLINE T	lerp(const T& a, const T& b, const W& w );
 
-	template<class T, class ENABLE = std::enable_if< std::is_floating_point_v<T> > >
+	template<class T, class ENABLE = std::enable_if_t< std::is_floating_point_v<T> > >
 	SGE_INLINE T	lerp(T a, T b, T w ) { return (1-w)*a + w*b; }
 
-	template<class T, class ENABLE = std::enable_if< std::is_integral_v<T> > >
+	template<class T, class ENABLE = std::enable_if_t< std::is_integral_v<T> > >
 	SGE_INLINE T	lerp(T a, T b, double w ) {
 		double a_ = static_cast<double>(a);
 		double b_ = static_cast<double>(b);
 		return static_cast<T>(lerp<double>(a_, b_, w));
+	}
+
+	template<>
+	SGE_INLINE float lerp(const float& a, const float& b, const double& w) {
+		return static_cast<float>((1 - w) * a + w * b);
 	}
 
 	//---------
