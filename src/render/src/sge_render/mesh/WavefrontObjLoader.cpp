@@ -171,12 +171,17 @@ void WavefrontObjLoader::_parseLine_f() {
 			auto vt = face_vt[i];
 			if (vt >= _tmpUv.size()) _error("face vt out of range");
 			_outMesh->uv[0].emplace_back(_tmpUv[vt]);
+		} else {
+			_outMesh->uv[0].emplace_back(0, 0);
 		}
 
-		if (face_vn.size() >= face_vn.size()) {
+		if (face_vn.size() >= face_vi.size()) {
 			auto vn = face_vn[i];
 			if (vn >= _tmpNormal.size()) _error("face vn out of range");
 			_outMesh->normal.emplace_back(_tmpNormal[vn]);
+		}
+		else {
+			_outMesh->normal.emplace_back(0,0,0);
 		}
 	}
 
