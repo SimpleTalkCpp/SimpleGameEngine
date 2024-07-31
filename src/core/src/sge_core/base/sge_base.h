@@ -194,6 +194,15 @@ public:
 
 	template<class R> void operator+=(const R& r) { Base::operator+=(r); }
 
+	bool operator==(const typename Base::value_type* v) const { return Base::compare(v) == 0; }
+	bool operator!=(const typename Base::value_type* v) const { return !this->operator==(v); }
+	
+	bool operator==(StrViewT<T> v) const { return Base::compare(v.data()) == 0; }
+	bool operator!=(StrViewT<T> v) const { return !this->operator==(v); }
+	
+	template<size_t N> bool operator==(const StringT<T, N>& v) const { return Base::compare(v) == 0; }
+	template<size_t N> bool operator!=(const StringT<T, N>& v) const { return !this->operator==(v); }
+
 	StrViewT<T>	view() const { return StrViewT<T>(data(), size()); }
 };
 
