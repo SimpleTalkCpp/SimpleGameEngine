@@ -15,8 +15,10 @@ void run_temp_test() {
 	//RUN_TEST(test_Vec2);
 	//RUN_TEST(test_Vec3);
 	//RUN_TEST(test_Vec4);
-	RUN_TEST(test_Quat4);
+	//RUN_TEST(test_Quat4);
 	//RUN_TEST(test_Mat4);
+
+	RUN_TEST(test_String);
 }
 
 void run_all_test() {
@@ -36,6 +38,7 @@ void run_all_test() {
 // string
 	RUN_TEST(test_Fmt);
 	RUN_TEST(test_UtfUtil);
+	RUN_TEST(test_String);
 
 // net
 	RUN_TEST(test_Socket);

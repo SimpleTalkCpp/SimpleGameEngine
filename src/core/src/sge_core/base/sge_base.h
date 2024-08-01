@@ -194,15 +194,6 @@ public:
 
 	template<class R> void operator+=(const R& r) { Base::operator+=(r); }
 
-	bool operator==(const typename Base::value_type* v) const { return Base::compare(v) == 0; }
-	bool operator!=(const typename Base::value_type* v) const { return !this->operator==(v); }
-	
-	bool operator==(StrViewT<T> v) const { return Base::compare(v.data()) == 0; }
-	bool operator!=(StrViewT<T> v) const { return !this->operator==(v); }
-	
-	template<size_t N> bool operator==(const StringT<T, N>& v) const { return Base::compare(v) == 0; }
-	template<size_t N> bool operator!=(const StringT<T, N>& v) const { return !this->operator==(v); }
-
 	StrViewT<T>	view() const { return StrViewT<T>(data(), size()); }
 };
 
@@ -217,6 +208,15 @@ using StringW = StringW_<0>;
 
 using StrView		= StrViewA;
 using String		= StringA;
+
+template<class T, size_t N> inline bool operator==(const StringT<T, N>& lhs, StrViewT<T> rhs) { return lhs.compare(rhs.data()) == 0; }
+template<class T, size_t N> inline bool operator!=(const StringT<T, N>& lhs, StrViewT<T> rhs) { return lhs.compare(rhs.data()) != 0; }
+
+template<class T, size_t N> inline bool operator==(StrViewT<T> lhs, const StringT<T, N>& rhs) { return rhs.compare(lhs.data()) == 0; }
+template<class T, size_t N> inline bool operator!=(StrViewT<T> lhs, const StringT<T, N>& rhs) { return rhs.compare(lhs.data()) != 0; }
+
+template<class T> inline bool operator==(StrViewT<T> lhs, const T* rhs) { return lhs.compare(rhs) == 0; }
+template<class T> inline bool operator!=(StrViewT<T> lhs, const T* rhs) { return lhs.compare(rhs) != 0; }
 
 inline StrView StrView_c_str(const char* s) {
 	return s ? StrView(s, strlen(s)) : StrView();
