@@ -184,6 +184,10 @@ public:
 	StringT(StrViewT<T> view) : Base(view.data(), view.size()) {}
 	StringT(StringT&& str) : Base(std::move(str)) {}
 	StringT(const T* sz) : Base(sz) {}
+	StringT(const StringT& s) : Base(s.data(), s.size()) {}
+
+	template<size_t N>
+	StringT(const StringT<T, N>& s) : Base(s.data(), s.size()) {}
 
 	template<class R> void operator=(R&& r) { Base::operator=(SGE_FORWARD(r)); }
 

@@ -40,7 +40,7 @@ void Directory::_create(StrView path) {
 	TempStringW pathW;
 	UtfUtil::convert(pathW, path);
 	auto ret = ::CreateDirectory(pathW.c_str(), nullptr);
-	if (!ret) throw SGE_ERROR("create directory {}", pathW);
+	if (!ret) throw SGE_ERROR("create directory {}", path);
 }
 
 bool Directory::exists(StrView path) {
